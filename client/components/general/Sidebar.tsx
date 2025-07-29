@@ -52,19 +52,45 @@ export function Sidebar({ isCollapsed, onToggleCollapse, activeRoute = "Dashboar
       {isMobile && (
         <div className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-40 lg:hidden">
           <div className="flex items-center gap-3">
-            <Clock className="w-8 h-8 text-[#63CDFA]" />
-            <span className="text-xl font-semibold text-black">TimeTracker</span>
+            <button
+              onClick={onToggleCollapse}
+              className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              {isCollapsed ? (
+                <Menu className="w-6 h-6 text-[#63CDFA]" />
+              ) : (
+                <X className="w-6 h-6 text-[#63CDFA]" />
+              )}
+            </button>
+            <span className="text-xl font-semibold text-black">Dashboard</span>
           </div>
-          <button
-            onClick={onToggleCollapse}
-            className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            {isCollapsed ? (
-              <Menu className="w-6 h-6 text-gray-600" />
-            ) : (
-              <X className="w-6 h-6 text-gray-600" />
-            )}
-          </button>
+
+          {/* User/Admin Toggle for Mobile */}
+          {isAdminView !== undefined && onToggleView && (
+            <div className="flex items-center gap-1 px-2 py-1 border border-[#63CDFA]/50 bg-white rounded-full shadow-sm">
+              <button
+                className={`flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 ${
+                  !isAdminView ? 'bg-[#63CDFA] shadow-sm' : 'bg-transparent hover:bg-gray-50'
+                }`}
+                onClick={onToggleView}
+              >
+                <span className={`text-xs font-semibold transition-colors ${!isAdminView ? 'text-white' : 'text-[#77838F]'}`}>
+                  U
+                </span>
+              </button>
+
+              <button
+                className={`flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 ${
+                  isAdminView ? 'bg-[#63CDFA] shadow-sm' : 'bg-transparent hover:bg-gray-50'
+                }`}
+                onClick={onToggleView}
+              >
+                <span className={`text-xs font-semibold transition-colors ${isAdminView ? 'text-white' : 'text-[#77838F]'}`}>
+                  A
+                </span>
+              </button>
+            </div>
+          )}
         </div>
       )}
 
