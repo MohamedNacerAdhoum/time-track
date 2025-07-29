@@ -47,6 +47,18 @@ export function Sidebar({ isCollapsed, onToggleCollapse, activeRoute = "Dashboar
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isProfileDropdownOpen) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isProfileDropdownOpen]);
+
   return (
     <>
       {/* Mobile Header with Hamburger Menu */}
