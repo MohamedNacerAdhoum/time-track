@@ -23,20 +23,24 @@ export default function UserDashboard() {
     // Set initial state
     handleResize();
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !isSidebarCollapsed && window.innerWidth < 1024) {
+      if (
+        e.key === "Escape" &&
+        !isSidebarCollapsed &&
+        window.innerWidth < 1024
+      ) {
         setIsSidebarCollapsed(true);
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isSidebarCollapsed]);
 
   return (
@@ -48,9 +52,11 @@ export default function UserDashboard() {
       />
 
       {/* Main Content */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${
-        isSidebarCollapsed ? 'lg:ml-[90px] ml-0' : 'lg:ml-[250px] ml-0'
-      }`}>
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          isSidebarCollapsed ? "lg:ml-[90px] ml-0" : "lg:ml-[250px] ml-0"
+        }`}
+      >
         {/* Header */}
         <DashboardHeader
           isAdminView={isAdminView}

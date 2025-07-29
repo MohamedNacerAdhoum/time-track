@@ -27,25 +27,29 @@ export default function Dashboard() {
     // Set initial state
     handleResize();
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !isSidebarCollapsed && window.innerWidth < 1024) {
+      if (
+        e.key === "Escape" &&
+        !isSidebarCollapsed &&
+        window.innerWidth < 1024
+      ) {
         setIsSidebarCollapsed(true);
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isSidebarCollapsed]);
 
   const handleToggleView = () => {
     setIsTransitioning(true);
-    
+
     // Add a slight delay for smooth transition
     setTimeout(() => {
       setIsAdminView(!isAdminView);
@@ -64,9 +68,11 @@ export default function Dashboard() {
       />
 
       {/* Main Content */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${
-        isSidebarCollapsed ? 'lg:ml-[90px] ml-0' : 'lg:ml-[250px] ml-0'
-      }`}>
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          isSidebarCollapsed ? "lg:ml-[90px] ml-0" : "lg:ml-[250px] ml-0"
+        }`}
+      >
         {/* Header */}
         <DashboardHeader
           isAdminView={isAdminView}
@@ -94,11 +100,13 @@ export default function Dashboard() {
             {/* Dashboard Content Container with sliding effect */}
             <div className="relative">
               {/* Admin Dashboard View */}
-              <div className={`transition-all duration-500 ease-in-out transform ${
-                isAdminView 
-                  ? 'translate-x-0 opacity-100' 
-                  : 'translate-x-full opacity-0 absolute inset-0 pointer-events-none'
-              } ${isTransitioning ? 'scale-95' : 'scale-100'}`}>
+              <div
+                className={`transition-all duration-500 ease-in-out transform ${
+                  isAdminView
+                    ? "translate-x-0 opacity-100"
+                    : "translate-x-full opacity-0 absolute inset-0 pointer-events-none"
+                } ${isTransitioning ? "scale-95" : "scale-100"}`}
+              >
                 <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
                   {/* Left Column - Main Content */}
                   <div className="xl:col-span-8 space-y-6">
@@ -128,11 +136,13 @@ export default function Dashboard() {
               </div>
 
               {/* User Dashboard View */}
-              <div className={`transition-all duration-500 ease-in-out transform ${
-                !isAdminView 
-                  ? 'translate-x-0 opacity-100' 
-                  : '-translate-x-full opacity-0 absolute inset-0 pointer-events-none'
-              } ${isTransitioning ? 'scale-95' : 'scale-100'}`}>
+              <div
+                className={`transition-all duration-500 ease-in-out transform ${
+                  !isAdminView
+                    ? "translate-x-0 opacity-100"
+                    : "-translate-x-full opacity-0 absolute inset-0 pointer-events-none"
+                } ${isTransitioning ? "scale-95" : "scale-100"}`}
+              >
                 <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
                   {/* Left Column - Main Content */}
                   <div className="xl:col-span-8 space-y-6">
