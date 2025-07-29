@@ -26,20 +26,24 @@ export default function Dashboard() {
     // Set initial state
     handleResize();
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !isSidebarCollapsed && window.innerWidth < 1024) {
+      if (
+        e.key === "Escape" &&
+        !isSidebarCollapsed &&
+        window.innerWidth < 1024
+      ) {
         setIsSidebarCollapsed(true);
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isSidebarCollapsed]);
 
   return (
@@ -51,13 +55,15 @@ export default function Dashboard() {
       />
 
       {/* Main Content */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${
-        isMobile 
-          ? 'pt-16 ml-0' // Mobile: add top padding for header, no left margin
-          : isSidebarCollapsed 
-            ? 'lg:ml-[90px] ml-0' 
-            : 'lg:ml-[250px] ml-0'
-      }`}>
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          isMobile
+            ? "pt-16 ml-0" // Mobile: add top padding for header, no left margin
+            : isSidebarCollapsed
+              ? "lg:ml-[90px] ml-0"
+              : "lg:ml-[250px] ml-0"
+        }`}
+      >
         {/* Header - Hidden on mobile since we have the mobile header in sidebar */}
         <div className="hidden lg:block">
           <DashboardHeader
@@ -74,26 +80,30 @@ export default function Dashboard() {
               <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-black">Dashboard</h1>
                 <div className="flex items-center gap-3 px-3 py-2 border border-[#63CDFA]/50 bg-white rounded-full">
-                  <button 
+                  <button
                     className={`flex items-center justify-center w-10 h-10 rounded-lg transition-colors ${
-                      !isAdminView ? 'bg-[#63CDFA]' : 'bg-transparent'
+                      !isAdminView ? "bg-[#63CDFA]" : "bg-transparent"
                     }`}
                     onClick={() => setIsAdminView(false)}
                   >
-                    <span className={`text-sm font-semibold ${!isAdminView ? 'text-white' : 'text-[#77838F]'}`}>
+                    <span
+                      className={`text-sm font-semibold ${!isAdminView ? "text-white" : "text-[#77838F]"}`}
+                    >
                       User
                     </span>
                   </button>
-                  
+
                   <div className="w-px h-6 bg-black/10" />
-                  
-                  <button 
+
+                  <button
                     className={`flex items-center justify-center w-10 h-10 rounded-lg transition-colors ${
-                      isAdminView ? 'bg-[#63CDFA]' : 'bg-transparent'
+                      isAdminView ? "bg-[#63CDFA]" : "bg-transparent"
                     }`}
                     onClick={() => setIsAdminView(true)}
                   >
-                    <span className={`text-sm font-semibold ${isAdminView ? 'text-white' : 'text-[#77838F]'}`}>
+                    <span
+                      className={`text-sm font-semibold ${isAdminView ? "text-white" : "text-[#77838F]"}`}
+                    >
                       Admin
                     </span>
                   </button>

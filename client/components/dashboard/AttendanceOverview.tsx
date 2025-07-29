@@ -60,8 +60,9 @@ export function AttendanceOverview() {
   };
 
   return (
-    <div className="w-full max-w-full flex flex-col items-end gap-5 relative bg-white rounded-lg overflow-hidden"
-         style={{ fontFamily: 'inherit' }}
+    <div
+      className="w-full max-w-full flex flex-col items-end gap-5 relative bg-white rounded-lg overflow-hidden"
+      style={{ fontFamily: "inherit" }}
     >
       {/* Dropdown Section */}
       <div
@@ -94,7 +95,9 @@ export function AttendanceOverview() {
                 handleViewChange("week");
               }}
               className={`w-full px-7 py-4 rounded-t-2xl text-base font-semibold cursor-pointer border-b border-gray-200 ${
-                selectedView === "week" ? "bg-blue-50 text-blue-600" : "text-gray-400 hover:bg-gray-50"
+                selectedView === "week"
+                  ? "bg-blue-50 text-blue-600"
+                  : "text-gray-400 hover:bg-gray-50"
               }`}
             >
               Week
@@ -105,7 +108,9 @@ export function AttendanceOverview() {
                 handleViewChange("month");
               }}
               className={`w-full px-7 py-4 rounded-b-2xl text-base font-semibold cursor-pointer ${
-                selectedView === "month" ? "bg-blue-50 text-blue-600" : "text-gray-400 hover:bg-gray-50"
+                selectedView === "month"
+                  ? "bg-blue-50 text-blue-600"
+                  : "text-gray-400 hover:bg-gray-50"
               }`}
             >
               Month
@@ -136,7 +141,7 @@ export function AttendanceOverview() {
             <div
               key={value}
               className="flex-1 flex items-center justify-center text-[#77838F] text-center text-xl font-semibold tracking-wider"
-              style={{ minWidth: '20px' }}
+              style={{ minWidth: "20px" }}
             >
               {value}
             </div>
@@ -159,7 +164,9 @@ export function AttendanceOverview() {
                 <div
                   key={index}
                   className="flex-1 h-full relative flex items-end justify-center"
-                  style={{ maxWidth: selectedView === "week" ? "60px" : "15px" }}
+                  style={{
+                    maxWidth: selectedView === "week" ? "60px" : "15px",
+                  }}
                 >
                   {/* Background bar */}
                   <div
@@ -175,7 +182,9 @@ export function AttendanceOverview() {
                   {item.value > 0 && (
                     <div
                       className={`absolute bottom-0 bg-[#63CDFA] ${
-                        selectedView === "week" ? "rounded-t-lg" : "rounded-t-sm"
+                        selectedView === "week"
+                          ? "rounded-t-lg"
+                          : "rounded-t-sm"
                       }`}
                       style={{
                         width: selectedView === "week" ? "60px" : "15px",
@@ -202,7 +211,7 @@ export function AttendanceOverview() {
                 }`}
                 style={{
                   maxWidth: selectedView === "week" ? "60px" : "15px",
-                  fontSize: selectedView === "week" ? "14px" : "11px"
+                  fontSize: selectedView === "week" ? "14px" : "11px",
                 }}
               >
                 {item.date}
