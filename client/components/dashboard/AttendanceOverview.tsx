@@ -77,46 +77,25 @@ export function AttendanceOverview() {
           viewBox="0 0 25 26"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          className="text-gray-500"
         >
           <path
             d="M19.8553 8.68114C19.7102 8.53595 19.5379 8.42076 19.3483 8.34218C19.1587 8.26359 18.9554 8.22314 18.7501 8.22314C18.5449 8.22314 18.3416 8.26359 18.152 8.34218C17.9623 8.42076 17.79 8.53595 17.6449 8.68114L12.8678 13.4572C12.7702 13.5548 12.6377 13.6097 12.4996 13.6097C12.3615 13.6097 12.2291 13.5548 12.1314 13.4572L7.35534 8.68114C7.06236 8.38802 6.66494 8.2233 6.2505 8.2232C5.83606 8.2231 5.43856 8.38764 5.14544 8.68062C4.85233 8.9736 4.6876 9.37103 4.6875 9.78546C4.6874 10.1999 4.85194 10.5974 5.14492 10.8905L9.92201 15.6676C10.2606 16.0062 10.6625 16.2748 11.1048 16.458C11.5472 16.6413 12.0213 16.7356 12.5001 16.7356C12.9789 16.7356 13.4531 16.6413 13.8954 16.458C14.3378 16.2748 14.7397 16.0062 15.0783 15.6676L19.8553 10.8905C20.1483 10.5975 20.3128 10.2002 20.3128 9.78583C20.3128 9.37151 20.1483 8.97416 19.8553 8.68114Z"
-            fill="#7F7F7F"
+            fill="currentColor"
           />
         </svg>
 
         {/* Dropdown Menu */}
         {isDropdownOpen && (
-          <div
-            style={{
-              position: "absolute",
-              top: "100%",
-              left: "0",
-              right: "0",
-              background: "white",
-              borderRadius: "15px",
-              boxShadow: "0 4px 12px 0 rgba(0, 0, 0, 0.1)",
-              zIndex: 10,
-              marginTop: "5px",
-            }}
-          >
+          <div className="absolute top-full left-0 right-0 bg-white rounded-2xl shadow-lg z-10 mt-1 border border-gray-200">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleViewChange("week");
               }}
-              style={{
-                width: "100%",
-                padding: "15px 30px",
-                background: selectedView === "week" ? "#f0f8ff" : "transparent",
-                border: "none",
-                borderRadius: "15px 15px 0 0",
-                color: "#B7B9C7",
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                fontWeight: "600",
-                cursor: "pointer",
-                borderBottom: "1px solid #eee",
-              }}
+              className={`w-full px-7 py-4 rounded-t-2xl text-base font-semibold cursor-pointer border-b border-gray-200 ${
+                selectedView === "week" ? "bg-blue-50 text-blue-600" : "text-gray-400 hover:bg-gray-50"
+              }`}
             >
               Week
             </button>
@@ -125,18 +104,9 @@ export function AttendanceOverview() {
                 e.stopPropagation();
                 handleViewChange("month");
               }}
-              style={{
-                width: "100%",
-                padding: "15px 30px",
-                background: selectedView === "month" ? "#f0f8ff" : "transparent",
-                border: "none",
-                borderRadius: "0 0 15px 15px",
-                color: "#B7B9C7",
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                fontWeight: "600",
-                cursor: "pointer",
-              }}
+              className={`w-full px-7 py-4 rounded-b-2xl text-base font-semibold cursor-pointer ${
+                selectedView === "month" ? "bg-blue-50 text-blue-600" : "text-gray-400 hover:bg-gray-50"
+              }`}
             >
               Month
             </button>
@@ -145,68 +115,16 @@ export function AttendanceOverview() {
       </div>
 
       {/* Header Section */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "flex-start",
-          gap: "10px",
-          alignSelf: "stretch",
-          position: "relative",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            flex: "1 0 0",
-            alignSelf: "stretch",
-            position: "relative",
-          }}
-        >
-          <div
-            style={{
-              width: "264px",
-              alignSelf: "stretch",
-              color: "#000",
-              fontFamily: "Poppins",
-              fontSize: "24px",
-              fontStyle: "normal",
-              fontWeight: "600",
-              lineHeight: "normal",
-              position: "relative",
-            }}
-          >
-            <span>Attendance Overview</span>
-          </div>
+      <div className="flex justify-between items-start gap-2.5 w-full">
+        <div className="flex-1">
+          <h2 className="text-2xl font-semibold text-black">
+            Attendance Overview
+          </h2>
         </div>
-        <div
-          style={{
-            display: "flex",
-            padding: "10px",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "10px",
-            background: "#FFF",
-            position: "relative",
-          }}
-        >
-          <div
-            style={{
-              color: "#77838F",
-              textAlign: "center",
-              fontFamily: "Poppins",
-              fontSize: "16px",
-              fontStyle: "normal",
-              fontWeight: "700",
-              lineHeight: "normal",
-              letterSpacing: "1px",
-              position: "relative",
-            }}
-          >
-            <span>{dateRange}</span>
-          </div>
+        <div className="flex justify-center items-center gap-2.5 bg-white px-2.5 py-2">
+          <span className="text-[#77838F] text-center text-base font-bold tracking-wide">
+            {dateRange}
+          </span>
         </div>
       </div>
 
