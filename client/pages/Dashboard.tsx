@@ -87,39 +87,7 @@ export default function Dashboard() {
           isTransitioning ? 'opacity-60 scale-95' : 'opacity-100 scale-100'
         }`}>
           <div className="max-w-7xl mx-auto">
-            {/* Mobile View Toggle - Visible only on mobile */}
-            <div className="lg:hidden mb-6">
-              <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-black">
-                  {isAdminView ? 'Admin Dashboard' : 'User Dashboard'}
-                </h1>
-                <div className="flex items-center gap-3 px-3 py-2 border border-[#63CDFA]/50 bg-white rounded-full shadow-sm">
-                  <button 
-                    className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 ${
-                      !isAdminView ? 'bg-[#63CDFA] shadow-sm' : 'bg-transparent hover:bg-gray-50'
-                    }`}
-                    onClick={handleToggleView}
-                  >
-                    <span className={`text-sm font-semibold transition-colors ${!isAdminView ? 'text-white' : 'text-[#77838F]'}`}>
-                      User
-                    </span>
-                  </button>
-                  
-                  <div className="w-px h-6 bg-black/10" />
-                  
-                  <button 
-                    className={`flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 ${
-                      isAdminView ? 'bg-[#63CDFA] shadow-sm' : 'bg-transparent hover:bg-gray-50'
-                    }`}
-                    onClick={handleToggleView}
-                  >
-                    <span className={`text-sm font-semibold transition-colors ${isAdminView ? 'text-white' : 'text-[#77838F]'}`}>
-                      Admin
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
+
 
             {/* Greeting Section */}
             <div className="mb-10">
