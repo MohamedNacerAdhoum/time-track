@@ -129,79 +129,27 @@ export function AttendanceOverview() {
       </div>
 
       {/* Chart Section */}
-      <div
-        style={{
-          display: "flex",
-          padding: "20px 15px",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "30px",
-          flex: "1 0 0",
-          alignSelf: "stretch",
-          borderRadius: "20px",
-          background: "#FFF",
-          position: "relative",
-        }}
-      >
+      <div className="flex px-4 py-5 justify-center items-center gap-7 flex-1 w-full rounded-3xl bg-white relative">
         {/* Y-axis Labels */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            gap: "10px",
-            alignSelf: "stretch",
-            position: "relative",
-          }}
-        >
+        <div className="flex flex-col justify-end items-center gap-2.5 h-44">
           {[8, 6, 4, 2, 0].map((value) => (
             <div
               key={value}
-              style={{
-                display: "flex",
-                width: "9px",
-                flexDirection: "column",
-                justifyContent: "flex-end",
-                flex: "1 0 0",
-                color: "#77838F",
-                textAlign: "center",
-                fontFamily: "Poppins",
-                fontSize: "20px",
-                fontStyle: "normal",
-                fontWeight: "600",
-                lineHeight: "normal",
-                letterSpacing: "1px",
-                position: "relative",
-              }}
+              className="flex-1 flex items-center justify-center text-[#77838F] text-center text-xl font-semibold tracking-wider"
+              style={{ minWidth: '20px' }}
             >
-              <span>{value}</span>
+              {value}
             </div>
           ))}
         </div>
 
         {/* Chart Area */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-            gap: "10px",
-            flex: "1 0 0",
-            position: "relative",
-          }}
-        >
+        <div className="flex flex-col items-end gap-2.5 flex-1">
           {/* Bars Container */}
           <div
-            style={{
-              display: "flex",
-              height: "176px",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: selectedView === "week" ? "50px" : "5px",
-              alignSelf: "stretch",
-              position: "relative",
-            }}
+            className={`flex h-44 justify-center items-end w-full relative ${
+              selectedView === "week" ? "gap-12" : "gap-1"
+            }`}
           >
             {currentData.map((item, index) => {
               const heightPercentage = (item.value / item.maxValue) * 100;
@@ -210,39 +158,28 @@ export function AttendanceOverview() {
               return (
                 <div
                   key={index}
-                  style={{
-                    flex: "1 0 0",
-                    alignSelf: "stretch",
-                    position: "relative",
-                  }}
+                  className="flex-1 h-full relative flex items-end justify-center"
+                  style={{ maxWidth: selectedView === "week" ? "60px" : "15px" }}
                 >
                   {/* Background bar */}
                   <div
+                    className={`absolute bottom-0 bg-[#E6EEF5] ${
+                      selectedView === "week" ? "rounded-t-lg" : "rounded-t-sm"
+                    }`}
                     style={{
                       width: selectedView === "week" ? "60px" : "15px",
                       height: "176px",
-                      borderRadius:
-                        selectedView === "week" ? "10px 10px 0 0" : "5px 5px 0 0",
-                      background: "#E6EEF5",
-                      position: "absolute",
-                      left: "0px",
-                      top: "0px",
                     }}
                   />
                   {/* Data bar */}
                   {item.value > 0 && (
                     <div
+                      className={`absolute bottom-0 bg-[#63CDFA] ${
+                        selectedView === "week" ? "rounded-t-lg" : "rounded-t-sm"
+                      }`}
                       style={{
-                        width: selectedView === "week" ? "59px" : "15px",
+                        width: selectedView === "week" ? "60px" : "15px",
                         height: `${dataBarHeight}px`,
-                        borderRadius:
-                          selectedView === "week"
-                            ? "10px 10px 0 0"
-                            : "5px 5px 0 0",
-                        background: "#63CDFA",
-                        position: "absolute",
-                        left: "0px",
-                        bottom: "0px",
                       }}
                     />
                   )}
@@ -253,32 +190,22 @@ export function AttendanceOverview() {
 
           {/* X-axis Labels */}
           <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: selectedView === "week" ? "30px" : "5px",
-              alignSelf: "stretch",
-              position: "relative",
-            }}
+            className={`flex justify-center items-center w-full ${
+              selectedView === "week" ? "gap-7" : "gap-1"
+            }`}
           >
             {currentData.map((item, index) => (
               <div
                 key={index}
+                className={`text-[#77838F] text-center font-semibold tracking-wide flex-1 ${
+                  selectedView === "week" ? "text-sm" : "text-xs"
+                }`}
                 style={{
-                  width: selectedView === "week" ? "auto" : "14.9px",
-                  color: "#77838F",
-                  textAlign: "center",
-                  fontFamily: "Poppins",
-                  fontSize: selectedView === "week" ? "14px" : "11px",
-                  fontStyle: "normal",
-                  fontWeight: "600",
-                  lineHeight: "normal",
-                  letterSpacing: "1px",
-                  position: "relative",
+                  maxWidth: selectedView === "week" ? "60px" : "15px",
+                  fontSize: selectedView === "week" ? "14px" : "11px"
                 }}
               >
-                <span>{item.date}</span>
+                {item.date}
               </div>
             ))}
           </div>
