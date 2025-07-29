@@ -1,4 +1,5 @@
 import { Bell, Power, User, Users } from "lucide-react";
+import { useState } from "react";
 
 interface DashboardHeaderProps {
   isAdminView: boolean;
@@ -6,6 +7,7 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ isAdminView, onToggleView }: DashboardHeaderProps) {
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   return (
     <div className="flex w-full items-center gap-2.5 px-6 py-4 bg-white">
       {/* User/Admin Toggle - positioned at the end to match Figma */}
