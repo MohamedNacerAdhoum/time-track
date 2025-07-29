@@ -29,9 +29,11 @@ interface SidebarProps {
   isCollapsed: boolean;
   onToggleCollapse: () => void;
   activeRoute?: string;
+  isAdminView?: boolean;
+  onToggleView?: () => void;
 }
 
-export function Sidebar({ isCollapsed, onToggleCollapse, activeRoute = "Dashboard" }: SidebarProps) {
+export function Sidebar({ isCollapsed, onToggleCollapse, activeRoute = "Dashboard", isAdminView, onToggleView }: SidebarProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
