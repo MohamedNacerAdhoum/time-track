@@ -60,17 +60,8 @@ export function AttendanceOverview() {
   };
 
   return (
-    <div
-      style={{
-        display: "inline-flex",
-        height: "449px",
-        flexDirection: "column",
-        alignItems: "flex-end",
-        gap: "20px",
-        flexShrink: 0,
-        position: "relative",
-        width: "682px",
-      }}
+    <div className="w-full max-w-full flex flex-col items-end gap-5 relative bg-white rounded-lg overflow-hidden"
+         style={{ fontFamily: 'inherit' }}
     >
       {/* Dropdown Section */}
       <div
