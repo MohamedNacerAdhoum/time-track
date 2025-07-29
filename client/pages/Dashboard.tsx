@@ -68,10 +68,10 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <div className={`flex-1 flex flex-col transition-all duration-300 ${
-        isMobile 
-          ? 'pt-16 ml-0' // Mobile: add top padding for header, no left margin
-          : isSidebarCollapsed 
-            ? 'lg:ml-[90px] ml-0' 
+        isMobile
+          ? 'pt-20 ml-0' // Mobile: add more top padding for header and toggle
+          : isSidebarCollapsed
+            ? 'lg:ml-[90px] ml-0'
             : 'lg:ml-[250px] ml-0'
       }`}>
         {/* Header - Hidden on mobile since we have the mobile header in sidebar */}
