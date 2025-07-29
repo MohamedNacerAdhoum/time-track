@@ -213,122 +213,46 @@ export function AttendanceOverview() {
       </div>
 
       {/* Navigation Arrows */}
-      <div
-        style={{
-          display: "flex",
-          width: "682px",
-          alignItems: "center",
-          gap: "10px",
-          position: "relative",
-        }}
-      >
+      <div className="flex justify-center items-center gap-4 w-full mt-2">
         {/* Left Arrow */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flex: "1 0 0",
-            boxShadow: "0 4px 12px 0 rgba(24, 24, 24, 0.04)",
-            position: "relative",
-          }}
+        <button
+          className="flex justify-center items-center w-10 h-10 p-2 rounded-full bg-[#63CDFA] shadow-md hover:bg-[#5bb8e6] transition-colors cursor-pointer"
+          aria-label="Previous period"
         >
-          <div
-            style={{
-              display: "flex",
-              padding: "8px",
-              alignItems: "flex-start",
-              gap: "10px",
-              borderRadius: "400px",
-              background: "#63CDFA",
-              position: "absolute",
-              left: "148px",
-              top: "0px",
-              width: "40px",
-              height: "40px",
-              cursor: "pointer",
-            }}
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="text-white"
           >
-            <div
-              style={{
-                display: "flex",
-                width: "24px",
-                height: "24px",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "200px",
-                position: "relative",
-              }}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M8.5002 12.8L14.2002 18.4C14.6002 18.8 15.2002 18.8 15.6002 18.4C16.0002 18 16.0002 17.4 15.6002 17L10.7002 12L15.6002 7.00005C16.0002 6.60005 16.0002 6.00005 15.6002 5.60005C15.4002 5.40005 15.2002 5.30005 14.9002 5.30005C14.6002 5.30005 14.4002 5.40005 14.2002 5.60005L8.5002 11.2C8.1002 11.7 8.1002 12.3 8.5002 12.8C8.5002 12.7 8.5002 12.7 8.5002 12.8Z"
-                  fill="white"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
+            <path
+              d="M8.5002 12.8L14.2002 18.4C14.6002 18.8 15.2002 18.8 15.6002 18.4C16.0002 18 16.0002 17.4 15.6002 17L10.7002 12L15.6002 7.00005C16.0002 6.60005 16.0002 6.00005 15.6002 5.60005C15.4002 5.40005 15.2002 5.30005 14.9002 5.30005C14.6002 5.30005 14.4002 5.40005 14.2002 5.60005L8.5002 11.2C8.1002 11.7 8.1002 12.3 8.5002 12.8C8.5002 12.7 8.5002 12.7 8.5002 12.8Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
 
         {/* Right Arrow */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flex: "1 0 0",
-            boxShadow: "0 4px 12px 0 rgba(24, 24, 24, 0.04)",
-            position: "relative",
-          }}
+        <button
+          className="flex justify-center items-center w-10 h-10 p-2 rounded-full bg-[#63CDFA] shadow-md hover:bg-[#5bb8e6] transition-colors cursor-pointer"
+          aria-label="Next period"
         >
-          <div
-            style={{
-              display: "flex",
-              padding: "8px",
-              alignItems: "flex-start",
-              gap: "10px",
-              borderRadius: "400px",
-              background: "#63CDFA",
-              position: "absolute",
-              left: "148px",
-              top: "0px",
-              width: "40px",
-              height: "40px",
-              cursor: "pointer",
-            }}
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="text-white"
           >
-            <div
-              style={{
-                display: "flex",
-                width: "24px",
-                height: "24px",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "200px",
-                position: "relative",
-              }}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M15.5397 11.29L9.87974 5.64004C9.78677 5.54631 9.67617 5.47191 9.55431 5.42115C9.43246 5.37038 9.30175 5.34424 9.16974 5.34424C9.03773 5.34424 8.90702 5.37038 8.78516 5.42115C8.6633 5.47191 8.5527 5.54631 8.45974 5.64004C8.27349 5.8274 8.16895 6.08085 8.16895 6.34504C8.16895 6.60922 8.27349 6.86267 8.45974 7.05004L13.4097 12.05L8.45974 17C8.27349 17.1874 8.16895 17.4409 8.16895 17.705C8.16895 17.9692 8.27349 18.2227 8.45974 18.41C8.55235 18.5045 8.6628 18.5797 8.78467 18.6312C8.90655 18.6827 9.03743 18.7095 9.16974 18.71C9.30204 18.7095 9.43293 18.6827 9.5548 18.6312C9.67668 18.5797 9.78712 18.5045 9.87974 18.41L15.5397 12.76C15.6412 12.6664 15.7223 12.5527 15.7777 12.4262C15.8331 12.2997 15.8617 12.1631 15.8617 12.025C15.8617 11.8869 15.8331 11.7503 15.7777 11.6238C15.7223 11.4973 15.6412 11.3837 15.5397 11.29Z"
-                  fill="white"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
+            <path
+              d="M15.5397 11.29L9.87974 5.64004C9.78677 5.54631 9.67617 5.47191 9.55431 5.42115C9.43246 5.37038 9.30175 5.34424 9.16974 5.34424C9.03773 5.34424 8.90702 5.37038 8.78516 5.42115C8.6633 5.47191 8.5527 5.54631 8.45974 5.64004C8.27349 5.8274 8.16895 6.08085 8.16895 6.34504C8.16895 6.60922 8.27349 6.86267 8.45974 7.05004L13.4097 12.05L8.45974 17C8.27349 17.1874 8.16895 17.4409 8.16895 17.705C8.16895 17.9692 8.27349 18.2227 8.45974 18.41C8.55235 18.5045 8.6628 18.5797 8.78467 18.6312C8.90655 18.6827 9.03743 18.7095 9.16974 18.71C9.30204 18.7095 9.43293 18.6827 9.5548 18.6312C9.67668 18.5797 9.78712 18.5045 9.87974 18.41L15.5397 12.76C15.6412 12.6664 15.7223 12.5527 15.7777 12.4262C15.8331 12.2997 15.8617 12.1631 15.8617 12.025C15.8617 11.8869 15.8331 11.7503 15.7777 11.6238C15.7223 11.4973 15.6412 11.3837 15.5397 11.29Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
