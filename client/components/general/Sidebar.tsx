@@ -35,6 +35,7 @@ interface SidebarProps {
 
 export function Sidebar({ isCollapsed, onToggleCollapse, activeRoute = "Dashboard", isAdminView, onToggleView }: SidebarProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
