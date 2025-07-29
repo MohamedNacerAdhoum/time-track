@@ -1,5 +1,5 @@
 import { Bell, Power, User, Users } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DashboardHeaderProps {
   isAdminView: boolean;
@@ -8,6 +8,18 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ isAdminView, onToggleView }: DashboardHeaderProps) {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isProfileDropdownOpen) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isProfileDropdownOpen]);
   return (
     <div className="flex w-full items-center gap-2.5 px-6 py-4 bg-white">
       {/* User/Admin Toggle - positioned at the start */}
