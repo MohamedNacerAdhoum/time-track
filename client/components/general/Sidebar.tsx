@@ -63,8 +63,8 @@ export function Sidebar({ isCollapsed, onToggleCollapse, activeRoute = "Dashboar
     <>
       {/* Mobile Header with Hamburger Menu */}
       {isMobile && (
-        <div className="fixed top-0 left-0 right-0 h-16 bg-white flex items-center justify-center px-5 z-40 lg:hidden">
-          <div className="flex items-center gap-2 relative">
+        <div className="fixed top-0 left-0 right-0 h-16 bg-white flex items-center justify-between px-5 z-40 lg:hidden">
+          <div className="flex items-center gap-3">
             {/* Hamburger Menu */}
             <button
               onClick={onToggleCollapse}
@@ -78,10 +78,11 @@ export function Sidebar({ isCollapsed, onToggleCollapse, activeRoute = "Dashboar
             </button>
 
             {/* Dashboard Title */}
-            <span className="text-lg font-semibold text-black ml-2">Dashboard</span>
+            <span className="text-lg font-semibold text-black">Dashboard</span>
+          </div>
 
-            {/* Profile with Dropdown */}
-            <div className="relative ml-auto">
+          {/* Profile with Dropdown */}
+          <div className="relative">
               <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                 className="flex items-center px-1 py-1 border border-[#71839B]/50 bg-white rounded-full"
@@ -96,9 +97,9 @@ export function Sidebar({ isCollapsed, onToggleCollapse, activeRoute = "Dashboar
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-2 text-[#71839B]">
                   <path d="M0.960615 4.05942C1.20917 4.05964 1.44747 4.15855 1.62312 4.33442L6.41812 9.12942C6.56321 9.27455 6.73548 9.38968 6.92508 9.46823C7.11468 9.54678 7.31789 9.58721 7.52312 9.58721C7.72834 9.58721 7.93156 9.54678 8.12115 9.46823C8.31075 9.38968 8.48302 9.27455 8.62812 9.12942L13.4169 4.34067C13.5937 4.16989 13.8305 4.0754 14.0763 4.07754C14.3221 4.07967 14.5573 4.17827 14.7311 4.35209C14.9049 4.52591 15.0035 4.76104 15.0056 5.00685C15.0078 5.25266 14.9133 5.48948 14.7425 5.66629L9.95749 10.455C9.31233 11.0989 8.43806 11.4606 7.52655 11.4606C6.61505 11.4606 5.74078 11.0989 5.09562 10.455L0.29749 5.66004C0.166293 5.52893 0.0769361 5.36185 0.0407273 5.17993C0.00451847 4.99802 0.0230848 4.80945 0.094077 4.63809C0.165069 4.46674 0.285296 4.32029 0.439546 4.21728C0.593795 4.11427 0.775133 4.05933 0.960615 4.05942Z" fill="#71839B"/>
                 </svg>
-              </button>
+            </button>
 
-              {/* Profile Dropdown */}
+            {/* Profile Dropdown */}
               {isProfileDropdownOpen && (
                 <div className="absolute top-full right-0 mt-1 w-36 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                   <div className="flex items-center gap-2 px-5 py-3 border-b border-gray-200">
@@ -125,12 +126,13 @@ export function Sidebar({ isCollapsed, onToggleCollapse, activeRoute = "Dashboar
                   </div>
                 </div>
               )}
-            </div>
           </div>
+        </div>
+      )}
 
-          {/* User/Admin Toggle for Mobile - positioned below */}
-          {isAdminView !== undefined && onToggleView && (
-            <div className="absolute left-5 top-20 flex items-center px-1 py-1 border border-[#63CDFA]/50 bg-white rounded-full shadow-sm">
+      {/* User/Admin Toggle for Mobile - positioned below header */}
+      {isMobile && isAdminView !== undefined && onToggleView && (
+        <div className="fixed left-5 top-20 flex items-center px-1 py-1 border border-[#63CDFA]/50 bg-white rounded-full shadow-sm z-30 lg:hidden">
               <button
                 className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
                   !isAdminView ? 'bg-[#63CDFA] shadow-sm' : 'bg-transparent hover:bg-gray-50'
@@ -155,8 +157,6 @@ export function Sidebar({ isCollapsed, onToggleCollapse, activeRoute = "Dashboar
                   <path d="M14.6672 19.4127H6.60321C6.38933 19.4127 6.18422 19.3277 6.03299 19.1765C5.88177 19.0253 5.79681 18.8202 5.79681 18.6063C5.79681 17.3231 6.30656 16.0924 7.21394 15.185C8.12132 14.2776 9.35198 13.7679 10.6352 13.7679C11.9184 13.7679 13.1491 14.2776 14.0565 15.185C14.9638 16.0924 15.4736 17.3231 15.4736 18.6063C15.4736 18.8202 15.3886 19.0253 15.2374 19.1765C15.0862 19.3277 14.8811 19.4127 14.6672 19.4127Z" fill={isAdminView ? "white" : "#77838F"}/>
                 </svg>
               </button>
-            </div>
-          )}
         </div>
       )}
 
