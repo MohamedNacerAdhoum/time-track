@@ -65,32 +65,12 @@ export function AttendanceOverview() {
     >
       {/* Dropdown Section */}
       <div
-        style={{
-          display: "flex",
-          padding: "15px 30px",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "20px",
-          borderRadius: "15px",
-          background: "#F6F6F6",
-          position: "relative",
-          cursor: "pointer",
-        }}
+        className="flex px-7 py-4 justify-center items-center gap-5 rounded-2xl bg-gray-100 relative cursor-pointer select-none"
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
       >
-        <div
-          style={{
-            color: "#B7B9C7",
-            fontFamily: "Poppins",
-            fontSize: "16px",
-            fontStyle: "normal",
-            fontWeight: "600",
-            lineHeight: "28px",
-            position: "relative",
-          }}
-        >
-          <span>{selectedView === "week" ? "Week" : "Month"}</span>
-        </div>
+        <span className="text-gray-400 text-base font-semibold leading-7">
+          {selectedView === "week" ? "Week" : "Month"}
+        </span>
         <svg
           width="25"
           height="26"
