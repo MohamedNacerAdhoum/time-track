@@ -62,6 +62,8 @@ export default function Dashboard() {
       <Sidebar
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        isAdminView={isAdminView}
+        onToggleView={handleToggleView}
       />
 
       {/* Main Content */}
