@@ -11,14 +11,24 @@ export function DashboardHeader({ isAdminView, onToggleView }: DashboardHeaderPr
       {/* User/Admin Toggle - positioned at the end to match Figma */}
       <div className="flex justify-end items-center flex-1 bg-white relative">
         <div className="flex w-[126px] p-[8.64px] items-start gap-3 rounded-full border border-[#63CDFA]/50 bg-white relative">
-          <div className="flex px-[8.64px] py-[8.64px] justify-center items-center gap-[8.64px] flex-1 self-stretch rounded-full bg-[#63CDFA] relative">
+          <button
+            onClick={onToggleView}
+            className={`flex px-[8.64px] py-[8.64px] justify-center items-center gap-[8.64px] flex-1 self-stretch rounded-full transition-all duration-200 ${
+              !isAdminView ? 'bg-[#63CDFA]' : 'bg-transparent hover:bg-gray-50'
+            } relative`}
+          >
             <div className="flex w-[30.24px] h-[30.24px] p-[4.32px] justify-center items-center rounded-full relative">
-              <User className="w-[22px] h-[22px] flex-shrink-0 text-white" />
+              <User className={`w-[22px] h-[22px] flex-shrink-0 transition-colors ${!isAdminView ? 'text-white' : 'text-[#77838F]'}`} />
             </div>
-          </div>
-          <div className="flex p-[8.64px] justify-center items-center gap-[8.64px] flex-1 self-stretch rounded-[8.64px] relative">
-            <Users className="w-[30.24px] h-[30.24px] text-[#77838F]" />
-          </div>
+          </button>
+          <button
+            onClick={onToggleView}
+            className={`flex p-[8.64px] justify-center items-center gap-[8.64px] flex-1 self-stretch rounded-[8.64px] transition-all duration-200 ${
+              isAdminView ? 'bg-[#63CDFA]' : 'bg-transparent hover:bg-gray-50'
+            } relative`}
+          >
+            <Users className={`w-[30.24px] h-[30.24px] transition-colors ${isAdminView ? 'text-white' : 'text-[#77838F]'}`} />
+          </button>
         </div>
       </div>
 
