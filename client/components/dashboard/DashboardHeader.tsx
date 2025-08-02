@@ -1,6 +1,7 @@
 import { Bell, Power, User, Users, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { LogoutConfirmationModal } from "./LogoutConfirmationModal";
+import { ProfileModal } from "./ProfileModal";
 
 interface DashboardHeaderProps {
   isAdminView: boolean;
