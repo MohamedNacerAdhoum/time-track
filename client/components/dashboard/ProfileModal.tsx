@@ -56,7 +56,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           <div className="flex justify-center gap-[8px] mb-6 p-[8px] bg-white">
             <button
               onClick={() => setActiveTab("profile")}
-              className={`px-5 py-[10px] rounded-[10px] text-2xl transition-colors ${
+              className={`px-4 py-[8px] rounded-[8px] text-lg transition-colors ${
                 activeTab === "profile"
                   ? "bg-[#63CDFA] text-white"
                   : "bg-[#F2FBFF] text-[#77838F]"
@@ -67,7 +67,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             </button>
             <button
               onClick={() => setActiveTab("edit")}
-              className={`px-5 py-[10px] rounded-[10px] text-2xl transition-colors ${
+              className={`px-4 py-[8px] rounded-[8px] text-lg transition-colors ${
                 activeTab === "edit"
                   ? "bg-[#63CDFA] text-white"
                   : "bg-[#F2FBFF] text-[#77838F]"
@@ -78,7 +78,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             </button>
             <button
               onClick={() => setActiveTab("password")}
-              className={`px-5 py-[10px] rounded-[10px] text-2xl transition-colors ${
+              className={`px-4 py-[8px] rounded-[8px] text-lg transition-colors ${
                 activeTab === "password"
                   ? "bg-[#63CDFA] text-white"
                   : "bg-[#F2FBFF] text-[#77838F]"
