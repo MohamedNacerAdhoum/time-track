@@ -186,6 +186,13 @@ export function DashboardHeader({
           <Power className="w-6 h-6 text-[#FF6262]" />
         </button>
       </div >
+
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={handleLogoutCancel}
+        onConfirm={handleLogoutConfirm}
+      />
     </div >
   );
 }
