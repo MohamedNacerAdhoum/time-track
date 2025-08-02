@@ -34,12 +34,12 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
       />
       
       {/* Modal */}
-      <div className="relative bg-white rounded-[15px] w-full max-w-4xl max-h-[90vh] overflow-auto">
-        <div className="p-10">
+      <div className="relative bg-white rounded-[15px] w-full max-w-3xl max-h-[90vh] overflow-auto">
+        <div className="p-6">
           {/* Header */}
-          <div className="flex items-center justify-between mb-10">
-            <h1 
-              className="text-[32px] font-semibold text-black leading-4"
+          <div className="flex items-center justify-between mb-6">
+            <h1
+              className="text-[24px] font-semibold text-black leading-4"
               style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
             >
               Profile
@@ -48,12 +48,12 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700 transition-colors"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Tabs */}
-          <div className="flex justify-center gap-[10px] mb-10 p-[10px] bg-white">
+          <div className="flex justify-center gap-[8px] mb-6 p-[8px] bg-white">
             <button
               onClick={() => setActiveTab("profile")}
               className={`px-5 py-[10px] rounded-[10px] text-2xl transition-colors ${
