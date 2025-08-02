@@ -91,39 +91,39 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
 
           {/* Tab Content */}
           {activeTab === "profile" && (
-            <div className="space-y-10">
+            <div className="space-y-6">
               {/* Profile Section */}
-              <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-[120px]">
-                {/* Profile Picture */}
-                <div className="flex flex-col items-center gap-5">
-                  <div className="relative w-[233px] h-[233px]">
-                    <div className="w-full h-full rounded-full border-[5px] border-[#4DA64D] p-[5px]">
+              <div className="flex flex-col items-center">
+                {/* Profile Picture - Centered */}
+                <div className="flex flex-col items-center gap-4">
+                  <div className="relative w-[160px] h-[160px]">
+                    <div className="w-full h-full rounded-full border-[3px] border-[#4DA64D] p-[3px]">
                       <div
-                        className="w-full h-full rounded-full bg-cover bg-center border-[3px] border-white"
+                        className="w-full h-full rounded-full bg-cover bg-center border-[2px] border-white"
                         style={{
                           backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets%2Fe586c13bd8994056b17ba0083cfb21fb%2Faceaf2278b834174a9471c88a3fba7ea?format=webp&width=800')"
                         }}
                       />
                     </div>
                     {/* Edit Icon */}
-                    <div className="absolute bottom-2 right-2 w-[54px] h-[54px] bg-[#F4F4F4] rounded-full border-[1.2px] border-[#63CDFA] flex items-center justify-center">
-                      <svg width="30" height="30" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div className="absolute bottom-1 right-1 w-[36px] h-[36px] bg-[#F4F4F4] rounded-full border-[1px] border-[#63CDFA] flex items-center justify-center">
+                      <svg width="20" height="20" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.5026 24.3987C0.564851 25.3362 0.0378808 26.6077 0.0375977 27.9337L0.0375977 30.5H2.60385C3.92982 30.4997 5.20138 29.9727 6.13885 29.035L22.8176 12.3562L18.1813 7.71997L1.5026 24.3987Z" fill="#63CDFA"/>
                         <path d="M28.9687 1.56883C28.6643 1.26413 28.3029 1.0224 27.905 0.857478C27.5071 0.692554 27.0807 0.607666 26.65 0.607666C26.2193 0.607666 25.7928 0.692554 25.3949 0.857478C24.9971 1.0224 24.6356 1.26413 24.3312 1.56883L19.9487 5.95258L24.585 10.5888L28.9687 6.20633C29.2734 5.90194 29.5152 5.54048 29.6801 5.14262C29.845 4.74475 29.9299 4.31828 29.9299 3.88758C29.9299 3.45689 29.845 3.03041 29.6801 2.63255C29.5152 2.23468 29.2734 1.87322 28.9687 1.56883Z" fill="#63CDFA"/>
                       </svg>
                     </div>
                   </div>
-                  
+
                   {/* User Info */}
-                  <div className="text-center space-y-5">
-                    <h2 
-                      className="text-[32px] font-medium text-black leading-4"
+                  <div className="text-center space-y-3">
+                    <h2
+                      className="text-[24px] font-medium text-black leading-5"
                       style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                     >
                       User xxxxx
                     </h2>
-                    <p 
-                      className="text-[20px] font-medium text-[#71839B] leading-4"
+                    <p
+                      className="text-[16px] font-medium text-[#71839B] leading-4"
                       style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                     >
                       Role xxxx
