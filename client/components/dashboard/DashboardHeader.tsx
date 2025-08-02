@@ -179,9 +179,12 @@ export function DashboardHeader({
         </div >
 
         {/* Power/Logout Button */}
-        < div className="flex w-[60px] h-[60px] p-[9px] justify-center items-center gap-2.5 rounded-full border border-[#FFB7B7] relative" >
+        <button
+          onClick={handleLogoutClick}
+          className="flex w-[60px] h-[60px] p-[9px] justify-center items-center gap-2.5 rounded-full border border-[#FFB7B7] hover:bg-red-50 transition-colors cursor-pointer"
+        >
           <Power className="w-6 h-6 text-[#FF6262]" />
-        </div >
+        </button>
       </div >
     </div >
   );
