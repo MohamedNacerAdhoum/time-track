@@ -149,7 +149,10 @@ export function DashboardHeader({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 px-5 py-3 rounded-b-lg hover:bg-gray-50 cursor-pointer">
+                <div
+                  onClick={handleLogoutClick}
+                  className="flex items-center gap-2 px-5 py-3 rounded-b-lg hover:bg-gray-50 cursor-pointer"
+                >
                   <svg
                     width="15"
                     height="15"
