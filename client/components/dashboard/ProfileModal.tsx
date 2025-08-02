@@ -374,11 +374,11 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           )}
 
           {activeTab === "password" && (
-            <div className="space-y-10 max-w-2xl mx-auto">
+            <div className="space-y-6 max-w-lg mx-auto">
               {/* Current Password */}
-              <div className="space-y-2">
-                <label 
-                  className="block text-[16px] font-semibold text-[#0A0A0A]"
+              <div className="space-y-1">
+                <label
+                  className="block text-[14px] font-semibold text-[#0A0A0A]"
                   style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                 >
                   Current Password
@@ -387,23 +387,23 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type={showPasswords.current ? "text" : "password"}
                     defaultValue="Pasword xxxx"
-                    className="w-full px-4 py-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[18px] text-[#5F5F5F] pr-12"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] pr-10"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   />
                   <button
                     type="button"
                     onClick={() => togglePasswordVisibility("current")}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#71839B]"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#71839B]"
                   >
-                    {showPasswords.current ? <Eye className="w-6 h-6" /> : <EyeOff className="w-6 h-6" />}
+                    {showPasswords.current ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
               {/* New Password */}
-              <div className="space-y-2">
-                <label 
-                  className="block text-[16px] font-semibold text-[#0A0A0A]"
+              <div className="space-y-1">
+                <label
+                  className="block text-[14px] font-semibold text-[#0A0A0A]"
                   style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                 >
                   New Password
@@ -412,23 +412,23 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type={showPasswords.new ? "text" : "password"}
                     defaultValue="Pasword xxxx"
-                    className="w-full px-4 py-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[18px] text-[#666] pr-12"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#666] pr-10"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   />
                   <button
                     type="button"
                     onClick={() => togglePasswordVisibility("new")}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#71839B]"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#71839B]"
                   >
-                    {showPasswords.new ? <Eye className="w-6 h-6" /> : <EyeOff className="w-6 h-6" />}
+                    {showPasswords.new ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
               {/* Confirm Password */}
-              <div className="space-y-2">
-                <label 
-                  className="block text-[16px] font-semibold text-[#0A0A0A]"
+              <div className="space-y-1">
+                <label
+                  className="block text-[14px] font-semibold text-[#0A0A0A]"
                   style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                 >
                   Confirm Password
@@ -437,30 +437,30 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type={showPasswords.confirm ? "text" : "password"}
                     defaultValue="Pasword xxxx"
-                    className="w-full px-4 py-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[18px] text-[#5F5F5F] pr-12"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] pr-10"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   />
                   <button
                     type="button"
                     onClick={() => togglePasswordVisibility("confirm")}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#71839B]"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#71839B]"
                   >
-                    {showPasswords.confirm ? <Eye className="w-6 h-6" /> : <EyeOff className="w-6 h-6" />}
+                    {showPasswords.confirm ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
               {/* Buttons */}
-              <div className="flex justify-end gap-[10px]">
+              <div className="flex justify-end gap-[8px]">
                 <button
                   onClick={onClose}
-                  className="px-6 py-[10px] border border-[#63CDFA] text-[#0A0A0A] rounded-lg hover:bg-gray-50 transition-colors"
+                  className="px-4 py-[8px] border border-[#63CDFA] text-[#0A0A0A] rounded-lg hover:bg-gray-50 transition-colors text-[14px]"
                   style={{ fontFamily: 'IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif' }}
                 >
                   Cancel
                 </button>
                 <button
-                  className="px-10 py-[10px] bg-[#63CDFA] text-white rounded-lg hover:bg-[#5ab8e8] transition-colors"
+                  className="px-6 py-[8px] bg-[#63CDFA] text-white rounded-lg hover:bg-[#5ab8e8] transition-colors text-[14px]"
                   style={{ fontFamily: 'IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif' }}
                 >
                   Save
