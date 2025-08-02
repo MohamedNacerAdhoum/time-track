@@ -100,7 +100,7 @@ export function DashboardHeader({
         <div className="relative" ref={dropdownRef}>
           {/* Desktop Profile Button */}
           <button
-            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+            onClick={() => setIsProfileModalOpen(true)}
             className="hidden md:flex p-[3px] items-start gap-2.5 rounded-full border-[3px] border-[#4DA64D] relative hover:bg-gray-50 transition-colors"
           >
             <div className="w-[63px] h-[63px] rounded-full relative">
