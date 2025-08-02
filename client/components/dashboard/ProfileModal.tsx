@@ -232,9 +232,9 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           )}
 
           {activeTab === "edit" && (
-            <div className="space-y-10">
+            <div className="space-y-6">
               {/* Form Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
                 {/* Name */}
                 <div className="space-y-2">
                   <label 
