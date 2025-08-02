@@ -20,7 +20,10 @@ export function DashboardHeader({
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsProfileDropdownOpen(false);
       }
     };
@@ -132,8 +135,6 @@ export function DashboardHeader({
               <ChevronDown className="w-[15px] h-[15px] text-[#71839B] rotate-0 transition-transform" />
             </div>
           </button>
-
-
         </div>
 
         {/* Power/Logout Button */}
