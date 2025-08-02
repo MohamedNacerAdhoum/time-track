@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Home,
   Clock,
@@ -13,6 +13,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
 
 const menuItems = [
   { icon: Home, label: "Dashboard", isActive: true },
@@ -42,6 +43,8 @@ export function Sidebar({
 }: SidebarProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -56,14 +59,32 @@ export function Sidebar({
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (isProfileDropdownOpen) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsProfileDropdownOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isProfileDropdownOpen]);
+  }, []);
+
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+    setIsProfileDropdownOpen(false);
+  };
+
+  const handleLogoutConfirm = () => {
+    console.log("User logged out");
+    setIsLogoutModalOpen(false);
+    window.location.href = "/";
+  };
+
+  const handleLogoutCancel = () => {
+    setIsLogoutModalOpen(false);
+  };
 
   return (
     <>
@@ -103,63 +124,93 @@ export function Sidebar({
           </div>
 
           {/* Profile with Dropdown */}
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-              className="flex items-center px-1 py-1 border border-[#71839B]/50 bg-white rounded-full"
+              className="flex items-center gap-2.5 p-[3px] rounded-full border border-[#71839B]/50 bg-white hover:bg-gray-50 transition-colors w-[95px] h-[54px]"
             >
-              <div className="w-12 h-12 rounded-full border-2 border-[#4DA64D] overflow-hidden">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Fe586c13bd8994056b17ba0083cfb21fb%2Faceaf2278b834174a9471c88a3fba7ea?format=webp&width=800"
-                  alt="Profile"
-                  className="w-full h-full object-cover"
+              <div className="flex p-[2.16px] items-center rounded-full border-[2.16px] border-[#4DA64D] relative">
+                <div
+                  className="w-[41px] h-[41px] rounded-full bg-cover bg-center border-[2.16px] border-white"
+                  style={{
+                    backgroundImage:
+                      "url('https://cdn.builder.io/api/v1/image/assets%2Fe586c13bd8994056b17ba0083cfb21fb%2Faceaf2278b834174a9471c88a3fba7ea?format=webp&width=800')",
+                  }}
                 />
               </div>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="ml-2 text-[#71839B]"
-              >
-                <path
-                  d="M0.960615 4.05942C1.20917 4.05964 1.44747 4.15855 1.62312 4.33442L6.41812 9.12942C6.56321 9.27455 6.73548 9.38968 6.92508 9.46823C7.11468 9.54678 7.31789 9.58721 7.52312 9.58721C7.72834 9.58721 7.93156 9.54678 8.12115 9.46823C8.31075 9.38968 8.48302 9.27455 8.62812 9.12942L13.4169 4.34067C13.5937 4.16989 13.8305 4.0754 14.0763 4.07754C14.3221 4.07967 14.5573 4.17827 14.7311 4.35209C14.9049 4.52591 15.0035 4.76104 15.0056 5.00685C15.0078 5.25266 14.9133 5.48948 14.7425 5.66629L9.95749 10.455C9.31233 11.0989 8.43806 11.4606 7.52655 11.4606C6.61505 11.4606 5.74078 11.0989 5.09562 10.455L0.29749 5.66004C0.166293 5.52893 0.0769361 5.36185 0.0407273 5.17993C0.00451847 4.99802 0.0230848 4.80945 0.094077 4.63809C0.165069 4.46674 0.285296 4.32029 0.439546 4.21728C0.593795 4.11427 0.775133 4.05933 0.960615 4.05942Z"
-                  fill="#71839B"
-                />
-              </svg>
+              <div className="flex items-center justify-center p-2 rounded-full">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`text-[#71839B] transition-transform duration-200 ${isProfileDropdownOpen ? "rotate-180" : "rotate-0"}`}
+                >
+                  <path
+                    d="M0.960615 4.05942C1.20917 4.05964 1.44747 4.15855 1.62312 4.33442L6.41812 9.12942C6.56321 9.27455 6.73548 9.38968 6.92508 9.46823C7.11468 9.54678 7.31789 9.58721 7.52312 9.58721C7.72834 9.58721 7.93156 9.54678 8.12115 9.46823C8.31075 9.38968 8.48302 9.27455 8.62812 9.12942L13.4169 4.34067C13.5937 4.16989 13.8305 4.0754 14.0763 4.07754C14.3221 4.07967 14.5573 4.17827 14.7311 4.35209C14.9049 4.52591 15.0035 4.76104 15.0056 5.00685C15.0078 5.25266 14.9133 5.48948 14.7425 5.66629L9.95749 10.455C9.31233 11.0989 8.43806 11.4606 7.52655 11.4606C6.61505 11.4606 5.74078 11.0989 5.09562 10.455L0.29749 5.66004C0.166293 5.52893 0.0769361 5.36185 0.0407273 5.17993C0.00451847 4.99802 0.0230848 4.80945 0.094077 4.63809C0.165069 4.46674 0.285296 4.32029 0.439546 4.21728C0.593795 4.11427 0.775133 4.05933 0.960615 4.05942Z"
+                    fill="#71839B"
+                  />
+                </svg>
+              </div>
             </button>
 
             {/* Profile Dropdown */}
             {isProfileDropdownOpen && (
-              <div className="absolute top-full right-0 mt-1 w-36 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                <div className="flex items-center gap-2 px-5 py-3 border-b border-gray-200">
+              <div className="absolute top-full right-0 mt-1 bg-white rounded-[10.8px] shadow-[0_2.88px_8.64px_rgba(0,0,0,0.25)] border-none z-50 w-[145px]">
+                {/* Profile */}
+                <div
+                  className="flex items-center gap-[10px] px-[21.6px] py-[10.8px] border-b-[0.36px] border-[#D9D9D9] hover:bg-gray-50 cursor-pointer rounded-t-[10.8px]"
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
+                >
                   <svg
                     width="15"
                     height="15"
-                    viewBox="0 0 15 15"
+                    viewBox="0 0 16 16"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path
-                      d="M8.09961 7.82007C8.84129 7.82007 9.56631 7.60014 10.183 7.18808C10.7997 6.77603 11.2803 6.19036 11.5642 5.50513C11.848 4.81991 11.9222 4.06591 11.7776 3.33848C11.6329 2.61105 11.2757 1.94287 10.7513 1.41842C10.2268 0.893973 9.55863 0.53682 8.8312 0.392125C8.10377 0.247431 7.34977 0.321693 6.66455 0.605522C5.97932 0.88935 5.39365 1.37 4.9816 1.98668C4.56954 2.60337 4.34961 3.32839 4.34961 4.07007C4.3506 5.06433 4.74601 6.01758 5.44906 6.72062C6.1521 7.42367 7.10535 7.81908 8.09961 7.82007ZM8.09961 1.57007C8.59406 1.57007 9.07741 1.71669 9.48853 1.9914C9.89966 2.2661 10.2201 2.65655 10.4093 3.11336C10.5985 3.57018 10.648 4.07284 10.5516 4.5578C10.4551 5.04275 10.217 5.48821 9.86738 5.83784C9.51775 6.18747 9.07229 6.42557 8.58734 6.52203C8.10238 6.6185 7.59972 6.56899 7.1429 6.37977C6.68609 6.19055 6.29564 5.87012 6.02094 5.459C5.74623 5.04787 5.59961 4.56452 5.59961 4.07007C5.59961 3.40703 5.863 2.77114 6.33184 2.3023C6.80068 1.83346 7.43657 1.57007 8.09961 1.57007Z"
-                      fill="#77838F"
-                    />
-                    <path
-                      d="M8.09961 9.07007C6.60827 9.07172 5.17849 9.66489 4.12396 10.7194C3.06943 11.774 2.47626 13.2037 2.47461 14.6951C2.47461 14.8608 2.54046 15.0198 2.65767 15.137C2.77488 15.2542 2.93385 15.3201 3.09961 15.3201C3.26537 15.3201 3.42434 15.2542 3.54155 15.137C3.65876 15.0198 3.72461 14.8608 3.72461 14.6951C3.72461 13.5347 4.18555 12.4219 5.00602 11.6015C5.82649 10.781 6.93929 10.3201 8.09961 10.3201C9.25993 10.3201 10.3727 10.781 11.1932 11.6015C12.0137 12.4219 12.4746 13.5347 12.4746 14.6951C12.4746 14.8608 12.5405 15.0198 12.6577 15.137C12.7749 15.2542 12.9338 15.3201 13.0996 15.3201C13.2654 15.3201 13.4243 15.2542 13.5416 15.137C13.6588 15.0198 13.7246 14.8608 13.7246 14.6951C13.723 13.2037 13.1298 11.774 12.0753 10.7194C11.0207 9.66489 9.59094 9.07172 8.09961 9.07007Z"
-                      fill="#77838F"
-                    />
+                    <g clipPath="url(#clip0_535_13061)">
+                      <path
+                        d="M8.09961 7.82007C8.84129 7.82007 9.56631 7.60014 10.183 7.18808C10.7997 6.77603 11.2803 6.19036 11.5642 5.50513C11.848 4.81991 11.9222 4.06591 11.7776 3.33848C11.6329 2.61105 11.2757 1.94287 10.7513 1.41842C10.2268 0.893973 9.55863 0.53682 8.8312 0.392125C8.10377 0.247431 7.34977 0.321693 6.66455 0.605522C5.97932 0.88935 5.39365 1.37 4.9816 1.98668C4.56954 2.60337 4.34961 3.32839 4.34961 4.07007C4.3506 5.06433 4.74601 6.01758 5.44906 6.72062C6.1521 7.42367 7.10535 7.81908 8.09961 7.82007ZM8.09961 1.57007C8.59406 1.57007 9.07741 1.71669 9.48853 1.9914C9.89966 2.2661 10.2201 2.65655 10.4093 3.11336C10.5985 3.57018 10.648 4.07284 10.5516 4.5578C10.4551 5.04275 10.217 5.48821 9.86738 5.83784C9.51775 6.18747 9.07229 6.42557 8.58734 6.52203C8.10238 6.6185 7.59972 6.56899 7.1429 6.37977C6.68609 6.19055 6.29564 5.87012 6.02094 5.459C5.74623 5.04787 5.59961 4.56452 5.59961 4.07007C5.59961 3.40703 5.863 2.77114 6.33184 2.3023C6.80068 1.83346 7.43657 1.57007 8.09961 1.57007Z"
+                        fill="#77838F"
+                      />
+                      <path
+                        d="M8.09961 9.07007C6.60827 9.07172 5.17849 9.66489 4.12396 10.7194C3.06943 11.774 2.47626 13.2037 2.47461 14.6951C2.47461 14.8608 2.54046 15.0198 2.65767 15.137C2.77488 15.2542 2.93385 15.3201 3.09961 15.3201C3.26537 15.3201 3.42434 15.2542 3.54155 15.137C3.65876 15.0198 3.72461 14.8608 3.72461 14.6951C3.72461 13.5347 4.18555 12.4219 5.00602 11.6015C5.82649 10.781 6.93929 10.3201 8.09961 10.3201C9.25993 10.3201 10.3727 10.781 11.1932 11.6015C12.0137 12.4219 12.4746 13.5347 12.4746 14.6951C12.4746 14.8608 12.5405 15.0198 12.6577 15.137C12.7749 15.2542 12.9338 15.3201 13.0996 15.3201C13.2654 15.3201 13.4243 15.2542 13.5416 15.137C13.6588 15.0198 13.7246 14.8608 13.7246 14.6951C13.723 13.2037 13.1298 11.774 12.0753 10.7194C11.0207 9.66489 9.59094 9.07172 8.09961 9.07007Z"
+                        fill="#77838F"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_535_13061">
+                        <rect
+                          width="15"
+                          height="15"
+                          fill="white"
+                          transform="translate(0.599609 0.320068)"
+                        />
+                      </clipPath>
+                    </defs>
                   </svg>
-                  <span className="text-xs font-semibold text-[#77838F]">
+                  <span className="text-[#77838F] text-[10px] font-semibold leading-[20.16px]">
                     Profile
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 px-5 py-3 border-b border-gray-200">
+                {/* Notifications */}
+                <div
+                  className="flex items-center gap-[10px] px-[21.6px] py-[10.8px] border-b-[0.36px] border-[#D9D9D9] hover:bg-gray-50 cursor-pointer"
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
+                >
                   <svg
                     width="15"
                     height="16"
-                    viewBox="0 0 15 16"
+                    viewBox="0 0 16 17"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
@@ -168,29 +219,37 @@ export function Sidebar({
                       fill="#77838F"
                     />
                   </svg>
-                  <span className="text-xs font-semibold text-[#77838F]">
+                  <span className="text-[#77838F] text-[10px] font-semibold leading-[20.16px]">
                     Notifications
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 px-5 py-3 rounded-b-lg">
+                {/* Logout */}
+                <div
+                  onClick={handleLogoutClick}
+                  className="flex items-center gap-[10px] px-[21.6px] py-[10.8px] hover:bg-gray-50 cursor-pointer rounded-b-[10.8px]"
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
+                >
                   <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 15 15"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M31.4829 17.2024C31.4779 17.5457 31.651 17.8671 31.9404 18.0518C34.5106 19.6222 35.3212 22.9789 33.7507 25.5492C32.1803 28.1194 28.8237 28.93 26.2534 27.3596C23.6831 25.7892 22.8726 22.4325 24.443 19.8622C24.8917 19.1278 25.5079 18.51 26.2411 18.0593C26.5355 17.8746 26.7132 17.5506 26.7109 17.203C26.7124 16.6383 26.2559 16.1792 25.6911 16.1777C25.4971 16.1771 25.307 16.2318 25.1429 16.3352C21.6247 18.5205 20.5442 23.144 22.7294 26.6621C24.9147 30.1803 29.5382 31.2608 33.0563 29.0756C36.5745 26.8903 37.655 22.2668 35.4698 18.7487C34.8615 17.7694 34.0356 16.9435 33.0563 16.3353C32.5771 16.0329 31.9435 16.1763 31.6412 16.6556C31.5379 16.8193 31.4831 17.0089 31.4829 17.2024Z"
+                      d="M7.5 1.5C8.03043 1.5 8.46957 1.93913 8.46957 2.46957V5.76087C8.46957 6.2913 8.03043 6.73043 7.5 6.73043C6.96957 6.73043 6.53043 6.2913 6.53043 5.76087V2.46957C6.53043 1.93913 6.96957 1.5 7.5 1.5Z"
                       fill="#FF6A6A"
                     />
                     <path
-                      d="M29.0968 13.8346C29.6616 13.8346 30.1194 14.2924 30.1194 14.8572V18.2658C30.1194 18.8306 29.6616 19.2884 29.0968 19.2884C28.5321 19.2884 28.0742 18.8306 28.0742 18.2658V14.8572C28.0742 14.2924 28.532 13.8346 29.0968 13.8346Z"
+                      d="M8.91304 5.13043C8.90435 5.31522 9.01304 5.48696 9.17826 5.57391C10.6348 6.32609 11.1783 8.17391 10.4261 9.63043C9.67391 11.087 7.82609 11.6304 6.36957 10.8783C4.91304 10.1261 4.36957 8.27826 5.12174 6.82174C5.35652 6.37391 5.70435 6.00000 6.12174 5.72174C6.29130 5.63043 6.40870 5.45217 6.40435 5.26087C6.40435 4.73043 5.96522 4.28261 5.43478 4.28261C5.31304 4.28261 5.19565 4.31739 5.09565 4.38261C3.21739 5.47391 2.60435 7.91304 3.69565 9.79130C4.78696 11.6696 7.22609 12.2826 9.10435 11.1913C10.9826 10.1000 11.5957 7.66087 10.5043 5.78261C10.1739 5.22609 9.70435 4.76087 9.14783 4.43478C8.86087 4.28696 8.50000 4.36957 8.35217 4.65652C8.30000 4.75652 8.27826 4.86957 8.91304 5.13043Z"
                       fill="#FF6A6A"
                     />
                   </svg>
-                  <span className="text-xs font-semibold text-[#FF6A6A]">
+                  <span className="text-[#FF6A6A] text-[10px] font-semibold leading-[20.16px]">
                     Logout
                   </span>
                 </div>
@@ -406,6 +465,13 @@ export function Sidebar({
           )}
         </div>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={handleLogoutCancel}
+        onConfirm={handleLogoutConfirm}
+      />
     </>
   );
 }
