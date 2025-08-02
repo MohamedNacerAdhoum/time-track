@@ -68,6 +68,21 @@ export function Sidebar({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+    setIsProfileDropdownOpen(false);
+  };
+
+  const handleLogoutConfirm = () => {
+    console.log("User logged out");
+    setIsLogoutModalOpen(false);
+    window.location.href = "/";
+  };
+
+  const handleLogoutCancel = () => {
+    setIsLogoutModalOpen(false);
+  };
+
   return (
     <>
       {/* Mobile Header with Hamburger Menu */}
