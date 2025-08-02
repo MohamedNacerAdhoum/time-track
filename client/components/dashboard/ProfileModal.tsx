@@ -355,16 +355,16 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               </div>
 
               {/* Buttons */}
-              <div className="flex justify-end gap-[10px] max-w-4xl mx-auto">
+              <div className="flex justify-end gap-[8px] max-w-2xl mx-auto">
                 <button
                   onClick={onClose}
-                  className="px-6 py-[10px] border border-[#63CDFA] text-[#0A0A0A] rounded-lg hover:bg-gray-50 transition-colors"
+                  className="px-4 py-[8px] border border-[#63CDFA] text-[#0A0A0A] rounded-lg hover:bg-gray-50 transition-colors text-[14px]"
                   style={{ fontFamily: 'IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif' }}
                 >
                   Cancel
                 </button>
                 <button
-                  className="px-10 py-[10px] bg-[#63CDFA] text-white rounded-lg hover:bg-[#5ab8e8] transition-colors"
+                  className="px-6 py-[8px] bg-[#63CDFA] text-white rounded-lg hover:bg-[#5ab8e8] transition-colors text-[14px]"
                   style={{ fontFamily: 'IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif' }}
                 >
                   Save
