@@ -133,76 +133,76 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               </div>
 
               {/* Details Section */}
-              <div className="max-w-[534px] mx-auto space-y-5">
+              <div className="max-w-[400px] mx-auto space-y-3 px-4">
                 <div className="flex items-center justify-between">
-                  <span 
-                    className="text-[20px] font-semibold text-black"
+                  <span
+                    className="text-[16px] font-semibold text-black"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     Email
                   </span>
-                  <span 
-                    className="text-[20px] font-normal text-black"
+                  <span
+                    className="text-[16px] font-normal text-black"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     yyy@gmail.com
                   </span>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
-                  <span 
-                    className="text-[20px] font-semibold text-black"
+                  <span
+                    className="text-[16px] font-semibold text-black"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     AGE
                   </span>
-                  <span 
-                    className="text-[20px] font-normal text-black"
+                  <span
+                    className="text-[16px] font-normal text-black"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     26
                   </span>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
-                  <span 
-                    className="text-[20px] font-semibold text-black"
+                  <span
+                    className="text-[16px] font-semibold text-black"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     EXPERIENCE
                   </span>
-                  <span 
-                    className="text-[20px] font-normal text-black"
+                  <span
+                    className="text-[16px] font-normal text-black"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     4 Years
                   </span>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
-                  <span 
-                    className="text-[20px] font-semibold text-black"
+                  <span
+                    className="text-[16px] font-semibold text-black"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     LOCATION
                   </span>
-                  <span 
-                    className="text-[20px] font-normal text-black"
+                  <span
+                    className="text-[16px] font-normal text-black"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     Ariana,Tunisia
                   </span>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
-                  <span 
-                    className="text-[20px] font-semibold text-black"
+                  <span
+                    className="text-[16px] font-semibold text-black"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     JOINED
                   </span>
-                  <span 
-                    className="text-[20px] font-normal text-black"
+                  <span
+                    className="text-[16px] font-normal text-black"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     08/08/2023
@@ -211,17 +211,17 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               </div>
 
               {/* Edit Profile Button */}
-              <div className="max-w-[534px] mx-auto">
+              <div className="max-w-[400px] mx-auto px-4">
                 <button
                   onClick={() => setActiveTab("edit")}
-                  className="w-full bg-[#63CDFA] hover:bg-[#5ab8e8] text-white py-[15px] px-4 rounded-[10px] shadow-[-4px_4px_12px_rgba(0,0,0,0.25)] transition-colors flex items-center justify-center gap-[10px]"
+                  className="w-full bg-[#63CDFA] hover:bg-[#5ab8e8] text-white py-[12px] px-4 rounded-[8px] shadow-[-4px_4px_12px_rgba(0,0,0,0.25)] transition-colors flex items-center justify-center gap-[8px]"
                 >
-                  <svg width="30" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="20" height="20" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1.965 23.899C1.02725 24.8364 0.500283 26.108 0.5 27.434L0.5 30.0002H3.06625C4.39222 29.9999 5.66379 29.473 6.60125 28.5352L23.28 11.8565L18.6438 7.22021L1.965 23.899Z" fill="white"/>
                     <path d="M29.4314 1.06883C29.127 0.764126 28.7655 0.522401 28.3677 0.357478C27.9698 0.192554 27.5433 0.107666 27.1126 0.107666C26.6819 0.107666 26.2555 0.192554 25.8576 0.357478C25.4597 0.522401 25.0983 0.764126 24.7939 1.06883L20.4114 5.45258L25.0476 10.0888L29.4314 5.70633C29.7361 5.40194 29.9778 5.04048 30.1427 4.64262C30.3077 4.24475 30.3925 3.81828 30.3925 3.38758C30.3925 2.95689 30.3077 2.53041 30.1427 2.13255C29.9778 1.73468 29.7361 1.37322 29.4314 1.06883Z" fill="white"/>
                   </svg>
-                  <span 
-                    className="text-[19px] font-semibold"
+                  <span
+                    className="text-[16px] font-semibold"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     Edit Profile
