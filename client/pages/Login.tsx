@@ -3,17 +3,76 @@ import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import api from "@/lib/api";
+import { ACCESS_TOKEN, USER_ROLE } from "@/lib/constants";
+import { useToast } from "@/hooks/use-toast";
+
+type LoginResponse = {
+  token: string;
+  role: string;
+  [key: string]: any;
+};
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("alex@gmail.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login attempt:", { email, password });
+    
+    // Basic validation
+    if (!email || !password) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    
+    // Show loading state
+    toast({
+      title: "Signing in...",
+      description: "Please wait while we log you in.",
+    });
+
+    try {
+      const response = await api.post<LoginResponse>("/auth/login/", { email, password });
+      const { token, role } = response.data;
+      
+      // Save auth data
+      localStorage.setItem(ACCESS_TOKEN, token);
+      localStorage.setItem(USER_ROLE, role);
+      
+      // Show success message
+      toast({
+        title: "Success!",
+        description: `Welcome back! Redirecting to ${role === 'admin' ? 'admin' : 'your'} dashboard.`,
+      });
+      
+      // Navigate based on role
+      navigate('/dashboard');
+      
+    } catch (error: any) {
+      console.error("Login error:", error);
+      
+      // Show error message
+      toast({
+        title: "Login Failed",
+        description: error.response?.data?.message || "Invalid email or password. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -114,10 +173,11 @@ export default function Login() {
 
             {/* Login Button */}
             <Button
-              asChild
+              type="submit"
               className="w-full h-14 bg-[#63CDFA] hover:bg-[#4CB8E8] text-white text-xl font-bold rounded-xl shadow-lg transition-colors"
+              disabled={isLoading}
             >
-              <Link to="/dashboard">Login</Link>
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
         </div>

@@ -3,6 +3,8 @@ import { Sidebar } from "@/components/general/Sidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { AttendanceChart } from "@/components/dashboard/AttendanceChart";
 import { StatsCards } from "@/components/dashboard/StatsCards";
+import { StatsCardsOrg } from "@/components/dashboard/StatsCardsOrg";
+import { TimeOverviewChart } from "@/components/dashboard/TimeOverviewChart";
 import { RecentDemands } from "@/components/dashboard/RecentDemands";
 import TimeClockControl from "@/components/dashboard/TimeClockControl";
 import { AttendanceOverview } from "@/components/dashboard/AttendanceOverview";
@@ -72,13 +74,12 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 ${
-          isMobile
-            ? "pt-20 ml-0" // Mobile: add more top padding for header and toggle
-            : isSidebarCollapsed
-              ? "lg:ml-[90px] ml-0"
-              : "lg:ml-[250px] ml-0"
-        }`}
+        className={`flex-1 flex flex-col transition-all duration-300 ${isMobile
+          ? "pt-20 ml-0" // Mobile: add more top padding for header and toggle
+          : isSidebarCollapsed
+            ? "lg:ml-[90px] ml-0"
+            : "lg:ml-[250px] ml-0"
+          }`}
       >
         {/* Header - Hidden on mobile since we have the mobile header in sidebar */}
         <div className="hidden lg:block">
@@ -90,9 +91,8 @@ export default function Dashboard() {
 
         {/* Dashboard Content with Transition */}
         <div
-          className={`flex-1 p-4 lg:p-6 transition-all duration-300 ${
-            isTransitioning ? "opacity-60 scale-95" : "opacity-100 scale-100"
-          }`}
+          className={`flex-1 p-4 lg:p-6 transition-all duration-300 ${isTransitioning ? "opacity-60 scale-95" : "opacity-100 scale-100"
+            }`}
         >
           <div className="max-w-7xl mx-auto">
             {/* Greeting Section */}
@@ -120,8 +120,17 @@ export default function Dashboard() {
               <div className="xl:col-span-8 space-y-6">
                 {/* Stats Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <AttendanceChart />
-                  <StatsCards />
+                  {isAdminView ? (
+                    <>
+                      <AttendanceChart />
+                      <StatsCardsOrg />
+                    </>
+                  ) : (
+                    <>
+                      <TimeOverviewChart />
+                      <StatsCards />
+                    </>
+                  )}
                 </div>
 
                 {/* Conditional Section Based on View */}
