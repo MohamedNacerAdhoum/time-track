@@ -236,9 +236,9 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               {/* Form Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
                 {/* Name */}
-                <div className="space-y-2">
-                  <label 
-                    className="block text-[16px] font-semibold text-[#0A0A0A]"
+                <div className="space-y-1">
+                  <label
+                    className="block text-[14px] font-semibold text-[#0A0A0A]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     Name
@@ -246,15 +246,15 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type="text"
                     defaultValue="xxxxxxxxxxxxxxxxxxx"
-                    className="w-full px-4 py-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[18px] text-[#5F5F5F]"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   />
                 </div>
 
                 {/* Email */}
-                <div className="space-y-2">
-                  <label 
-                    className="block text-[16px] font-semibold text-[#0A0A0A]"
+                <div className="space-y-1">
+                  <label
+                    className="block text-[14px] font-semibold text-[#0A0A0A]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     Email
@@ -262,15 +262,15 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type="email"
                     defaultValue="yyyy@gmail.com"
-                    className="w-full px-4 py-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[18px] text-[#5F5F5F]"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   />
                 </div>
 
                 {/* Age */}
-                <div className="space-y-2">
-                  <label 
-                    className="block text-[16px] font-semibold text-[#0A0A0A]"
+                <div className="space-y-1">
+                  <label
+                    className="block text-[14px] font-semibold text-[#0A0A0A]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     Age
@@ -278,7 +278,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type="number"
                     defaultValue="35"
-                    className="w-full px-4 py-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[18px] text-[#5F5F5F]"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   />
                 </div>
