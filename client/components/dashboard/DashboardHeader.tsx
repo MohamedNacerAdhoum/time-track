@@ -25,6 +25,23 @@ export function DashboardHeader({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isProfileDropdownOpen]);
+
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+    setIsProfileDropdownOpen(false);
+  };
+
+  const handleLogoutConfirm = () => {
+    // Add logout logic here (clear tokens, redirect, etc.)
+    console.log("User logged out");
+    setIsLogoutModalOpen(false);
+    // For now, just redirect to login (you can replace this with proper logout logic)
+    window.location.href = "/";
+  };
+
+  const handleLogoutCancel = () => {
+    setIsLogoutModalOpen(false);
+  };
   return (
     <div className="flex w-full items-center gap-2.5 px-6 py-4 bg-white">
       {/* User/Admin Toggle - positioned at the start */}
