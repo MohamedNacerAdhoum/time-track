@@ -39,16 +39,16 @@ export function LogoutConfirmationModal({
             onClick={onClose}
             className="flex px-4 py-2 justify-center items-center gap-[10px] rounded-[10px] border border-[#DDD] bg-white hover:bg-gray-50 transition-colors"
           >
-            <span className="text-black font-[Poppins] text-base font-normal leading-normal">
+            <span className="text-black text-base font-normal leading-normal" style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}>
               Cancel
             </span>
           </button>
-          
+
           <button
             onClick={onConfirm}
             className="flex px-4 py-2 justify-center items-center gap-[10px] rounded-[10px] bg-[#FF6262] hover:bg-[#FF5252] transition-colors"
           >
-            <span className="text-white font-[Poppins] text-base font-normal leading-normal">
+            <span className="text-white text-base font-normal leading-normal" style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}>
               Log out
             </span>
           </button>
