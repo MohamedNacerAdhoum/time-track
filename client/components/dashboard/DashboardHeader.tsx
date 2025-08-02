@@ -12,6 +12,7 @@ export function DashboardHeader({
   onToggleView,
 }: DashboardHeaderProps) {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
