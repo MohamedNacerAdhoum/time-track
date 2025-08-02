@@ -284,28 +284,28 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 </div>
 
                 {/* Role */}
-                <div className="space-y-2">
-                  <label 
-                    className="block text-[16px] font-semibold text-[#0A0A0A]"
+                <div className="space-y-1">
+                  <label
+                    className="block text-[14px] font-semibold text-[#0A0A0A]"
                     style={{ fontFamily: 'IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     Role
                   </label>
                   <div className="relative">
-                    <select className="w-full px-4 py-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[18px] text-[#5F5F5F] appearance-none pr-12">
+                    <select className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] appearance-none pr-8">
                       <option>Please select an option</option>
                       <option>Admin</option>
                       <option>Manager</option>
                       <option>Employee</option>
                     </select>
-                    <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-[#06B2FB] pointer-events-none" />
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
                   </div>
                 </div>
 
                 {/* Location */}
-                <div className="space-y-2">
-                  <label 
-                    className="block text-[16px] font-semibold text-[#0A0A0A]"
+                <div className="space-y-1">
+                  <label
+                    className="block text-[14px] font-semibold text-[#0A0A0A]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     Location
@@ -313,15 +313,15 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type="text"
                     defaultValue="yyyyyyyyy"
-                    className="w-full px-4 py-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[18px] text-[#5F5F5F]"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   />
                 </div>
 
                 {/* Experience */}
-                <div className="space-y-2">
-                  <label 
-                    className="block text-[16px] font-semibold text-[#0A0A0A]"
+                <div className="space-y-1">
+                  <label
+                    className="block text-[14px] font-semibold text-[#0A0A0A]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     Experience
@@ -329,27 +329,27 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type="number"
                     defaultValue="4"
-                    className="w-full px-4 py-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[18px] text-[#5F5F5F]"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   />
                 </div>
 
                 {/* Date picker - full width */}
-                <div className="md:col-span-2 space-y-2">
-                  <label 
-                    className="block text-[16px] font-semibold text-[#0A0A0A]"
+                <div className="md:col-span-2 space-y-1">
+                  <label
+                    className="block text-[14px] font-semibold text-[#0A0A0A]"
                     style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}
                   >
                     Date picker
                   </label>
-                  <div className="relative max-w-md">
+                  <div className="relative max-w-sm">
                     <input
                       type="text"
                       defaultValue="12/08/2022"
-                      className="w-full px-4 py-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[18px] text-[#7F7F7F] pr-12"
+                      className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10"
                       style={{ fontFamily: 'IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif' }}
                     />
-                    <Calendar className="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-[#06B2FB]" />
+                    <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB]" />
                   </div>
                 </div>
               </div>
