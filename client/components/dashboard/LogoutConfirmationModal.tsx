@@ -25,10 +25,10 @@ export function LogoutConfirmationModal({
       <div className="relative bg-white rounded-[10px] p-[30px] flex flex-col items-end gap-[11px] w-full max-w-[578px] mx-4">
         {/* Content */}
         <div className="flex flex-col justify-center items-start gap-[11px] w-full">
-          <h2 className="text-[30px] font-normal text-black font-[Poppins] leading-normal">
+          <h2 className="text-[30px] font-normal text-black leading-normal" style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}>
             Log out Confirmation
           </h2>
-          <p className="text-[18px] font-normal text-black font-[Poppins] leading-normal">
+          <p className="text-[18px] font-normal text-black leading-normal" style={{ fontFamily: 'Poppins, -apple-system, Roboto, Helvetica, sans-serif' }}>
             Are you sure you want to Log out?
           </p>
         </div>
