@@ -8,14 +8,34 @@ export default defineConfig({
     {
       name: 'express-dev-server',
       configureServer(server) {
-        server.middlewares.use('/api', async (req, res, next) => {
+        let expressApp: any;
+
+        // Initialize Express app once
+        server.middlewares.use(async (req, res, next) => {
+          if (!req.url?.startsWith('/api/')) {
+            return next();
+          }
+
           try {
-            const { createServer } = await import('./server/index');
-            const expressApp = createServer();
-            expressApp(req, res, next);
+            if (!expressApp) {
+              const { createServer } = await import('./server/index.js');
+              expressApp = createServer();
+            }
+
+            // Handle the API request with Express
+            expressApp(req, res, (err: any) => {
+              if (err) {
+                console.error('Express error:', err);
+                res.statusCode = 500;
+                res.end('Internal Server Error');
+              } else {
+                next();
+              }
+            });
           } catch (error) {
             console.error('Error loading express server:', error);
-            next(error);
+            res.statusCode = 500;
+            res.end('Server Error');
           }
         });
       },
