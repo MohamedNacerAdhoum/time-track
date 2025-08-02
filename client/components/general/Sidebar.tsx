@@ -121,31 +121,34 @@ export function Sidebar({
           </div>
 
           {/* Profile with Dropdown */}
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-              className="flex items-center px-1 py-1 border border-[#71839B]/50 bg-white rounded-full"
+              className="flex items-center gap-2.5 p-[3px] rounded-full border border-[#71839B]/50 bg-white hover:bg-gray-50 transition-colors w-[95px] h-[54px]"
             >
-              <div className="w-12 h-12 rounded-full border-2 border-[#4DA64D] overflow-hidden">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Fe586c13bd8994056b17ba0083cfb21fb%2Faceaf2278b834174a9471c88a3fba7ea?format=webp&width=800"
-                  alt="Profile"
-                  className="w-full h-full object-cover"
+              <div className="flex p-[2.16px] items-center rounded-full border-[2.16px] border-[#4DA64D] relative">
+                <div
+                  className="w-[41px] h-[41px] rounded-full bg-cover bg-center border-[2.16px] border-white"
+                  style={{
+                    backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets%2Fe586c13bd8994056b17ba0083cfb21fb%2Faceaf2278b834174a9471c88a3fba7ea?format=webp&width=800')"
+                  }}
                 />
               </div>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="ml-2 text-[#71839B]"
-              >
-                <path
-                  d="M0.960615 4.05942C1.20917 4.05964 1.44747 4.15855 1.62312 4.33442L6.41812 9.12942C6.56321 9.27455 6.73548 9.38968 6.92508 9.46823C7.11468 9.54678 7.31789 9.58721 7.52312 9.58721C7.72834 9.58721 7.93156 9.54678 8.12115 9.46823C8.31075 9.38968 8.48302 9.27455 8.62812 9.12942L13.4169 4.34067C13.5937 4.16989 13.8305 4.0754 14.0763 4.07754C14.3221 4.07967 14.5573 4.17827 14.7311 4.35209C14.9049 4.52591 15.0035 4.76104 15.0056 5.00685C15.0078 5.25266 14.9133 5.48948 14.7425 5.66629L9.95749 10.455C9.31233 11.0989 8.43806 11.4606 7.52655 11.4606C6.61505 11.4606 5.74078 11.0989 5.09562 10.455L0.29749 5.66004C0.166293 5.52893 0.0769361 5.36185 0.0407273 5.17993C0.00451847 4.99802 0.0230848 4.80945 0.094077 4.63809C0.165069 4.46674 0.285296 4.32029 0.439546 4.21728C0.593795 4.11427 0.775133 4.05933 0.960615 4.05942Z"
-                  fill="#71839B"
-                />
-              </svg>
+              <div className="flex items-center justify-center p-2 rounded-full">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`text-[#71839B] transition-transform duration-200 ${isProfileDropdownOpen ? 'rotate-180' : 'rotate-0'}`}
+                >
+                  <path
+                    d="M0.960615 4.05942C1.20917 4.05964 1.44747 4.15855 1.62312 4.33442L6.41812 9.12942C6.56321 9.27455 6.73548 9.38968 6.92508 9.46823C7.11468 9.54678 7.31789 9.58721 7.52312 9.58721C7.72834 9.58721 7.93156 9.54678 8.12115 9.46823C8.31075 9.38968 8.48302 9.27455 8.62812 9.12942L13.4169 4.34067C13.5937 4.16989 13.8305 4.0754 14.0763 4.07754C14.3221 4.07967 14.5573 4.17827 14.7311 4.35209C14.9049 4.52591 15.0035 4.76104 15.0056 5.00685C15.0078 5.25266 14.9133 5.48948 14.7425 5.66629L9.95749 10.455C9.31233 11.0989 8.43806 11.4606 7.52655 11.4606C6.61505 11.4606 5.74078 11.0989 5.09562 10.455L0.29749 5.66004C0.166293 5.52893 0.0769361 5.36185 0.0407273 5.17993C0.00451847 4.99802 0.0230848 4.80945 0.094077 4.63809C0.165069 4.46674 0.285296 4.32029 0.439546 4.21728C0.593795 4.11427 0.775133 4.05933 0.960615 4.05942Z"
+                    fill="#71839B"
+                  />
+                </svg>
+              </div>
             </button>
 
             {/* Profile Dropdown */}
