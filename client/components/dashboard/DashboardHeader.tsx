@@ -145,6 +145,12 @@ export function DashboardHeader({
         </button>
       </div>
 
+      {/* Profile Modal */}
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+      />
+
       {/* Logout Confirmation Modal */}
       <LogoutConfirmationModal
         isOpen={isLogoutModalOpen}
