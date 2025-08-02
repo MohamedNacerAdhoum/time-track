@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Home,
   Clock,
@@ -13,6 +13,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
 
 const menuItems = [
   { icon: Home, label: "Dashboard", isActive: true },
