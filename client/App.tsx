@@ -34,7 +34,7 @@ const App = () => (
 
           {/* Dashboard Layout with nested routes */}
           <Route path="/" element={<DashboardLayout />}>
-            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="dashboard" element={<div />} />
             <Route path="timesheets" element={<TimesheetsPage />} />
             <Route path="members" element={<MembersPage />} />
             <Route path="schedules" element={<SchedulesPage />} />
