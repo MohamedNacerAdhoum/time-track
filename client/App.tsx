@@ -51,4 +51,11 @@ const App = () => (
   </QueryClientProvider>
 );
 
-createRoot(document.getElementById("root")!).render(<App />);
+const container = document.getElementById("root")!;
+
+// Prevent multiple root creation during development
+if (!container._reactRoot) {
+  container._reactRoot = createRoot(container);
+}
+
+container._reactRoot.render(<App />);
