@@ -31,7 +31,19 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* Dashboard Layout with nested routes */}
+          <Route path="/" element={<DashboardLayout />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="timesheets" element={<TimesheetsPage />} />
+            <Route path="members" element={<MembersPage />} />
+            <Route path="schedules" element={<SchedulesPage />} />
+            <Route path="demands" element={<DemandsPage />} />
+            <Route path="complaints" element={<ComplaintsPage />} />
+            <Route path="balances" element={<BalancesPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
