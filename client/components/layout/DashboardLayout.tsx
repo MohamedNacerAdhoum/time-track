@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Sidebar } from "@/components/general/Sidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import DashboardPage from "@/pages/DashboardPage";
 
 export default function DashboardLayout() {
   const [isAdminView, setIsAdminView] = useState(true);
