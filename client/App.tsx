@@ -1,7 +1,14 @@
 import "./global.css";
 
 import { Toaster } from "@/components/ui/toaster";
-import { createRoot } from "react-dom/client";
+import { createRoot, Root } from "react-dom/client";
+
+// Extend HTMLElement to include our custom _reactRoot property
+declare global {
+  interface HTMLElement {
+    _reactRoot?: Root;
+  }
+}
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
