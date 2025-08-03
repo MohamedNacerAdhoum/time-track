@@ -106,7 +106,11 @@ export default function DashboardLayout() {
         >
           <div className="max-w-7xl mx-auto">
             {/* Render the current page component */}
-            <Outlet />
+            {getCurrentRoute() === "Dashboard" ? (
+              <DashboardPage isAdminView={isAdminView} />
+            ) : (
+              <Outlet />
+            )}
           </div>
         </div>
       </div>
