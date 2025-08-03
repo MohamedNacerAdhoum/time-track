@@ -9,7 +9,15 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/general/ProtectedRoute";
 
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+import DashboardLayout from "./components/layout/DashboardLayout";
+import DashboardPage from "./pages/DashboardPage";
+import TimesheetsPage from "./pages/TimesheetsPage";
+import MembersPage from "./pages/MembersPage";
+import SchedulesPage from "./pages/SchedulesPage";
+import DemandsPage from "./pages/DemandsPage";
+import ComplaintsPage from "./pages/ComplaintsPage";
+import BalancesPage from "./pages/BalancesPage";
+import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
