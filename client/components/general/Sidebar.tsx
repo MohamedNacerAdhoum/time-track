@@ -42,6 +42,7 @@ export function Sidebar({
   isAdminView,
   onToggleView,
 }: SidebarProps) {
+  const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
