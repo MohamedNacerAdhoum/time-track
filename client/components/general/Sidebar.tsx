@@ -17,14 +17,14 @@ import {
 import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
 
 const menuItems = [
-  { icon: Home, label: "Dashboard", isActive: true },
-  { icon: Clock, label: "Timesheets", isActive: false },
-  { icon: Users, label: "Members", isActive: false },
-  { icon: Calendar, label: "Schedules", isActive: false },
-  { icon: Mail, label: "Demands", isActive: false },
-  { icon: MessageCircle, label: "Complaints", isActive: false },
-  { icon: Coins, label: "Balances", isActive: false },
-  { icon: Settings, label: "Settings", isActive: false },
+  { icon: Home, label: "Dashboard", path: "/dashboard" },
+  { icon: Clock, label: "Timesheets", path: "/timesheets" },
+  { icon: Users, label: "Members", path: "/members" },
+  { icon: Calendar, label: "Schedules", path: "/schedules" },
+  { icon: Mail, label: "Demands", path: "/demands" },
+  { icon: MessageCircle, label: "Complaints", path: "/complaints" },
+  { icon: Coins, label: "Balances", path: "/balances" },
+  { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
 interface SidebarProps {
