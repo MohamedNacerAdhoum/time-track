@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Home,
   Clock,
@@ -16,14 +17,14 @@ import {
 import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
 
 const menuItems = [
-  { icon: Home, label: "Dashboard", isActive: true },
-  { icon: Clock, label: "Timesheets", isActive: false },
-  { icon: Users, label: "Members", isActive: false },
-  { icon: Calendar, label: "Schedules", isActive: false },
-  { icon: Mail, label: "Demands", isActive: false },
-  { icon: MessageCircle, label: "Complaints", isActive: false },
-  { icon: Coins, label: "Balances", isActive: false },
-  { icon: Settings, label: "Settings", isActive: false },
+  { icon: Home, label: "Dashboard", path: "/dashboard" },
+  { icon: Clock, label: "Timesheets", path: "/timesheets" },
+  { icon: Users, label: "Members", path: "/members" },
+  { icon: Calendar, label: "Schedules", path: "/schedules" },
+  { icon: Mail, label: "Demands", path: "/demands" },
+  { icon: MessageCircle, label: "Complaints", path: "/complaints" },
+  { icon: Coins, label: "Balances", path: "/balances" },
+  { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
 interface SidebarProps {
@@ -41,6 +42,7 @@ export function Sidebar({
   isAdminView,
   onToggleView,
 }: SidebarProps) {
+  const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -416,6 +418,8 @@ export function Sidebar({
                   } relative group`}
                   title={isCollapsed && !isMobile ? item.label : undefined}
                   onClick={() => {
+                    // Navigate to the route
+                    navigate(item.path);
                     // Close mobile menu when item is clicked
                     if (isMobile) {
                       onToggleCollapse();
