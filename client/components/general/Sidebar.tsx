@@ -418,6 +418,8 @@ export function Sidebar({
                   } relative group`}
                   title={isCollapsed && !isMobile ? item.label : undefined}
                   onClick={() => {
+                    // Navigate to the route
+                    navigate(item.path);
                     // Close mobile menu when item is clicked
                     if (isMobile) {
                       onToggleCollapse();
