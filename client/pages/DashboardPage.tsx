@@ -14,14 +14,14 @@ interface DashboardPageProps {
   isAdminView?: boolean;
 }
 
-export default function DashboardPage({ isAdminView = true }: DashboardPageProps) {
+export default function DashboardPage({
+  isAdminView = true,
+}: DashboardPageProps) {
   return (
     <>
       {/* Greeting Section */}
       <div className="mb-10">
-        <h1 className="text-3xl font-bold text-black mb-2">
-          Good morning 👋
-        </h1>
+        <h1 className="text-3xl font-bold text-black mb-2">Good morning 👋</h1>
         <p className="text-black/60 text-xl">
           {isAdminView
             ? "Welcome to your admin dashboard. Manage your team effectively."
@@ -30,9 +30,7 @@ export default function DashboardPage({ isAdminView = true }: DashboardPageProps
 
         {/* Time Display */}
         <div className="mt-8">
-          <div className="text-4xl font-bold text-black">
-            HH : mm : ss
-          </div>
+          <div className="text-4xl font-bold text-black">HH : mm : ss</div>
         </div>
       </div>
 
