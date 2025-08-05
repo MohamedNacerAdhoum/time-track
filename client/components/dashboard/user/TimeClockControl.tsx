@@ -18,7 +18,7 @@ const TimeClockControl = () => {
   return (
     <div className="w-full px-4 py-2">
       {/* Mobile: Horizontal buttons only, Desktop: Full layout with notes */}
-      
+
       {/* Mobile-only: Horizontal buttons without notes */}
       <div className="flex md:hidden justify-center items-center gap-4 w-full">
         {/* Clock In - Mobile */}
