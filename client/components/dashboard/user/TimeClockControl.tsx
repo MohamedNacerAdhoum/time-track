@@ -23,10 +23,10 @@ const TimeClockControl = () => {
       <div className="flex md:hidden justify-center items-center gap-6 w-full">
         {/* Clock In - Mobile */}
         <button className="flex w-[140px] h-[60px] px-5 py-4 justify-center items-center gap-3 rounded-full bg-[#4DA64D] shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] transition-transform hover:scale-105 active:scale-95">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <svg
-              width="12"
-              height="12"
+              width="16"
+              height="16"
               viewBox="0 0 20 21"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +41,7 @@ const TimeClockControl = () => {
                 fill="white"
               />
             </svg>
-            <span className="text-white font-semibold text-xs font-poppins">
+            <span className="text-white font-semibold text-sm font-poppins">
               Clock in
             </span>
           </div>
