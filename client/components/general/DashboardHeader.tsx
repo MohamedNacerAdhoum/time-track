@@ -1,7 +1,8 @@
 import { Bell, Power, User, Users, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { LogoutConfirmationModal } from "./LogoutConfirmationModal";
+import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
 import { ProfileModal } from "./ProfileModal";
+import { useAuthStore } from "@/contexts/UserContext";
 
 interface DashboardHeaderProps {
   isAdminView: boolean;
@@ -16,6 +17,15 @@ export function DashboardHeader({
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { user, isAdmin } = useAuthStore();
+
+  // Check if user is admin on component mount
+  useEffect(() => {
+    if (!isAdmin) {
+      // Force user view for non-admin users
+      onToggleView();
+    }
+  }, [isAdmin, onToggleView]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -49,41 +59,42 @@ export function DashboardHeader({
 
   return (
     <div className="flex w-full items-center gap-2.5 px-6 py-4 bg-white">
-      {/* User/Admin Toggle - positioned at the start */}
-      <div className="flex items-center bg-white relative">
-        <div className="flex w-[126px] p-[8.64px] items-start gap-3 rounded-full border border-[#63CDFA]/50 bg-white relative">
-          <button
-            onClick={onToggleView}
-            className={`flex px-[8.64px] py-[8.64px] justify-center items-center gap-[8.64px] flex-1 self-stretch rounded-full transition-all duration-200 ${
-              !isAdminView ? "bg-[#63CDFA]" : "bg-transparent hover:bg-gray-50"
-            } relative`}
-          >
-            <User
-              className={`w-[30.24px] h-[30.24px] transition-colors ${
-                !isAdminView ? "text-white" : "text-[#77838F]"
-              }`}
-            />
-          </button>
-          <button
-            onClick={onToggleView}
-            className={`flex px-[8.64px] py-[8.64px] justify-center items-center gap-[8.64px] flex-1 self-stretch rounded-full transition-all duration-200 ${
-              isAdminView ? "bg-[#63CDFA]" : "bg-transparent hover:bg-gray-50"
-            } relative`}
-          >
-            <Users
-              className={`w-[30.24px] h-[30.24px] transition-colors ${
-                isAdminView ? "text-white" : "text-[#77838F]"
-              }`}
-            />
-          </button>
+      {/* User/Admin Toggle - only show for admin users */}
+      {isAdmin ? (
+        <>
+          <div className="flex items-center">
+            <div className="flex w-[126px] p-2 items-center gap-3 rounded-full border border-[#63CDFA]/50 bg-white">
+              <button
+                onClick={onToggleView}
+                className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${!isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                  }`}
+              >
+                <User
+                  className={`w-7 h-7 transition-colors ${!isAdminView ? "text-white" : "text-[#77838F]"
+                    }`}
+                />
+              </button>
+              <button
+                onClick={onToggleView}
+                className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                  }`}
+              >
+                <Users
+                  className={`w-7 h-7 transition-colors ${isAdminView ? "text-white" : "text-[#77838F]"
+                    }`}
+                />
+              </button>
+            </div>
+          </div>
+          <div className="h-16 w-1 bg-black/10 rounded-full mx-4" />
+        </>
+      ) : (
+        <div className="flex items-center">
         </div>
-      </div>
-
-      {/* Vertical Divider */}
-      <div className="h-16 w-1 bg-black/10 rounded-full mx-4"></div>
+      )}
 
       {/* Spacer */}
-      <div className="flex-1"></div>
+      <div className="flex-1" />
 
       {/* Right side controls */}
       <div className="flex items-center gap-7 relative">

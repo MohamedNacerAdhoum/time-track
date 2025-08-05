@@ -1,31 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/contexts/UserContext";
+import { useToast } from "@/hooks/useToast";
 
-import api from "@/lib/api";
-import { ACCESS_TOKEN, USER_ROLE } from "@/lib/constants";
-import { useToast } from "@/hooks/use-toast";
-
-type LoginResponse = {
-  token: string;
-  role: string;
-  [key: string]: any;
-};
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login, loading, error, clearError, isAuthenticated } = useAuthStore();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Handle error state changes
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Login Failed",
+        description: error,
+        variant: "destructive",
+      });
+      // Clear the error after showing it
+      clearError();
+    }
+  }, [error, toast, clearError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Basic validation
     if (!email || !password) {
       toast({
@@ -36,42 +49,26 @@ export default function Login() {
       return;
     }
 
-    setIsLoading(true);
-    
-    // Show loading state
-    toast({
-      title: "Signing in...",
-      description: "Please wait while we log you in.",
-    });
-
     try {
-      const response = await api.post<LoginResponse>("/auth/login/", { email, password });
-      const { token, role } = response.data;
-      
-      // Save auth data
-      localStorage.setItem(ACCESS_TOKEN, token);
-      localStorage.setItem(USER_ROLE, role);
+      // Show loading state
+      toast({
+        title: "Signing in...",
+        description: "Please wait while we log you in.",
+      });
+
+      // Call the login function from the auth store
+      await login(email, password);
       
       // Show success message
       toast({
         title: "Success!",
-        description: `Welcome back! Redirecting to ${role === 'admin' ? 'admin' : 'your'} dashboard.`,
+        description: "Welcome back! Redirecting to your dashboard.",
       });
-      
-      // Navigate based on role
-      navigate('/dashboard');
-      
-    } catch (error: any) {
+
+      // Note: Navigation is handled by the isAuthenticated effect
+    } catch (error) {
+      // Error handling is done via the error state in the effect
       console.error("Login error:", error);
-      
-      // Show error message
-      toast({
-        title: "Login Failed",
-        description: error.response?.data?.message || "Invalid email or password. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -175,9 +172,9 @@ export default function Login() {
             <Button
               type="submit"
               className="w-full h-14 bg-[#63CDFA] hover:bg-[#4CB8E8] text-white text-xl font-bold rounded-xl shadow-lg transition-colors"
-              disabled={isLoading}
+              disabled={loading}
             >
-              {isLoading ? "Signing in..." : "Sign in"}
+              {loading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
         </div>

@@ -1,22 +1,17 @@
 import "./global.css";
-
-import { Toaster } from "@/components/ui/toaster";
 import { createRoot, Root } from "react-dom/client";
-
-// Extend HTMLElement to include our custom _reactRoot property
-declare global {
-  interface HTMLElement {
-    _reactRoot?: Root;
-  }
-}
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import ProtectedRoute from "./components/general/ProtectedRoute";
 
+// Components
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import ProtectedRoute from "./components/general/ProtectedRoute";
+import DashboardLayout from "./layout/DashboardLayout";
+
+// Pages
 import Login from "./pages/Login";
-import DashboardLayout from "./components/layout/DashboardLayout";
 import DashboardPage from "./pages/DashboardPage";
 import TimesheetsPage from "./pages/TimesheetsPage";
 import MembersPage from "./pages/MembersPage";
@@ -27,36 +22,49 @@ import BalancesPage from "./pages/BalancesPage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 
+// Extend HTMLElement to include our custom _reactRoot property
+declare global {
+  interface HTMLElement {
+    _reactRoot?: Root;
+  }
+}
+
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-          <Route path="/login" element={<Login />} />
-
-          {/* Dashboard Layout with nested routes */}
-          <Route path="/" element={<DashboardLayout />}>
-            <Route path="dashboard" element={<div />} />
-            <Route path="timesheets" element={<TimesheetsPage />} />
-            <Route path="members" element={<MembersPage />} />
-            <Route path="schedules" element={<SchedulesPage />} />
-            <Route path="demands" element={<DemandsPage />} />
-            <Route path="complaints" element={<ComplaintsPage />} />
-            <Route path="balances" element={<BalancesPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-          </Route>
-
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="timesheets" element={<TimesheetsPage />} />
+                <Route path="members" element={<MembersPage />} />
+                <Route path="schedules" element={<SchedulesPage />} />
+                <Route path="demands" element={<DemandsPage />} />
+                <Route path="complaints" element={<ComplaintsPage />} />
+                <Route path="balances" element={<BalancesPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+          <Toaster />
+          <Sonner />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 const container = document.getElementById("root")!;
 

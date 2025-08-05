@@ -1,14 +1,17 @@
-import { useState, useEffect } from "react";
-import { AttendanceChart } from "@/components/dashboard/AttendanceChart";
-import { StatsCards } from "@/components/dashboard/StatsCards";
-import { StatsCardsOrg } from "@/components/dashboard/StatsCardsOrg";
-import { TimeOverviewChart } from "@/components/dashboard/TimeOverviewChart";
-import { RecentDemands } from "@/components/dashboard/RecentDemands";
-import TimeClockControl from "@/components/dashboard/TimeClockControl";
+import { AttendanceChart } from "@/components/dashboard/org/AttendanceChart";
+import { StatsCards } from "@/components/dashboard/user/StatsCards";
+import { StatsCardsOrg } from "@/components/dashboard/org/StatsCardsOrg";
+import { TimeOverviewChart } from "@/components/dashboard/user/TimeOverviewChart";
+import { RecentDemands } from "@/components/dashboard/org/RecentDemands";
+import TimeClockControl from "@/components/dashboard/user/TimeClockControl";
 import { AttendanceOverview } from "@/components/dashboard/AttendanceOverview";
 import { CalendarWidget } from "@/components/dashboard/CalendarWidget";
-import { EmployeeStatus } from "@/components/dashboard/EmployeeStatus";
-import TodayActivity from "@/components/dashboard/TodayActivity";
+import { EmployeeStatus } from "@/components/dashboard/org/EmployeeStatus";
+import TodayActivity from "@/components/dashboard/user/TodayActivity";
+
+import { useEffect } from 'react';
+import RealTimeClock from '@/components/ui/RealTimeClock';
+import { useMembersStore } from '@/contexts/MembersContext';
 
 interface DashboardPageProps {
   isAdminView?: boolean;
@@ -17,6 +20,16 @@ interface DashboardPageProps {
 export default function DashboardPage({
   isAdminView = true,
 }: DashboardPageProps) {
+
+  const { currentUser, fetchCurrentUser } = useMembersStore();
+  
+  // Fetch current user data when component mounts
+  useEffect(() => {
+    fetchCurrentUser().catch(err => {
+      console.error('Error fetching current user:', err);
+    });
+  }, [fetchCurrentUser]);
+  
   return (
     <>
       {/* Greeting Section */}
@@ -25,12 +38,14 @@ export default function DashboardPage({
         <p className="text-black/60 text-xl">
           {isAdminView
             ? "Welcome to your admin dashboard. Manage your team effectively."
-            : "Have a nice day at work XXX."}
+            : `Have a nice day at work ${currentUser?.name || ''}.`}
         </p>
 
         {/* Time Display */}
         <div className="mt-8">
-          <div className="text-4xl font-bold text-black">HH : mm : ss</div>
+          <div className="text-4xl font-bold text-black">
+            <RealTimeClock />
+          </div>
         </div>
       </div>
 
@@ -57,9 +72,7 @@ export default function DashboardPage({
           {isAdminView ? (
             <RecentDemands />
           ) : (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-              <TimeClockControl />
-            </div>
+            <TimeClockControl />
           )}
 
           {/* Attendance Overview */}

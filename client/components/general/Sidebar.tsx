@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/contexts/UserContext";
 import {
   Home,
   Clock,
@@ -16,16 +17,25 @@ import {
 } from "lucide-react";
 import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
 
-const menuItems = [
-  { icon: Home, label: "Dashboard", path: "/dashboard" },
-  { icon: Clock, label: "Timesheets", path: "/timesheets" },
-  { icon: Users, label: "Members", path: "/members" },
-  { icon: Calendar, label: "Schedules", path: "/schedules" },
-  { icon: Mail, label: "Demands", path: "/demands" },
-  { icon: MessageCircle, label: "Complaints", path: "/complaints" },
-  { icon: Coins, label: "Balances", path: "/balances" },
-  { icon: Settings, label: "Settings", path: "/settings" },
-];
+const getMenuItems = (userRole: string | undefined) => {
+  const isAdmin = userRole === 'admin';
+  const items = [
+    { icon: Home, label: "Dashboard", path: "/dashboard" },
+    { icon: Clock, label: "Timesheets", path: "/timesheets" },
+    { icon: Calendar, label: "Schedules", path: "/schedules" },
+    { icon: Mail, label: "Demands", path: "/demands" },
+    { icon: MessageCircle, label: "Complaints", path: "/complaints" },
+    { icon: Coins, label: "Balances", path: "/balances" },
+    { icon: Settings, label: "Settings", path: "/settings" },
+  ];
+
+  // Only add Members tab for admin users
+  if (isAdmin) {
+    items.splice(2, 0, { icon: Users, label: "Members", path: "/members" });
+  }
+
+  return items;
+};
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -43,14 +53,18 @@ export function Sidebar({
   onToggleView,
 }: SidebarProps) {
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(false);
+  const { user, isAdmin } = useAuthStore();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const menuItems = getMenuItems(isAdmin ? 'admin' : 'user');
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
+      const isMobile = window.innerWidth < 1024;
+      setIsMobile(isMobile);
     };
 
     checkMobile();
