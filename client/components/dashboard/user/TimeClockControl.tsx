@@ -49,10 +49,10 @@ const TimeClockControl = () => {
 
         {/* Break - Mobile */}
         <button className="flex w-[140px] h-[60px] px-5 py-4 justify-center items-center gap-3 rounded-full bg-[#FFA501] shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] transition-transform hover:scale-105 active:scale-95">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <svg
-              width="12"
-              height="13"
+              width="16"
+              height="17"
               viewBox="0 0 14 15"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
