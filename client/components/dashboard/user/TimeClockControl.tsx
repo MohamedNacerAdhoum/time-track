@@ -63,7 +63,7 @@ const TimeClockControl = () => {
                 fill="white"
               />
             </svg>
-            <span className="text-white font-semibold text-xs font-poppins">
+            <span className="text-white font-semibold text-sm font-poppins">
               Break
             </span>
           </div>
