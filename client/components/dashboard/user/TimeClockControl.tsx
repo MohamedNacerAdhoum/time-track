@@ -41,7 +41,7 @@ const TimeClockControl = () => {
                 fill="white"
               />
             </svg>
-            <span className="text-white font-semibold text-[10px] font-poppins">
+            <span className="text-white font-semibold text-xs font-poppins">
               Clock in
             </span>
           </div>
