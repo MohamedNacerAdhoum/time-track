@@ -4,7 +4,7 @@ import { StatsCardsOrg } from "@/components/dashboard/org/StatsCardsOrg";
 import { TimeOverviewChart } from "@/components/dashboard/user/TimeOverviewChart";
 import { RecentDemands } from "@/components/dashboard/org/RecentDemands";
 import TimeClockControl from "@/components/dashboard/user/TimeClockControl";
-import { AttendanceOverview } from "@/components/dashboard/AttendanceOverview";
+import { AttendanceOverview } from "@/components/dashboard/user/AttendanceOverview";
 import { CalendarWidget } from "@/components/dashboard/CalendarWidget";
 import { EmployeeStatus } from "@/components/dashboard/org/EmployeeStatus";
 import TodayActivity from "@/components/dashboard/user/TodayActivity";

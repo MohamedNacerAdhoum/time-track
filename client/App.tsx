@@ -35,30 +35,32 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route
-                path="/"
-                element={
-                    <DashboardLayout />
-                }
-              >
-                <Route index element={<Navigate to="/dashboard" replace />} />
-                <Route path="dashboard" element={<DashboardPage />} />
-                <Route path="timesheets" element={<TimesheetsPage />} />
-                <Route path="members" element={<MembersPage />} />
-                <Route path="schedules" element={<SchedulesPage />} />
-                <Route path="demands" element={<DemandsPage />} />
-                <Route path="complaints" element={<ComplaintsPage />} />
-                <Route path="balances" element={<BalancesPage />} />
-                <Route path="settings" element={<SettingsPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-          <Toaster />
-          <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="timesheets" element={<TimesheetsPage />} />
+              <Route path="members" element={<MembersPage />} />
+              <Route path="schedules" element={<SchedulesPage />} />
+              <Route path="demands" element={<DemandsPage />} />
+              <Route path="complaints" element={<ComplaintsPage />} />
+              <Route path="balances" element={<BalancesPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        <Toaster />
+        <Sonner />
       </TooltipProvider>
     </QueryClientProvider>
   );

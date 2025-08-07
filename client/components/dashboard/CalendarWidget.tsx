@@ -1,6 +1,4 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { Calendar, ChangedEventArgs } from '@syncfusion/ej2-calendars';
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import '@syncfusion/ej2-base/styles/material.css'; // Required core styles

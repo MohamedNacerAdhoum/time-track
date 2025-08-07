@@ -14,6 +14,8 @@ interface TimeOverview {
   targetHours: number;
   percentage: number;
   remainingHours: number;
+  isClockedIn: boolean;
+  isOnBreak: boolean;
 }
 
 interface CardProps {
@@ -39,18 +41,26 @@ const parseHoursWorked = (hoursStr: string): number => {
 };
 
 export function TimeOverviewChart() {
-  const { fetchUserTimeSheets, timeSheets, loading, error } = useTimeSheets();
+  const {
+    fetchTodayTimeSheet,
+    todayTimeSheet,
+    loading,
+    error
+  } = useTimeSheets();
+
   const { currentUser } = useMembersStore();
   const { toast } = useToast();
   const [localError, setLocalError] = useState<string | null>(null);
 
-  // Fetch timesheet data
+  // Fetch today's timesheet data
   useEffect(() => {
-    const loadData = async () => {
+    const loadTodayTimesheet = async () => {
       try {
-        await fetchUserTimeSheets();
+        const todaySheet = await fetchTodayTimeSheet();
+
       } catch (err: unknown) {
-        const errorMessage = 'Failed to load timesheet data. Please try again later.';
+        const errorMessage = 'Failed to load today\'s timesheet data. Please try again later.';
+
         setLocalError(errorMessage);
 
         const status = (err as { response?: { status: number } })?.response?.status;
@@ -64,23 +74,52 @@ export function TimeOverviewChart() {
       }
     };
 
-    loadData();
-  }, [fetchUserTimeSheets, toast]);
+    loadTodayTimesheet();
+  }, [fetchTodayTimeSheet, toast]);
 
   // Calculate time overview metrics
   const timeOverview: TimeOverview = useMemo(() => {
-    const totalHours = timeSheets.reduce((sum, ts) => sum + parseHoursWorked(ts.hours_worked), 0);
-    const hoursWorked = Math.round(totalHours * 10) / 10;
+
+    // Initialize with default values
+    let hoursWorked = 0;
+    let remainingHours = 0;
+    let percentage = 0;
     const targetHours = currentUser?.hours || DEFAULT_TARGET_HOURS;
-    const percentage = targetHours > 0 ? Math.min(Math.round((hoursWorked / targetHours) * 100), 100) : 0;
+
+    // Calculate hours worked if clocked in
+    if (todayTimeSheet?.time_sheet?.clock_in) {
+      const clockIn = new Date(todayTimeSheet.time_sheet.clock_in);
+      const now = new Date();
+
+      // Calculate hours worked (in hours)
+      const msWorked = now.getTime() - clockIn.getTime();
+      hoursWorked = msWorked / (1000 * 60 * 60); // Convert ms to hours
+
+      // Subtract break time if currently on break
+      if (todayTimeSheet.time_sheet.break_start && !todayTimeSheet.time_sheet.break_end) {
+        const breakStart = new Date(todayTimeSheet.time_sheet.break_start);
+        const breakMs = now.getTime() - breakStart.getTime();
+        const breakHours = breakMs / (1000 * 60 * 60);
+        hoursWorked -= breakHours;
+      }
+
+      // Ensure hours worked is not negative and round to 1 decimal place
+      hoursWorked = Math.max(0, Math.round(hoursWorked * 10) / 10);
+
+      // Calculate remaining hours and percentage
+      remainingHours = Math.max(0, targetHours - hoursWorked);
+      percentage = targetHours > 0 ? Math.min(Math.round((hoursWorked / targetHours) * 100), 100) : 0;
+    }
 
     return {
       hoursWorked,
       targetHours,
       percentage,
-      remainingHours: Math.max(0, targetHours - hoursWorked),
+      remainingHours,
+      isClockedIn: !!todayTimeSheet?.time_sheet?.clock_in && !todayTimeSheet?.time_sheet?.clock_out,
+      isOnBreak: !!todayTimeSheet?.time_sheet?.break_start && !todayTimeSheet?.time_sheet?.break_end
     };
-  }, [timeSheets, currentUser]);
+  }, [todayTimeSheet, currentUser]);
 
   if (loading) {
     return (

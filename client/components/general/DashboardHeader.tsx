@@ -115,35 +115,53 @@ export function DashboardHeader({
           {/* Desktop Profile Button */}
           <button
             onClick={() => setIsProfileModalOpen(true)}
-            className="hidden md:flex p-[3px] items-start gap-2.5 rounded-full border-[3px] border-[#4DA64D] relative hover:bg-gray-50 transition-colors"
+            className="hidden md:flex p-[3px] items-start gap-2.5 rounded-full relative hover:bg-gray-50 transition-colors"
           >
             <div className="w-[63px] h-[63px] rounded-full relative">
-              <div
-                className="w-[63px] h-[63px] rounded-full bg-cover bg-center"
-                style={{
-                  backgroundImage:
-                    "url('https://cdn.builder.io/api/v1/image/assets%2Fe586c13bd8994056b17ba0083cfb21fb%2Faceaf2278b834174a9471c88a3fba7ea?format=webp&width=800')",
-                }}
-              />
+              <div className={`w-full h-full rounded-full p-[3px] border-[3px] ${user?.status === 'in' ? 'border-[#0FBA83]' : user?.status === 'break' ? 'border-[#F59E0B]' : 'border-[#EF4444]'}`}>
+                {user?.imageUrl ? (
+                  <div
+                    className="w-full h-full rounded-full bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url(${user.imageUrl})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-2xl font-medium text-gray-500">
+                    {user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+                  </div>
+                )}
+              </div>
             </div>
           </button>
 
           {/* Mobile Profile Button */}
           <button
             onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-            className="md:hidden flex items-center gap-2.5 p-[3px] rounded-full border border-[#71839B] bg-white hover:bg-gray-50 transition-colors w-[95px] h-[54px]"
+            className="md:hidden flex items-center gap-2.5 p-[3px] rounded-full bg-white hover:bg-gray-50 transition-colors w-[95px] h-[54px]"
           >
-            <div className="flex p-[2.16px] items-center rounded-full border-[2.16px] border-[#4DA64D] relative">
-              <div
-                className="w-[41px] h-[41px] rounded-full bg-cover bg-center border-[2.16px] border-white"
-                style={{
-                  backgroundImage:
-                    "url('https://cdn.builder.io/api/v1/image/assets%2Fe586c13bd8994056b17ba0083cfb21fb%2Faceaf2278b834174a9471c88a3fba7ea?format=webp&width=800')",
-                }}
-              />
-            </div>
-            <div className="flex items-center justify-center p-2 rounded-full">
-              <ChevronDown className="w-[15px] h-[15px] text-[#71839B] rotate-0 transition-transform" />
+            <div className="flex p-[2.16px] items-center">
+              <div className={`w-[41px] h-[41px] rounded-full p-[2.16px] ${user?.status === 'in' ? 'border-[2.16px] border-[#0FBA83]' : user?.status === 'break' ? 'border-[2.16px] border-[#F59E0B]' : 'border-[2.16px] border-[#EF4444]'}`}>
+                {user?.imageUrl ? (
+                  <div
+                    className="w-full h-full rounded-full bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url(${user.imageUrl})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium text-gray-500">
+                    {user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center justify-center p-2 rounded-full">
+                <ChevronDown className="w-[15px] h-[15px] text-[#71839B] rotate-0 transition-transform" />
+              </div>
             </div>
           </button>
         </div>
