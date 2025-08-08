@@ -129,6 +129,8 @@ export default function TimesheetsPage() {
   const [activeTab, setActiveTab] = useState("history");
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+  const [lastAction, setLastAction] = useState("last_action");
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date(2022, 6, 25)); // July 25, 2022
 
   const totalPages = Math.ceil(mockData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
