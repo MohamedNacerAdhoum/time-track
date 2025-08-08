@@ -15,7 +15,11 @@ type ViewType = "week" | "month";
 
 export function AttendanceOverviewOrg() {
   const [selectedView, setSelectedView] = useState<ViewType>("week");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const viewOptions = [
+    { value: "week", label: "Week" },
+    { value: "month", label: "Month" },
+  ];
 
   const weekData = [
     { date: "26 Dec", value: 7, maxValue: 8 },
