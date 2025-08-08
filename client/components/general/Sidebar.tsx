@@ -185,6 +185,7 @@ export function Sidebar({
               <div className="absolute top-full right-0 mt-1 bg-white rounded-[10.8px] shadow-[0_2.88px_8.64px_rgba(0,0,0,0.25)] border-none z-50 w-[145px]">
                 {/* Profile */}
                 <div
+                  onClick={handleProfileClick}
                   className="flex items-center gap-[10px] px-[21.6px] py-[10.8px] border-b-[0.36px] border-[#D9D9D9] hover:bg-gray-50 cursor-pointer rounded-t-[10.8px]"
                   style={{
                     fontFamily:
