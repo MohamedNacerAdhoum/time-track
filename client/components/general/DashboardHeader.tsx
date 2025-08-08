@@ -144,8 +144,8 @@ export function DashboardHeader({
 
       {/* Right side controls */}
       <div className="flex items-center gap-7 relative">
-        {/* Notification Bell */}
-        <div className="relative" ref={notificationRef}>
+        {/* Notification Bell - Hidden on mobile */}
+        <div className="relative hidden md:block" ref={notificationRef}>
           <button
             onClick={handleNotificationClick}
             className="flex p-2.5 justify-center items-center gap-2.5 rounded-full bg-[#63CDFA] relative hover:bg-[#4BA8E8] transition-colors cursor-pointer"
@@ -185,10 +185,10 @@ export function DashboardHeader({
             </div>
           </button>
 
-          {/* Mobile Profile Button */}
+          {/* Mobile Profile Button - Hidden since it's handled by sidebar */}
           <button
             onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-            className="md:hidden flex items-center gap-2.5 p-[3px] rounded-full border border-[#71839B] bg-white hover:bg-gray-50 transition-colors w-[95px] h-[54px]"
+            className="hidden"
           >
             <div className="flex p-[2.16px] items-center rounded-full border-[2.16px] border-[#4DA64D] relative">
               <div
@@ -205,10 +205,10 @@ export function DashboardHeader({
           </button>
         </div>
 
-        {/* Power/Logout Button */}
+        {/* Power/Logout Button - Hidden on mobile */}
         <button
           onClick={handleLogoutClick}
-          className="flex w-[60px] h-[60px] p-[9px] justify-center items-center gap-2.5 rounded-full border border-[#FFB7B7] hover:bg-red-50 transition-colors cursor-pointer"
+          className="hidden md:flex w-[60px] h-[60px] p-[9px] justify-center items-center gap-2.5 rounded-full border border-[#FFB7B7] hover:bg-red-50 transition-colors cursor-pointer"
         >
           <Power className="w-6 h-6 text-[#FF6262]" />
         </button>
