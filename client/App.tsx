@@ -1,4 +1,13 @@
 import "./global.css";
+// Register Syncfusion license key - MUST be done before any Syncfusion imports
+import { registerLicense } from "@syncfusion/ej2-base";
+
+// Debug: Log the Syncfusion license key (remove in production)
+console.log('Syncfusion License Key:', import.meta.env.VITE_SYNCFUSION_LICENSE_KEY ? 'Key found' : 'Key not found');
+
+// Register the license key
+registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY || '');
+
 import { createRoot, Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -35,30 +44,32 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route
-                path="/"
-                element={
-                    <DashboardLayout />
-                }
-              >
-                <Route index element={<Navigate to="/dashboard" replace />} />
-                <Route path="dashboard" element={<DashboardPage />} />
-                <Route path="timesheets" element={<TimesheetsPage />} />
-                <Route path="members" element={<MembersPage />} />
-                <Route path="schedules" element={<SchedulesPage />} />
-                <Route path="demands" element={<DemandsPage />} />
-                <Route path="complaints" element={<ComplaintsPage />} />
-                <Route path="balances" element={<BalancesPage />} />
-                <Route path="settings" element={<SettingsPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-          <Toaster />
-          <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="timesheets" element={<TimesheetsPage />} />
+              <Route path="members" element={<MembersPage />} />
+              <Route path="schedules" element={<SchedulesPage />} />
+              <Route path="demands" element={<DemandsPage />} />
+              <Route path="complaints" element={<ComplaintsPage />} />
+              <Route path="balances" element={<BalancesPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        <Toaster />
+        <Sonner />
       </TooltipProvider>
     </QueryClientProvider>
   );

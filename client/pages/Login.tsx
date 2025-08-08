@@ -26,15 +26,41 @@ export default function Login() {
   // Handle error state changes
   useEffect(() => {
     if (error) {
-      toast({
-        title: "Login Failed",
-        description: error,
-        variant: "destructive",
-      });
-      // Clear the error after showing it
-      clearError();
+      // Only show error if it's not already being handled by the login function
+      if (!loading) {
+        let errorTitle = "Login Failed";
+        let errorMessage = error;
+
+        // Map common error messages to more user-friendly ones
+        if (error.includes("Unable to log in")) {
+          errorMessage = "Invalid email or password. Please check your credentials and try again.";
+        } else if (error.includes("not found")) {
+          errorMessage = "No account found with this email address. Please check your email or sign up for a new account.";
+        } else if (error.includes("network")) {
+          errorTitle = "Connection Error";
+          errorMessage = "Unable to connect to the server. Please check your internet connection and try again.";
+        } else if (error.includes("timeout")) {
+          errorTitle = "Request Timeout";
+          errorMessage = "The server is taking too long to respond. Please try again in a moment.";
+        } else if (error.includes("400") || error.includes("Bad Request")) {
+          errorMessage = "Invalid request. Please check your input and try again.";
+        } else if (error.includes("500") || error.includes("Server Error")) {
+          errorTitle = "Server Error";
+          errorMessage = "Something went wrong on our end. Our team has been notified. Please try again later.";
+        }
+
+        toast({
+          title: errorTitle,
+          description: errorMessage,
+          variant: "destructive",
+          duration: 8000, // Longer duration for error messages
+        });
+
+        // Clear the error after showing it
+        clearError();
+      }
     }
-  }, [error, toast, clearError]);
+  }, [error, loading, toast, clearError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,25 +75,44 @@ export default function Login() {
       return;
     }
 
+    // Show loading state
+    const loadingToast = toast({
+      title: "Signing in...",
+      description: "Please wait while we log you in.",
+      variant: "default",
+      duration: 30000, // Long duration in case of slow network
+    });
+
     try {
-      // Show loading state
-      toast({
-        title: "Signing in...",
-        description: "Please wait while we log you in.",
-      });
-
       // Call the login function from the auth store
-      await login(email, password);
-      
-      // Show success message
-      toast({
-        title: "Success!",
-        description: "Welcome back! Redirecting to your dashboard.",
-      });
+      const user = await login(email, password);
 
+      // Dismiss loading toast
+      loadingToast.dismiss();
+
+      if (user) {
+        // Show success message
+        toast({
+          title: "Success!",
+          description: `Welcome back, ${user.name || user.email}!`,
+          variant: "default",
+          duration: 3000,
+        });
+      }
       // Note: Navigation is handled by the isAuthenticated effect
     } catch (error) {
-      // Error handling is done via the error state in the effect
+      // Dismiss loading toast
+      loadingToast.dismiss();
+
+      // Show error message if not already shown by the error effect
+      if (!error) {
+        toast({
+          title: "Login Failed",
+          description: "We encountered an issue while processing your request. Please check your connection and try again. If the problem persists, contact support.",
+          variant: "destructive",
+          duration: 8000,
+        });
+      }
       console.error("Login error:", error);
     }
   };

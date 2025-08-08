@@ -28,6 +28,7 @@
     "@syncfusion/ej2-react-dropdowns": "^30.1.42",
     "@syncfusion/ej2-react-grids": "^30.1.42",
     "@syncfusion/ej2-react-inputs": "^30.1.40",
+    "@syncfusion/ej2-react-layouts": "^30.1.40",
     "@syncfusion/ej2-react-notifications": "^30.1.37",
     "@syncfusion/ej2-react-popups": "^30.1.42",
     "@syncfusion/ej2-react-schedule": "^30.1.42",

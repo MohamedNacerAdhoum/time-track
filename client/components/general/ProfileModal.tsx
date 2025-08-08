@@ -29,15 +29,15 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const { toast } = useToast();
   const { changePassword } = useAuthStore();
   const hasFetched = useRef(false);
-  
+
   // Use MembersContext for user data
   const { currentUser, loading, error, fetchCurrentUser } = useMembersStore();
   const { user: authUser } = useAuthStore();
-  
+
   // Fetch user data when modal opens
   useEffect(() => {
     if (!isOpen || !authUser?.token || hasFetched.current) return;
-    
+
     const loadUserData = async () => {
       try {
         await fetchCurrentUser();
@@ -50,9 +50,9 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         }
       }
     };
-    
+
     loadUserData();
-    
+
     // Reset hasFetched when modal closes
     return () => {
       if (!isOpen) {
@@ -62,7 +62,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   }, [isOpen, isInitialLoad, fetchCurrentUser, authUser?.token]);
 
   if (!isOpen) return null;
-  
+
   // Use currentUser from MembersContext
   const user = currentUser;
 
@@ -85,27 +85,27 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   // Validate password form
   const validatePasswordForm = (): boolean => {
     const { current_password, new_password, confirm_password } = passwordData;
-    
+
     if (!current_password) {
       setPasswordError('Current password is required');
       return false;
     }
-    
+
     if (!new_password) {
       setPasswordError('New password is required');
       return false;
     }
-    
+
     if (new_password.length < 8) {
       setPasswordError('Password must be at least 8 characters long');
       return false;
     }
-    
+
     if (new_password !== confirm_password) {
       setPasswordError('New passwords do not match');
       return false;
     }
-    
+
     setPasswordError(null);
     return true;
   };
@@ -118,20 +118,38 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     }));
   };
 
+  const validatePassword = (password: string) => {
+    // Only require minimum 6 characters
+    return password.length >= 6;
+  };
+
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Basic validation
     if (!passwordData.current_password || !passwordData.new_password || !passwordData.confirm_password) {
-      setPasswordError("All fields are required");
+      const errorMsg = "All fields are required";
+      setPasswordError(errorMsg);
       toast({
         title: "Error",
-        description: "All fields are required",
+        description: errorMsg,
         variant: "destructive"
       });
       return;
     }
-    
+
+    // Check if new password meets minimum length requirement
+    if (!validatePassword(passwordData.new_password)) {
+      const errorMsg = "Password must be at least 6 characters long";
+      setPasswordError(errorMsg);
+      toast({
+        title: "Error",
+        description: errorMsg,
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (passwordData.new_password !== passwordData.confirm_password) {
       const errorMsg = "New passwords do not match";
       setPasswordError(errorMsg);
@@ -142,10 +160,22 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
       });
       return;
     }
-    
+
+    // Ensure new password is different from current
+    if (passwordData.current_password === passwordData.new_password) {
+      const errorMsg = "New password must be different from current password";
+      setPasswordError(errorMsg);
+      toast({
+        title: "Error",
+        description: errorMsg,
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     setPasswordError(null);
-    
+
     try {
       // Use the changePassword function from auth store
       await changePassword(
@@ -153,32 +183,19 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         passwordData.new_password,
         passwordData.confirm_password
       );
-      
-      // Show success message
-      toast({
-        title: "Success",
-        description: "Password changed successfully",
-        variant: "default"
-      });
-      
+
       // Reset form
       setPasswordData({
         current_password: "",
         new_password: "",
         confirm_password: ""
       });
-      
+
       // Switch back to profile tab
       setActiveTab("profile");
-    } catch (error: any) {
-      // Error handling is now done in the changePassword function
-      // Just log the error for debugging
+    } catch (error) {
+      // Error is already handled by the changePassword function
       console.error("Error in handlePasswordSubmit:", error);
-      
-      // Set the error message if not already set by the toast in UserContext
-      if (error.message) {
-        setPasswordError(error.message);
-      }
     } finally {
       setIsSubmitting(false);
     }
@@ -231,15 +248,21 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               <div className="flex flex-col items-center">
                 <div className="flex flex-col items-center gap-4">
                   <div className="relative w-[160px] h-[160px]">
-                    <div className="w-full h-full rounded-full border-[3px] border-[#4DA64D] p-[3px]">
-                      <div
-                        className="w-full h-full rounded-full bg-cover bg-center border-[2px] border-white"
-                        style={{
-                          backgroundImage: user?.imageUrl
-                            ? `url(${user.imageUrl})`
-                            : "url('https://cdn.builder.io/api/v1/image/assets%2Fe586c13bd8994056b17ba0083cfb21fb%2Faceaf2278b834174a9471c88a3fba7ea?format=webp&width=800')"
-                        }}
-                      />
+                    <div className={`w-full h-full rounded-full p-[3px] ${user?.status === 'in' ? 'border-[3px] border-[#0FBA83]' : user?.status === 'break' ? 'border-[3px] border-[#F59E0B]' : 'border-[3px] border-[#EF4444]'}`}>
+                      {user?.imageUrl ? (
+                        <div
+                          className="w-full h-full rounded-full bg-cover bg-center border-[2px] border-white"
+                          style={{
+                            backgroundImage: `url(${user.imageUrl})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-4xl font-medium text-gray-500">
+                          {user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+                        </div>
+                      )}
                     </div>
                     <div className="absolute bottom-1 right-1 w-[36px] h-[36px] bg-[#F4F4F4] rounded-full border-[1px] border-[#63CDFA] flex items-center justify-center">
                       <svg
@@ -328,7 +351,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                         Balance
                       </span>
                       <span className="text-[16px] font-normal text-black" style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}>
-                        {user.balance != null ? `$${user.balance.toFixed(2)}` : 'N/A'}
+                        {user.payrate != null ? `${user.payrate}` : 'N/A'}
                       </span>
                     </div>
                   </div>
