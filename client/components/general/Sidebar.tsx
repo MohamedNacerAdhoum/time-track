@@ -279,15 +279,15 @@ export function Sidebar({
       {/* Mobile Overlay */}
       {!isCollapsed && isMobile && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-50 lg:hidden"
           onClick={onToggleCollapse}
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`fixed left-0 z-40 h-full transition-all duration-300 ${
-          isMobile ? "top-16" : "top-0"
+        className={`fixed left-0 z-50 h-full transition-all duration-300 ${
+          isMobile ? "top-0" : "top-0"
         } ${isMobile && isCollapsed ? "-translate-x-full" : "translate-x-0"}`}
       >
         {/* Active indicator background - positioned dynamically based on collapsed state */}
