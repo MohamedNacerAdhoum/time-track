@@ -188,30 +188,12 @@ export function AttendanceOverview() {
   return (
     <div className="w-full max-w-full flex flex-col items-end gap-5 relative bg-white rounded-lg overflow-hidden">
       {/* Dropdown */}
-      <div
-        className="flex px-7 py-4 gap-5 rounded-2xl bg-gray-100 relative cursor-pointer select-none"
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-      >
-        <span className="text-gray-400 text-base font-semibold">
-          {selectedView === "week" ? "Week" : "Month"}
-        </span>
-        {isDropdownOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white rounded-2xl shadow-lg z-10 mt-1 border border-gray-200">
-            <button
-              onClick={(e) => { e.stopPropagation(); setSelectedView("week"); setIsDropdownOpen(false); }}
-              className={`w-full px-7 py-4 ${selectedView === "week" ? "bg-blue-50 text-blue-600" : "text-gray-400 hover:bg-gray-50"}`}
-            >
-              Week
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); setSelectedView("month"); setIsDropdownOpen(false); }}
-              className={`w-full px-7 py-4 ${selectedView === "month" ? "bg-blue-50 text-blue-600" : "text-gray-400 hover:bg-gray-50"}`}
-            >
-              Month
-            </button>
-          </div>
-        )}
-      </div>
+      <CustomDropdown
+        value={selectedView}
+        options={viewOptions}
+        onChange={(value) => setSelectedView(value as ViewType)}
+        className="self-end"
+      />
 
       {/* Header */}
       <div className="flex justify-between w-full">
