@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { CustomDropdown } from '@/components/ui/custom-dropdown';
+import { CustomDropdown } from "@/components/ui/custom-dropdown";
 import {
   ChartComponent,
   SeriesCollectionDirective,
@@ -69,10 +69,10 @@ export function AttendanceOverviewOrg() {
 
   // Create data for the stacked columns
   const getStackedData = () => {
-    return currentData.map(item => ({
+    return currentData.map((item) => ({
       date: item.date,
       value: item.value,
-      remaining: item.maxValue - item.value
+      remaining: item.maxValue - item.value,
     }));
   };
 
@@ -87,7 +87,7 @@ export function AttendanceOverviewOrg() {
         onChange={(value) => setSelectedView(value as ViewType)}
         className="self-end"
       />
-        
+
       {/* Header */}
       <div className="flex justify-between w-full">
         <h2 className="text-2xl font-semibold">Attendance Overview</h2>
@@ -105,7 +105,7 @@ export function AttendanceOverviewOrg() {
             labelStyle: {
               color: "#77838F",
               fontWeight: "600",
-              size: selectedView === "week" ? "14px" : "11px"
+              size: selectedView === "week" ? "14px" : "11px",
             },
           }}
           primaryYAxis={{
@@ -120,8 +120,8 @@ export function AttendanceOverviewOrg() {
           chartArea={{ border: { width: 0 } }}
           tooltip={{
             enable: true,
-            format: '${point.y} hours',
-            header: '${point.x}'
+            format: "${point.y} hours",
+            header: "${point.x}",
           }}
           legendSettings={{ visible: false }}
           height="300px"

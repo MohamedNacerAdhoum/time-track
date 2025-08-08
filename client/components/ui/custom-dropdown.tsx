@@ -27,11 +27,14 @@ export function CustomDropdown({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const selectedOption = options.find(option => option.value === value);
+  const selectedOption = options.find((option) => option.value === value);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -64,7 +67,7 @@ export function CustomDropdown({
         className={cn(
           "flex items-center justify-center gap-5 px-8 py-4 rounded-2xl bg-gray-100 cursor-pointer select-none transition-colors",
           disabled && "opacity-50 cursor-not-allowed",
-          "hover:bg-gray-200"
+          "hover:bg-gray-200",
         )}
       >
         <span className="text-gray-500 font-semibold text-base">
@@ -79,8 +82,10 @@ export function CustomDropdown({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg z-50 border-0 overflow-hidden"
-             style={{ boxShadow: '-4px 4px 12px 0 rgba(0, 0, 0, 0.25)' }}>
+        <div
+          className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg z-50 border-0 overflow-hidden"
+          style={{ boxShadow: "-4px 4px 12px 0 rgba(0, 0, 0, 0.25)" }}
+        >
           {options.map((option, index) => (
             <div key={option.value}>
               <button
@@ -90,7 +95,7 @@ export function CustomDropdown({
                   "text-gray-500 hover:bg-gray-50",
                   value === option.value && "bg-blue-50 text-blue-600",
                   index === 0 && "rounded-t-2xl",
-                  index === options.length - 1 && "rounded-b-2xl"
+                  index === options.length - 1 && "rounded-b-2xl",
                 )}
               >
                 {option.label}

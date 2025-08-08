@@ -5,6 +5,7 @@
 A reusable dropdown component that matches the Figma design specifications.
 
 ### Props
+
 - `value: string` - Currently selected value
 - `options: DropdownOption[]` - Array of options with `value` and `label`
 - `onChange: (value: string) => void` - Callback when option is selected
@@ -13,8 +14,9 @@ A reusable dropdown component that matches the Figma design specifications.
 - `disabled?: boolean` - Whether the dropdown is disabled
 
 ### Usage Example
+
 ```tsx
-import { CustomDropdown } from '@/components/ui/custom-dropdown';
+import { CustomDropdown } from "@/components/ui/custom-dropdown";
 
 const options = [
   { value: "week", label: "Week" },
@@ -41,6 +43,7 @@ function MyComponent() {
 A reusable calendar widget for date selection that matches the Figma design.
 
 ### Props
+
 - `value?: Date` - Currently selected date
 - `onChange: (date: Date) => void` - Callback when date is selected
 - `placeholder?: string` - Placeholder text when no date selected
@@ -49,8 +52,9 @@ A reusable calendar widget for date selection that matches the Figma design.
 - `formatDate?: (date: Date) => string` - Custom date formatting function
 
 ### Usage Example
+
 ```tsx
-import { CalendarWidget } from '@/components/ui/calendar-widget';
+import { CalendarWidget } from "@/components/ui/calendar-widget";
 
 function MyComponent() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -69,6 +73,7 @@ function MyComponent() {
 ## Features
 
 ### CustomDropdown Features
+
 - ✅ Matches Figma design exactly
 - ✅ Click outside to close
 - ✅ Keyboard navigation support
@@ -77,6 +82,7 @@ function MyComponent() {
 - ✅ Responsive design
 
 ### CalendarWidget Features
+
 - ✅ Full calendar view with month navigation
 - ✅ Highlight selected date
 - ✅ Event indicators (small dots)
@@ -88,6 +94,7 @@ function MyComponent() {
 ## Implementation Notes
 
 Both components are built with:
+
 - React hooks for state management
 - TypeScript for type safety
 - Tailwind CSS for styling
@@ -96,6 +103,7 @@ Both components are built with:
 - Accessibility considerations
 
 The components automatically handle:
+
 - Click outside detection
 - State management
 - Visual feedback
