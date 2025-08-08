@@ -142,6 +142,14 @@ export default function TimesheetsPage() {
     setIsNoteModalOpen(true);
   };
 
+  const lastActionOptions = [
+    { value: "last_action", label: "Last action" },
+    { value: "clock_in", label: "Clock In" },
+    { value: "clock_out", label: "Clock Out" },
+    { value: "break_start", label: "Break Start" },
+    { value: "break_end", label: "Break End" },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Tab Navigation */}
