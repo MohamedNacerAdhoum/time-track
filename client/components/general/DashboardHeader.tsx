@@ -4,6 +4,7 @@ import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
 import { ProfileModal } from "./ProfileModal";
 import { NotificationPopup } from "../dashboard/NotificationPopup";
 import { useAuthStore } from "@/contexts/UserContext";
+import { useMobile } from "@/hooks/useMobile";
 
 interface DashboardHeaderProps {
   isAdminView: boolean;
