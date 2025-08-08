@@ -1,8 +1,9 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { format, subDays, eachDayOfInterval } from 'date-fns';
-import { useMemo, useState, useEffect } from 'react';
-import { useTimeSheets, type TimeSheet } from '@/contexts/TimeSheetsContext';
-import { useMembersStore } from '@/contexts/MembersContext';
+import { format, subDays, eachDayOfInterval } from "date-fns";
+import { useMemo, useState, useEffect } from "react";
+import { useTimeSheets, type TimeSheet } from "@/contexts/TimeSheetsContext";
+import { useMembersStore } from "@/contexts/MembersContext";
+import { CustomDropdown } from "@/components/ui/custom-dropdown";
 import {
   ChartComponent,
   SeriesCollectionDirective,
@@ -11,7 +12,7 @@ import {
   Category,
   Tooltip,
   StackingColumnSeries,
-  Legend
+  Legend,
 } from "@syncfusion/ej2-react-charts";
 
 type ViewType = "week" | "month";
@@ -24,7 +25,7 @@ interface ChartDataItem {
   dateKey?: string;
 }
 
-interface StackedChartDataItem extends Omit<ChartDataItem, 'maxValue'> {
+interface StackedChartDataItem extends Omit<ChartDataItem, "maxValue"> {
   remaining: number;
 }
 
@@ -37,12 +38,24 @@ const calculateHours = (start: string, end: string | null): number => {
 
 export function AttendanceOverview() {
   const [selectedView, setSelectedView] = useState<ViewType>("week");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { fetchDayTimeSheet, fetchUserTimeSheets, timeSheets = [], loading, error } = useTimeSheets();
+
+  const viewOptions = [
+    { value: "week", label: "Week" },
+    { value: "month", label: "Month" },
+  ];
+  const {
+    fetchDayTimeSheet,
+    fetchUserTimeSheets,
+    timeSheets = [],
+    loading,
+    error,
+  } = useTimeSheets();
   const { currentUser } = useMembersStore();
   const EXPECTED_HOURS_PER_DAY = currentUser?.hours || 8;
 
-  const [localTimeSheets, setLocalTimeSheets] = useState<TimeSheet[]>(timeSheets || []);
+  const [localTimeSheets, setLocalTimeSheets] = useState<TimeSheet[]>(
+    timeSheets || [],
+  );
   const [currentPage, setCurrentPage] = useState(0);
   const DAYS_PER_PAGE = 7;
 
@@ -54,18 +67,22 @@ export function AttendanceOverview() {
     const fetchedTimeSheets: TimeSheet[] = [];
 
     try {
-      const startDate = format(subDays(today, endOffset - 1), 'yyyy-MM-dd');
-      const endDate = format(subDays(today, startOffset), 'yyyy-MM-dd');
+      const startDate = format(subDays(today, endOffset - 1), "yyyy-MM-dd");
+      const endDate = format(subDays(today, startOffset), "yyyy-MM-dd");
       const allTimeSheets = await fetchUserTimeSheets({
         start_date: startDate,
-        end_date: endDate
+        end_date: endDate,
       });
 
       if (allTimeSheets && allTimeSheets.length > 0) {
-        setLocalTimeSheets(prev => {
-          const existingIds = new Set(prev.map(ts => ts.id));
-          const newSheets = allTimeSheets.filter(ts => !existingIds.has(ts.id));
-          return [...prev, ...newSheets].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setLocalTimeSheets((prev) => {
+          const existingIds = new Set(prev.map((ts) => ts.id));
+          const newSheets = allTimeSheets.filter(
+            (ts) => !existingIds.has(ts.id),
+          );
+          return [...prev, ...newSheets].sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          );
         });
         return;
       }
@@ -75,7 +92,7 @@ export function AttendanceOverview() {
 
     // Fallback: day by day
     for (let i = startOffset; i < endOffset; i++) {
-      const dateStr = format(subDays(today, i), 'yyyy-MM-dd');
+      const dateStr = format(subDays(today, i), "yyyy-MM-dd");
       try {
         const ts = await fetchDayTimeSheet(dateStr);
         if (ts) fetchedTimeSheets.push(ts);
@@ -83,10 +100,14 @@ export function AttendanceOverview() {
         console.error(`Error fetching ${dateStr}:`, err);
       }
     }
-    setLocalTimeSheets(prev => {
-      const existingDates = new Set(prev.map(ts => ts.date));
-      const newSheets = fetchedTimeSheets.filter(ts => !existingDates.has(ts.date));
-      return [...prev, ...newSheets].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    setLocalTimeSheets((prev) => {
+      const existingDates = new Set(prev.map((ts) => ts.date));
+      const newSheets = fetchedTimeSheets.filter(
+        (ts) => !existingDates.has(ts.date),
+      );
+      return [...prev, ...newSheets].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      );
     });
   };
 
@@ -102,111 +123,116 @@ export function AttendanceOverview() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  const handleNextPage = () => setCurrentPage(prev => Math.max(0, prev - 1));
-  const handlePrevPage = () => setCurrentPage(prev => prev + 1);
+  const handleNextPage = () => setCurrentPage((prev) => Math.max(0, prev - 1));
+  const handlePrevPage = () => setCurrentPage((prev) => prev + 1);
 
   const { weekData, monthData, dateRange } = useMemo(() => {
     const sheetsToProcess = [...localTimeSheets, ...timeSheets].filter(
       (sheet, idx, self) =>
-        idx === self.findIndex(s =>
-          s.id === sheet.id ||
-          (s.date === sheet.date && s.employee === sheet.employee)
-        )
+        idx ===
+        self.findIndex(
+          (s) =>
+            s.id === sheet.id ||
+            (s.date === sheet.date && s.employee === sheet.employee),
+        ),
     );
 
-    const dailyHours = sheetsToProcess.reduce((acc, entry) => {
-      if (!entry) return acc;
-      const dateKey = entry.date;
-      let hoursWorked = 0;
-      if (entry.clock_in && entry.clock_out) {
-        hoursWorked = calculateHours(entry.clock_in, entry.clock_out);
-        if (entry.break_start && entry.break_end) {
-          hoursWorked = Math.max(0, hoursWorked - calculateHours(entry.break_start, entry.break_end));
+    const dailyHours = sheetsToProcess.reduce(
+      (acc, entry) => {
+        if (!entry) return acc;
+        const dateKey = entry.date;
+        let hoursWorked = 0;
+        if (entry.clock_in && entry.clock_out) {
+          hoursWorked = calculateHours(entry.clock_in, entry.clock_out);
+          if (entry.break_start && entry.break_end) {
+            hoursWorked = Math.max(
+              0,
+              hoursWorked - calculateHours(entry.break_start, entry.break_end),
+            );
+          }
         }
-      }
-      acc[dateKey] = (acc[dateKey] || 0) + parseFloat(hoursWorked.toFixed(1));
-      return acc;
-    }, {} as Record<string, number>);
+        acc[dateKey] = (acc[dateKey] || 0) + parseFloat(hoursWorked.toFixed(1));
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     // Week view range
     const viewEndDate = subDays(new Date(), currentPage * DAYS_PER_PAGE);
     const viewStartDate = subDays(viewEndDate, DAYS_PER_PAGE - 1);
-    const viewDays = eachDayOfInterval({ start: viewStartDate, end: viewEndDate }).reverse();
+    const viewDays = eachDayOfInterval({
+      start: viewStartDate,
+      end: viewEndDate,
+    }).reverse();
 
     const weekData: ChartDataItem[] = viewDays
-      .map(day => {
-        const dateKey = format(day, 'yyyy-MM-dd');
+      .map((day) => {
+        const dateKey = format(day, "yyyy-MM-dd");
         return {
-          date: format(day, 'dd MMM'),
+          date: format(day, "dd MMM"),
           dateKey,
           value: dailyHours[dateKey] || 0,
           maxValue: EXPECTED_HOURS_PER_DAY,
-          actualHours: dailyHours[dateKey] || 0
+          actualHours: dailyHours[dateKey] || 0,
         };
       })
       .reverse();
 
     // Month view logic
     const currentDate = subDays(new Date(), currentPage * DAYS_PER_PAGE);
-    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-    const daysInMonth = eachDayOfInterval({ start: startOfMonth, end: endOfMonth });
+    const startOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1,
+    );
+    const endOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0,
+    );
+    const daysInMonth = eachDayOfInterval({
+      start: startOfMonth,
+      end: endOfMonth,
+    });
 
-    const monthData: ChartDataItem[] = daysInMonth.map(day => {
-      const dateKey = format(day, 'yyyy-MM-dd');
+    const monthData: ChartDataItem[] = daysInMonth.map((day) => {
+      const dateKey = format(day, "yyyy-MM-dd");
       const hours = dailyHours[dateKey] || 0;
       return {
-        date: format(day, 'dd MMM'),
+        date: format(day, "dd MMM"),
         dateKey,
         value: hours,
         maxValue: EXPECTED_HOURS_PER_DAY,
-        actualHours: hours
+        actualHours: hours,
       };
     });
 
-    const dateRange = selectedView === 'week'
-      ? `${format(viewStartDate, 'dd MMM')} - ${format(viewEndDate, 'dd MMM')}`
-      : `${format(startOfMonth, 'dd MMM')} - ${format(endOfMonth, 'dd MMM')}`;
+    const dateRange =
+      selectedView === "week"
+        ? `${format(viewStartDate, "dd MMM")} - ${format(viewEndDate, "dd MMM")}`
+        : `${format(startOfMonth, "dd MMM")} - ${format(endOfMonth, "dd MMM")}`;
 
     return { weekData, monthData, dateRange };
   }, [timeSheets, localTimeSheets, selectedView, currentPage]);
 
   const currentData = selectedView === "week" ? weekData : monthData;
-  const stackedData: StackedChartDataItem[] = currentData.map(item => ({
+  const stackedData: StackedChartDataItem[] = currentData.map((item) => ({
     date: item.date,
     value: Math.min(item.value, item.maxValue),
     remaining: Math.max(0, item.maxValue - item.value),
     actualHours: item.value,
-    dateKey: item.dateKey || item.date
+    dateKey: item.dateKey || item.date,
   }));
 
   return (
     <div className="w-full max-w-full flex flex-col items-end gap-5 relative bg-white rounded-lg overflow-hidden">
       {/* Dropdown */}
-      <div
-        className="flex px-7 py-4 gap-5 rounded-2xl bg-gray-100 relative cursor-pointer select-none"
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-      >
-        <span className="text-gray-400 text-base font-semibold">
-          {selectedView === "week" ? "Week" : "Month"}
-        </span>
-        {isDropdownOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white rounded-2xl shadow-lg z-10 mt-1 border border-gray-200">
-            <button
-              onClick={(e) => { e.stopPropagation(); setSelectedView("week"); setIsDropdownOpen(false); }}
-              className={`w-full px-7 py-4 ${selectedView === "week" ? "bg-blue-50 text-blue-600" : "text-gray-400 hover:bg-gray-50"}`}
-            >
-              Week
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); setSelectedView("month"); setIsDropdownOpen(false); }}
-              className={`w-full px-7 py-4 ${selectedView === "month" ? "bg-blue-50 text-blue-600" : "text-gray-400 hover:bg-gray-50"}`}
-            >
-              Month
-            </button>
-          </div>
-        )}
-      </div>
+      <CustomDropdown
+        value={selectedView}
+        options={viewOptions}
+        onChange={(value) => setSelectedView(value as ViewType)}
+        className="self-end"
+      />
 
       {/* Header */}
       <div className="flex justify-between w-full">
@@ -225,10 +251,10 @@ export function AttendanceOverview() {
             labelStyle: {
               color: "#77838F",
               fontWeight: "600",
-              size: selectedView === "week" ? "14px" : "11px"
+              size: selectedView === "week" ? "14px" : "11px",
             },
-            labelIntersectAction: 'Rotate45',
-            labelRotation: selectedView === 'month' ? 45 : 0
+            labelIntersectAction: "Rotate45",
+            labelRotation: selectedView === "month" ? 45 : 0,
           }}
           primaryYAxis={{
             minimum: 0,
@@ -238,19 +264,21 @@ export function AttendanceOverview() {
             majorGridLines: { width: 0 },
             majorTickLines: { width: 0 },
             labelStyle: { color: "#77838F", fontWeight: "600" },
-            labelFormat: '{value}h'
+            labelFormat: "{value}h",
           }}
-          chartArea={{ border: { width: 0 }, background: 'white' }}
+          chartArea={{ border: { width: 0 }, background: "white" }}
           tooltip={{
             enable: true,
-            format: '${point.y} hours',
-            header: '${point.x}'
+            format: "${point.y} hours",
+            header: "${point.x}",
           }}
           legendSettings={{ visible: false }}
           height="300px"
           width="100%"
         >
-          <Inject services={[StackingColumnSeries, Category, Tooltip, Legend]} />
+          <Inject
+            services={[StackingColumnSeries, Category, Tooltip, Legend]}
+          />
           <SeriesCollectionDirective>
             <SeriesDirective
               type="StackingColumn"

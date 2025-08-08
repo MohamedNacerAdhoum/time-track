@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { CustomDropdown } from "@/components/ui/custom-dropdown";
 import {
   ChartComponent,
   SeriesCollectionDirective,
@@ -14,7 +15,11 @@ type ViewType = "week" | "month";
 
 export function AttendanceOverviewOrg() {
   const [selectedView, setSelectedView] = useState<ViewType>("week");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const viewOptions = [
+    { value: "week", label: "Week" },
+    { value: "month", label: "Month" },
+  ];
 
   const weekData = [
     { date: "26 Dec", value: 7, maxValue: 8 },
@@ -62,17 +67,12 @@ export function AttendanceOverviewOrg() {
   const currentData = selectedView === "week" ? weekData : monthData;
   const dateRange = selectedView === "week" ? "26 Dec - 31 Dec" : "Dec 2023";
 
-  const handleViewChange = (view: ViewType) => {
-    setSelectedView(view);
-    setIsDropdownOpen(false);
-  };
-
   // Create data for the stacked columns
   const getStackedData = () => {
-    return currentData.map(item => ({
+    return currentData.map((item) => ({
       date: item.date,
       value: item.value,
-      remaining: item.maxValue - item.value
+      remaining: item.maxValue - item.value,
     }));
   };
 
@@ -81,43 +81,13 @@ export function AttendanceOverviewOrg() {
   return (
     <div className="w-full max-w-full flex flex-col items-end gap-5 relative bg-white rounded-lg overflow-hidden">
       {/* Dropdown */}
-      <div
-        className="flex px-7 py-4 gap-5 rounded-2xl bg-gray-100 relative cursor-pointer select-none"
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-      >
-        <span className="text-gray-400 text-base font-semibold">
-          {selectedView === "week" ? "Week" : "Month"}
-        </span>
-        {isDropdownOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white rounded-2xl shadow-lg z-10 mt-1 border border-gray-200">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleViewChange("week");
-              }}
-              className={`w-full px-7 py-4 ${selectedView === "week"
-                ? "bg-blue-50 text-blue-600"
-                : "text-gray-400 hover:bg-gray-50"
-                }`}
-            >
-              Week
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleViewChange("month");
-              }}
-              className={`w-full px-7 py-4 ${selectedView === "month"
-                ? "bg-blue-50 text-blue-600"
-                : "text-gray-400 hover:bg-gray-50"
-                }`}
-            >
-              Month
-            </button>
-          </div>
-        )}
-      </div>
-        
+      <CustomDropdown
+        value={selectedView}
+        options={viewOptions}
+        onChange={(value) => setSelectedView(value as ViewType)}
+        className="self-end"
+      />
+
       {/* Header */}
       <div className="flex justify-between w-full">
         <h2 className="text-2xl font-semibold">Attendance Overview</h2>
@@ -135,7 +105,7 @@ export function AttendanceOverviewOrg() {
             labelStyle: {
               color: "#77838F",
               fontWeight: "600",
-              size: selectedView === "week" ? "14px" : "11px"
+              size: selectedView === "week" ? "14px" : "11px",
             },
           }}
           primaryYAxis={{
@@ -150,8 +120,8 @@ export function AttendanceOverviewOrg() {
           chartArea={{ border: { width: 0 } }}
           tooltip={{
             enable: true,
-            format: '${point.y} hours',
-            header: '${point.x}'
+            format: "${point.y} hours",
+            header: "${point.x}",
           }}
           legendSettings={{ visible: false }}
           height="300px"
