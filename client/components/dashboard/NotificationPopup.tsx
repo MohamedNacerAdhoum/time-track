@@ -76,9 +76,9 @@ export function NotificationPopup({
       ref={popupRef}
       className="absolute top-full right-0 mt-2 w-[392px] bg-white rounded-[20px] shadow-[0_4px_12px_rgba(0,0,0,0.25)] border border-gray-100 z-50 overflow-hidden"
     >
-      <div className="flex h-[320px]">
+      <div className="h-[320px]">
         {/* Notifications Container */}
-        <div className="flex-1 p-2.5 overflow-y-auto">
+        <div className="p-2.5 overflow-y-auto h-full">
           <div className="flex flex-col gap-2.5">
             {notifications.map((notification) => (
               <div
@@ -94,7 +94,7 @@ export function NotificationPopup({
                       style={{ backgroundColor: notification.avatarColor }}
                     />
                   </div>
-                  
+
                   {/* Content */}
                   <div className="flex flex-col gap-1">
                     <div className="text-[#333] text-[17px] font-normal leading-normal tracking-[-0.17px]">
@@ -113,12 +113,6 @@ export function NotificationPopup({
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Scrollbar */}
-        <div className="w-1 flex flex-col items-center py-[2px]">
-          <div className="w-1 h-[74px] bg-[#808080] rounded-[10px] mt-[2px]" />
-          <div className="flex-1 w-1 bg-[#808080]/10 rounded-[10px]" />
         </div>
       </div>
     </div>
