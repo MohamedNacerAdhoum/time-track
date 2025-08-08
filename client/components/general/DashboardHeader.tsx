@@ -112,15 +112,26 @@ export function DashboardHeader({
       {/* Right side controls */}
       <div className="flex items-center gap-7 relative">
         {/* Notification Bell */}
-        <div className="flex p-2.5 justify-center items-center gap-2.5 rounded-full bg-[#63CDFA] relative">
-          <div className="w-10 h-10 relative">
-            <Bell className="w-[30px] h-[33px] flex-shrink-0 text-white absolute left-1 top-[3px]" />
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#FF6262] rounded-full border-2 border-[#63CDFA] flex items-center justify-center">
-              <span className="text-white text-xs font-semibold leading-normal">
-                9+
-              </span>
+        <div className="relative" ref={notificationRef}>
+          <button
+            onClick={handleNotificationClick}
+            className="flex p-2.5 justify-center items-center gap-2.5 rounded-full bg-[#63CDFA] relative hover:bg-[#4BA8E8] transition-colors cursor-pointer"
+          >
+            <div className="w-10 h-10 relative">
+              <Bell className="w-[30px] h-[33px] flex-shrink-0 text-white absolute left-1 top-[3px]" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#FF6262] rounded-full border-2 border-[#63CDFA] flex items-center justify-center">
+                <span className="text-white text-xs font-semibold leading-normal">
+                  9+
+                </span>
+              </div>
             </div>
-          </div>
+          </button>
+
+          {/* Notification Popup */}
+          <NotificationPopup
+            isOpen={isNotificationOpen}
+            onClose={() => setIsNotificationOpen(false)}
+          />
         </div>
 
         {/* Profile Picture with Dropdown */}
