@@ -66,6 +66,10 @@ export function DashboardHeader({
     setIsLogoutModalOpen(false);
   };
 
+  const handleNotificationClick = () => {
+    setIsNotificationOpen(!isNotificationOpen);
+  };
+
   return (
     <div className="flex w-full items-center gap-2.5 px-6 py-4 bg-white">
       {/* User/Admin Toggle - only show for admin users */}
