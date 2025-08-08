@@ -440,6 +440,12 @@ export function Sidebar({
         onClose={handleLogoutCancel}
         onConfirm={handleLogoutConfirm}
       />
+
+      {/* Mobile Profile */}
+      <MobileProfile
+        isOpen={isMobileProfileOpen}
+        onClose={() => setIsMobileProfileOpen(false)}
+      />
     </>
   );
 }
