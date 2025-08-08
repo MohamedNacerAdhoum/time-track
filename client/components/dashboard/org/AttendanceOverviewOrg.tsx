@@ -67,11 +67,6 @@ export function AttendanceOverviewOrg() {
   const currentData = selectedView === "week" ? weekData : monthData;
   const dateRange = selectedView === "week" ? "26 Dec - 31 Dec" : "Dec 2023";
 
-  const handleViewChange = (view: ViewType) => {
-    setSelectedView(view);
-    setIsDropdownOpen(false);
-  };
-
   // Create data for the stacked columns
   const getStackedData = () => {
     return currentData.map(item => ({
