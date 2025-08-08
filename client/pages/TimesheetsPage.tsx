@@ -184,22 +184,22 @@ export default function TimesheetsPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-[#63CDFA] hover:bg-[#63CDFA]">
-              <TableHead className="text-white font-semibold py-6">
+              <TableHead className="text-white font-semibold py-6 w-32">
                 <SortableHeader>Name</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold">
+              <TableHead className="text-white font-semibold w-24">
                 <SortableHeader>Date</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold">
+              <TableHead className="text-white font-semibold w-24">
                 <SortableHeader>Clock In</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold">
+              <TableHead className="text-white font-semibold w-24">
                 <SortableHeader>Clock Out</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold">
+              <TableHead className="text-white font-semibold w-32">
                 <SortableHeader>Break Period / day</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold text-center">
+              <TableHead className="text-white font-semibold text-center w-32">
                 Last Action
               </TableHead>
             </TableRow>
