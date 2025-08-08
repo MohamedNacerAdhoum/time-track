@@ -134,7 +134,7 @@ export default function TimesheetsPage() {
     <div className="space-y-6">
       {/* Tab Navigation */}
       <div className="flex justify-center">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full max-w-2xl">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2 h-16 p-2 bg-gray-100 rounded-2xl border border-blue-200">
             <TabsTrigger 
               value="today" 
