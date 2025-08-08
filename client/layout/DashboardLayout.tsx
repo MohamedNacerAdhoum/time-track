@@ -119,13 +119,15 @@ export default function DashboardLayout() {
             : "lg:ml-[250px] ml-0"
           }`}
       >
-        {/* Header - Now shown on all devices */}
-        <div className={`${isMobile ? "relative z-40" : ""}`}>
-          <DashboardHeader
-            isAdminView={isAdminView}
-            onToggleView={handleToggleView}
-          />
-        </div>
+        {/* Header - Hidden on mobile */}
+        {!isMobile && (
+          <div className="relative">
+            <DashboardHeader
+              isAdminView={isAdminView}
+              onToggleView={handleToggleView}
+            />
+          </div>
+        )}
 
         {/* Page Content with Transition */}
         <div
