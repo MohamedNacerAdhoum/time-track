@@ -74,34 +74,65 @@ export function DashboardHeader({
 
   return (
     <div className="flex w-full items-center gap-2.5 px-6 py-4 bg-white">
-      {/* User/Admin Toggle - only show for admin users */}
+      {/* User/Admin Toggle - show for admin users, on mobile show on left, on desktop show as before */}
       {isAdmin ? (
         <>
-          <div className="flex items-center">
-            <div className="flex w-[126px] p-2 items-center gap-3 rounded-full border border-[#63CDFA]/50 bg-white">
-              <button
-                onClick={onToggleView}
-                className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${!isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                  }`}
-              >
-                <User
-                  className={`w-7 h-7 transition-colors ${!isAdminView ? "text-white" : "text-[#77838F]"
+          {isMobile ? (
+            // Mobile layout - admin switch on left side
+            <div className="flex items-center">
+              <div className="flex w-[84px] p-1 items-center gap-1 rounded-full border border-[#63CDFA]/50 bg-white">
+                <button
+                  onClick={onToggleView}
+                  className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${!isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
                     }`}
-                />
-              </button>
-              <button
-                onClick={onToggleView}
-                className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                  }`}
-              >
-                <Users
-                  className={`w-7 h-7 transition-colors ${isAdminView ? "text-white" : "text-[#77838F]"
+                >
+                  <User
+                    className={`w-5 h-5 transition-colors ${!isAdminView ? "text-white" : "text-[#77838F]"
+                      }`}
+                  />
+                </button>
+                <button
+                  onClick={onToggleView}
+                  className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
                     }`}
-                />
-              </button>
+                >
+                  <Users
+                    className={`w-5 h-5 transition-colors ${isAdminView ? "text-white" : "text-[#77838F]"
+                      }`}
+                  />
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="h-16 w-1 bg-black/10 rounded-full mx-4" />
+          ) : (
+            // Desktop layout - admin switch centered
+            <>
+              <div className="flex items-center">
+                <div className="flex w-[126px] p-2 items-center gap-3 rounded-full border border-[#63CDFA]/50 bg-white">
+                  <button
+                    onClick={onToggleView}
+                    className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${!isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                      }`}
+                  >
+                    <User
+                      className={`w-7 h-7 transition-colors ${!isAdminView ? "text-white" : "text-[#77838F]"
+                        }`}
+                    />
+                  </button>
+                  <button
+                    onClick={onToggleView}
+                    className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                      }`}
+                  >
+                    <Users
+                      className={`w-7 h-7 transition-colors ${isAdminView ? "text-white" : "text-[#77838F]"
+                        }`}
+                    />
+                  </button>
+                </div>
+              </div>
+              <div className="h-16 w-1 bg-black/10 rounded-full mx-4" />
+            </>
+          )}
         </>
       ) : (
         <div className="flex items-center">
