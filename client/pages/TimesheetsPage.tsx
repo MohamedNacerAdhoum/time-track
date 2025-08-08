@@ -180,7 +180,7 @@ export default function TimesheetsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl overflow-hidden border border-gray-200">
+      <div className="bg-white rounded-xl overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow className="bg-[#63CDFA] hover:bg-[#63CDFA]">
