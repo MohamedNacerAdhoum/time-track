@@ -239,9 +239,10 @@ export default function TimesheetsPage() {
                 <TableCell className="text-center">
                   <div className="flex items-center justify-center gap-3">
                     <StatusBadge status={entry.status} />
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="icon"
+                      onClick={() => handleNoteClick(entry.id)}
                       className="h-8 w-8 text-[#63CDFA] hover:text-[#63CDFA] hover:bg-blue-50"
                     >
                       <FileText className="h-5 w-5" />
