@@ -104,8 +104,8 @@ export function Sidebar({
 
   return (
     <>
-      {/* Mobile Header with Hamburger Menu - Only show when sidebar is collapsed */}
-      {isMobile && isCollapsed && (
+      {/* Mobile Header with Hamburger Menu - Always show on mobile */}
+      {isMobile && (
         <div className="fixed top-0 left-0 right-0 h-16 bg-white flex items-center justify-between px-5 z-40 lg:hidden">
           <div className="flex items-center gap-3">
             {/* Hamburger Menu */}
