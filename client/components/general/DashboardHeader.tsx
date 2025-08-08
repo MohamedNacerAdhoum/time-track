@@ -39,6 +39,12 @@ export function DashboardHeader({
       ) {
         setIsProfileDropdownOpen(false);
       }
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target as Node)
+      ) {
+        setIsNotificationOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
