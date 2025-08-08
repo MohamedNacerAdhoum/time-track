@@ -2,6 +2,7 @@ import { Bell, Power, User, Users, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
 import { ProfileModal } from "./ProfileModal";
+import { NotificationPopup } from "../dashboard/NotificationPopup";
 import { useAuthStore } from "@/contexts/UserContext";
 
 interface DashboardHeaderProps {
