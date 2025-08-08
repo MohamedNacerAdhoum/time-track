@@ -305,7 +305,7 @@ export function Sidebar({
         {/* Sidebar background */}
         <div
           className={`${isCollapsed && !isMobile ? "w-[90px]" : "w-[250px]"} ${
-            isMobile ? "h-[calc(100vh-4rem)]" : "h-screen"
+            isMobile ? "h-screen" : "h-screen"
           } bg-[#63CDFA] ${
             isMobile ? "rounded-r-[20px]" : "rounded-r-[40px]"
           } relative overflow-hidden transition-all duration-300 shadow-lg`}
