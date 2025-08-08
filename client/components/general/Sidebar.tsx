@@ -104,6 +104,13 @@ export function Sidebar({
     setIsLogoutModalOpen(false);
   };
 
+  const handleProfileClick = () => {
+    if (isMobile) {
+      setIsMobileProfileOpen(true);
+      setIsProfileDropdownOpen(false);
+    }
+  };
+
   return (
     <>
       {/* Mobile Header with Hamburger Menu - Always show on mobile */}
