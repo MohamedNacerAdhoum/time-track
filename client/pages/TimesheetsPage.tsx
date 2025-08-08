@@ -125,11 +125,18 @@ export default function TimesheetsPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("history");
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
 
   const totalPages = Math.ceil(mockData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const currentData = mockData.slice(startIndex, endIndex);
+
+  const handleNoteClick = (entryId: string) => {
+    setSelectedNoteId(entryId);
+    setIsNoteModalOpen(true);
+  };
 
   return (
     <div className="space-y-6">
