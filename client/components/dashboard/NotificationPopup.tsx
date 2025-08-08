@@ -20,35 +20,35 @@ const defaultNotifications: NotificationItem[] = [
     user: "User YYY",
     message: "Missing attendance claim",
     timestamp: "10 min ago",
-    avatarColor: "#63CDFA"
+    avatarColor: "#63CDFA",
   },
   {
     id: "2",
     user: "User YYY",
     message: "New demand",
     timestamp: "10 min ago",
-    avatarColor: "#63CDFA"
+    avatarColor: "#63CDFA",
   },
   {
     id: "3",
     user: "User YYY",
     message: "Leave request",
     timestamp: "10 min ago",
-    avatarColor: "#63CDFA"
+    avatarColor: "#63CDFA",
   },
   {
     id: "4",
     user: "User YYY",
     message: "Missing attendance claim",
     timestamp: "10 min ago",
-    avatarColor: "#63CDFA"
-  }
+    avatarColor: "#63CDFA",
+  },
 ];
 
 export function NotificationPopup({
   isOpen,
   onClose,
-  notifications = defaultNotifications
+  notifications = defaultNotifications,
 }: NotificationPopupProps) {
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -65,7 +65,8 @@ export function NotificationPopup({
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isOpen, onClose]);
 

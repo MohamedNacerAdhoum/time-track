@@ -19,9 +19,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
   if (!isOpen) return null;
 
   const togglePasswordVisibility = (field: keyof typeof showPassword) => {
-    setShowPassword(prev => ({
+    setShowPassword((prev) => ({
       ...prev,
-      [field]: !prev[field]
+      [field]: !prev[field],
     }));
   };
 
@@ -29,7 +29,10 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
     <div className="fixed inset-0 bg-white z-[100] flex flex-col">
       {/* Header with Back Button */}
       <div className="flex items-center px-6 py-4 border-b border-gray-100">
-        <button onClick={onClose} className="flex items-center gap-2 text-[#63CDFA]">
+        <button
+          onClick={onClose}
+          className="flex items-center gap-2 text-[#63CDFA]"
+        >
           <ChevronLeft className="w-6 h-6" />
           <span className="text-lg font-normal">Back</span>
         </button>
@@ -90,7 +93,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
                 </div>
               </div>
               <div>
-                <h2 className="text-2xl font-semibold text-black">User xxxxx</h2>
+                <h2 className="text-2xl font-semibold text-black">
+                  User xxxxx
+                </h2>
                 <p className="text-gray-500 mt-1">Role xxxx</p>
               </div>
             </div>
@@ -106,7 +111,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
                 <span className="text-lg text-gray-700">26</span>
               </div>
               <div className="flex justify-between items-center py-3">
-                <span className="text-lg font-medium text-black">EXPERIENCE</span>
+                <span className="text-lg font-medium text-black">
+                  EXPERIENCE
+                </span>
                 <span className="text-lg text-gray-700">4 Years</span>
               </div>
               <div className="flex justify-between items-center py-3">
@@ -130,7 +137,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
         {activeTab === "edit" && (
           <div className="space-y-6">
             <div>
-              <label className="block text-lg font-medium text-black mb-2">Name</label>
+              <label className="block text-lg font-medium text-black mb-2">
+                Name
+              </label>
               <input
                 type="text"
                 defaultValue="xxxxxxxxxxxxxxxxxxxxx"
@@ -139,7 +148,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
             </div>
 
             <div>
-              <label className="block text-lg font-medium text-black mb-2">Email</label>
+              <label className="block text-lg font-medium text-black mb-2">
+                Email
+              </label>
               <input
                 type="email"
                 defaultValue="yyyy@gmail.com"
@@ -148,7 +159,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
             </div>
 
             <div>
-              <label className="block text-lg font-medium text-black mb-2">Age</label>
+              <label className="block text-lg font-medium text-black mb-2">
+                Age
+              </label>
               <input
                 type="number"
                 defaultValue="35"
@@ -157,7 +170,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
             </div>
 
             <div>
-              <label className="block text-lg font-medium text-black mb-2">Role</label>
+              <label className="block text-lg font-medium text-black mb-2">
+                Role
+              </label>
               <div className="relative">
                 <select className="w-full px-4 py-3 bg-gray-100 rounded-lg border-0 text-lg text-gray-700 appearance-none pr-10">
                   <option>Software developer</option>
@@ -169,7 +184,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
             </div>
 
             <div>
-              <label className="block text-lg font-medium text-black mb-2">Location</label>
+              <label className="block text-lg font-medium text-black mb-2">
+                Location
+              </label>
               <input
                 type="text"
                 defaultValue="YYYYYYYYY"
@@ -178,7 +195,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
             </div>
 
             <div>
-              <label className="block text-lg font-medium text-black mb-2">Experience</label>
+              <label className="block text-lg font-medium text-black mb-2">
+                Experience
+              </label>
               <input
                 type="number"
                 defaultValue="4"
@@ -187,7 +206,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
             </div>
 
             <div>
-              <label className="block text-lg font-medium text-black mb-2">Date picker</label>
+              <label className="block text-lg font-medium text-black mb-2">
+                Date picker
+              </label>
               <div className="relative">
                 <input
                   type="text"
@@ -213,7 +234,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
         {activeTab === "password" && (
           <div className="space-y-6">
             <div>
-              <label className="block text-lg font-medium text-black mb-2">Current Password</label>
+              <label className="block text-lg font-medium text-black mb-2">
+                Current Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword.current ? "text" : "password"}
@@ -235,7 +258,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
             </div>
 
             <div>
-              <label className="block text-lg font-medium text-black mb-2">New Password</label>
+              <label className="block text-lg font-medium text-black mb-2">
+                New Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword.new ? "text" : "password"}
@@ -257,7 +282,9 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
             </div>
 
             <div>
-              <label className="block text-lg font-medium text-black mb-2">Confirm Password</label>
+              <label className="block text-lg font-medium text-black mb-2">
+                Confirm Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword.confirm ? "text" : "password"}

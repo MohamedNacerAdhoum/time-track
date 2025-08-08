@@ -19,7 +19,7 @@ import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
 import { MobileProfile } from "./MobileProfile";
 
 const getMenuItems = (userRole: string | undefined) => {
-  const isAdmin = userRole === 'admin';
+  const isAdmin = userRole === "admin";
   const items = [
     { icon: Home, label: "Dashboard", path: "/dashboard" },
     { icon: Clock, label: "Timesheets", path: "/timesheets" },
@@ -61,7 +61,7 @@ export function Sidebar({
   const [isMobileProfileOpen, setIsMobileProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const menuItems = getMenuItems(isAdmin ? 'admin' : 'user');
+  const menuItems = getMenuItems(isAdmin ? "admin" : "user");
 
   useEffect(() => {
     const checkMobile = () => {
@@ -284,7 +284,6 @@ export function Sidebar({
           </div>
         </div>
       )}
-
 
       {/* Mobile Overlay */}
       {!isCollapsed && isMobile && (

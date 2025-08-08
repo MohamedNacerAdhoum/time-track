@@ -83,22 +83,26 @@ export function DashboardHeader({
               <div className="flex w-[84px] p-1 items-center gap-1 rounded-full border border-[#63CDFA]/50 bg-white">
                 <button
                   onClick={onToggleView}
-                  className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${!isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                    }`}
+                  className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
+                    !isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                  }`}
                 >
                   <User
-                    className={`w-5 h-5 transition-colors ${!isAdminView ? "text-white" : "text-[#77838F]"
-                      }`}
+                    className={`w-5 h-5 transition-colors ${
+                      !isAdminView ? "text-white" : "text-[#77838F]"
+                    }`}
                   />
                 </button>
                 <button
                   onClick={onToggleView}
-                  className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                    }`}
+                  className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
+                    isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                  }`}
                 >
                   <Users
-                    className={`w-5 h-5 transition-colors ${isAdminView ? "text-white" : "text-[#77838F]"
-                      }`}
+                    className={`w-5 h-5 transition-colors ${
+                      isAdminView ? "text-white" : "text-[#77838F]"
+                    }`}
                   />
                 </button>
               </div>
@@ -110,22 +114,26 @@ export function DashboardHeader({
                 <div className="flex w-[126px] p-2 items-center gap-3 rounded-full border border-[#63CDFA]/50 bg-white">
                   <button
                     onClick={onToggleView}
-                    className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${!isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                      }`}
+                    className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${
+                      !isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                    }`}
                   >
                     <User
-                      className={`w-7 h-7 transition-colors ${!isAdminView ? "text-white" : "text-[#77838F]"
-                        }`}
+                      className={`w-7 h-7 transition-colors ${
+                        !isAdminView ? "text-white" : "text-[#77838F]"
+                      }`}
                     />
                   </button>
                   <button
                     onClick={onToggleView}
-                    className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                      }`}
+                    className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${
+                      isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                    }`}
                   >
                     <Users
-                      className={`w-7 h-7 transition-colors ${isAdminView ? "text-white" : "text-[#77838F]"
-                        }`}
+                      className={`w-7 h-7 transition-colors ${
+                        isAdminView ? "text-white" : "text-[#77838F]"
+                      }`}
                     />
                   </button>
                 </div>
@@ -135,8 +143,7 @@ export function DashboardHeader({
           )}
         </>
       ) : (
-        <div className="flex items-center">
-        </div>
+        <div className="flex items-center"></div>
       )}
 
       {/* Spacer */}

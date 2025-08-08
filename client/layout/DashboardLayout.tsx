@@ -24,7 +24,7 @@ export default function DashboardLayout() {
     if (isAdmin) {
       setIsTransitioning(true);
       setTimeout(() => {
-        setIsAdminView(prev => !prev);
+        setIsAdminView((prev) => !prev);
         setTimeout(() => {
           setIsTransitioning(false);
         }, 150);
@@ -65,8 +65,6 @@ export default function DashboardLayout() {
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isSidebarCollapsed]);
 
-
-
   // Get current route for sidebar active state
   const getCurrentRoute = () => {
     const path = location.pathname;
@@ -84,14 +82,14 @@ export default function DashboardLayout() {
   const activeRoute = getCurrentRoute();
 
   const handleToggleSidebar = () => {
-    setIsSidebarCollapsed(prev => !prev);
+    setIsSidebarCollapsed((prev) => !prev);
   };
 
   const handleToggleView = () => {
     if (isAdmin) {
       setIsTransitioning(true);
       setTimeout(() => {
-        setIsAdminView(prev => !prev);
+        setIsAdminView((prev) => !prev);
         setTimeout(() => {
           setIsTransitioning(false);
         }, 150);
@@ -112,12 +110,13 @@ export default function DashboardLayout() {
 
       {/* Main Content */}
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 ${isMobile
-          ? "ml-0" // Mobile: no left margin, full width
-          : isSidebarCollapsed
-            ? "lg:ml-[90px] ml-0"
-            : "lg:ml-[250px] ml-0"
-          }`}
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          isMobile
+            ? "ml-0" // Mobile: no left margin, full width
+            : isSidebarCollapsed
+              ? "lg:ml-[90px] ml-0"
+              : "lg:ml-[250px] ml-0"
+        }`}
       >
         {/* Header - Hidden on mobile */}
         {!isMobile && (
@@ -131,8 +130,9 @@ export default function DashboardLayout() {
 
         {/* Page Content with Transition */}
         <div
-          className={`flex-1 p-4 lg:p-6 transition-all duration-300 ${isTransitioning ? "opacity-60 scale-95" : "opacity-100 scale-100"
-            }`}
+          className={`flex-1 p-4 lg:p-6 transition-all duration-300 ${
+            isTransitioning ? "opacity-60 scale-95" : "opacity-100 scale-100"
+          }`}
         >
           <div className="max-w-7xl mx-auto">
             {/* Render the current page component */}
