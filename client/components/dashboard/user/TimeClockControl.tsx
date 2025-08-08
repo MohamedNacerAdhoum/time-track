@@ -167,15 +167,6 @@ const TimeClockControl = () => {
 
         {renderNoteInput(action)}
 
-        {isDone && todayTimeSheet?.time_sheet && (
-          <div className={`text-xs text-center ${action === 'clock_in' ? 'text-green-600' :
-            action === 'break' ? 'text-amber-600' : 'text-red-600'
-            }`}>
-            {action === 'clock_in' && `Clocked in at ${new Date(todayTimeSheet.time_sheet.clock_in).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-            {action === 'break' && todayTimeSheet.time_sheet.break_start && `On break since ${new Date(todayTimeSheet.time_sheet.break_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-            {action === 'clock_out' && todayTimeSheet.time_sheet.clock_out && `Clocked out at ${new Date(todayTimeSheet.time_sheet.clock_out).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-          </div>
-        )}
       </div>
     );
   };

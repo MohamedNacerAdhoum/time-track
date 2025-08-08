@@ -1,4 +1,13 @@
 import "./global.css";
+// Register Syncfusion license key - MUST be done before any Syncfusion imports
+import { registerLicense } from "@syncfusion/ej2-base";
+
+// Debug: Log the Syncfusion license key (remove in production)
+console.log('Syncfusion License Key:', import.meta.env.VITE_SYNCFUSION_LICENSE_KEY ? 'Key found' : 'Key not found');
+
+// Register the license key
+registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY || '');
+
 import { createRoot, Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";

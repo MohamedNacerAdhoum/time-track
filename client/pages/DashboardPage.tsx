@@ -12,6 +12,7 @@ import TodayActivity from "@/components/dashboard/user/TodayActivity";
 import { useEffect } from 'react';
 import RealTimeClock from '@/components/ui/RealTimeClock';
 import { useMembersStore } from '@/contexts/MembersContext';
+import { AttendanceOverviewOrg } from "@/components/dashboard/org/AttendanceOverviewOrg";
 
 interface DashboardPageProps {
   isAdminView?: boolean;
@@ -74,9 +75,12 @@ export default function DashboardPage({
           ) : (
             <TimeClockControl />
           )}
-
-          {/* Attendance Overview */}
-          <AttendanceOverview />
+          {/* Conditional Section Based on View */}
+          {isAdminView ? (
+            <AttendanceOverviewOrg />
+          ) : (
+            <AttendanceOverview />
+          )}
         </div>
 
         {/* Right Column - Sidebar Content */}

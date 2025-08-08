@@ -4,7 +4,7 @@ import api from '@/lib/api';
 import { useAuthStore } from './UserContext';
 
 // Types
-interface TimeSheet {
+export interface TimeSheet {
   id: string;
   employee: string;
   employee_name: string;

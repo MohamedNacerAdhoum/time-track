@@ -1,29 +1,32 @@
-  import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useTimeSheets } from '@/contexts/TimeSheetsContext';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import { Button } from '@/components/ui/button';
 
 export function EmployeeStatus() {
   const { employeesStatus, loading: loadingStatus, fetchEmployeesStatus } = useTimeSheets();
-  
+  const navigate = useNavigate();
+
   // Fetch employees status when component mounts
   useEffect(() => {
     fetchEmployeesStatus();
   }, [fetchEmployeesStatus]);
-  
+
   // Process recent employees from the status data
   const recentEmployees = useMemo(() => {
     if (!employeesStatus?.RECENT) return [];
-    
+
     return employeesStatus.RECENT.map(employee => ({
       id: employee.employee,
       name: employee.employee_name,
-      status: employee.status === 'IN' ? 'in' : 
-              employee.status === 'IN BREAK' ? 'break' : 'out',
+      status: employee.status === 'IN' ? 'in' :
+        employee.status === 'IN BREAK' ? 'break' : 'out',
       timestamp: format(new Date(employee.last_modified), 'MMMM d, yyyy h:mm a'),
       imageUrl: employee.employee_image
     }));
   }, [employeesStatus]);
-  
+
   // Get status counts from the API response
   const statusCounts = useMemo(() => ({
     in: employeesStatus?.IN || 0,
@@ -32,20 +35,20 @@ export function EmployeeStatus() {
     total: employeesStatus?.TOTAL || 0,
     absent: employeesStatus?.ABSENT || 0
   }), [employeesStatus]);
-  
+
   // Calculate progress percentage
   const progressPercentage = useMemo(() => {
     if (!statusCounts.total) return 0;
     return ((statusCounts.in + statusCounts.break) / statusCounts.total) * 100;
   }, [statusCounts]);
-  
+
   return (
     <div className="bg-white rounded-xl p-5">
       {/* Header */}
       <h3 className="text-2xl font-semibold text-black text-center mb-2">
         Employees Status
       </h3>
-      
+
       {/* Status bar and numbers */}
       <div className="px-8 mb-6">
         <div className="flex justify-between items-center gap-12 mb-3">
@@ -71,16 +74,16 @@ export function EmployeeStatus() {
             </div>
           </div>
         </div>
-        
+
         {/* Progress bar */}
         <div className="w-full h-3 bg-[#E6EEF5] rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-[#63CDFA] rounded-full transition-all duration-500 ease-in-out" 
+          <div
+            className="h-full bg-[#63CDFA] rounded-full transition-all duration-500 ease-in-out"
             style={{ width: `${progressPercentage}%` }}
           />
         </div>
       </div>
-      
+
       {/* Employee list */}
       <div className="space-y-2.5">
         {loadingStatus ? (
@@ -105,20 +108,20 @@ export function EmployeeStatus() {
               break: 'bg-[#F59E0B]',
               out: 'bg-[#EF4444]'
             };
-            
+
             const statusText = {
               in: 'In',
               break: 'Break',
               out: 'Out'
             };
-            
+
             return (
               <div key={member.id} className="flex items-center justify-between py-3 border-b border-gray-100">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-full p-[2px] ${member.status === 'in' ? 'border-2 border-[#0FBA83]' : member.status === 'break' ? 'border-2 border-[#F59E0B]' : 'border-2 border-[#EF4444]'}`}>
                     {member.imageUrl ? (
-                      <img 
-                        src={member.imageUrl} 
+                      <img
+                        src={member.imageUrl}
                         alt={member.name}
                         className="w-full h-full rounded-full object-cover"
                         onError={(e) => {
@@ -147,16 +150,16 @@ export function EmployeeStatus() {
             );
           })
         )}
-        
-        {!loadingStatus && recentEmployees.length > 0 && (
-          <div className="mt-4">
-            <button className="w-full h-8 bg-[#63CDFA]/20 rounded-xl flex items-center justify-center hover:bg-[#63CDFA]/30 transition-colors">
-              <span className="text-xs font-semibold text-[#63CDFA]">
-                See all
-              </span>
-            </button>
-          </div>
-        )}
+
+        <div className="mt-4">
+          <Button
+            variant="outline"
+            className="w-full h-8 bg-[#63CDFA]/20 hover:bg-[#63CDFA]/30 border-0 text-[#63CDFA] hover:text-[#63CDFA]"
+            onClick={() => navigate('/members')}
+          >
+            See all Members
+          </Button>
+        </div>
       </div>
     </div>
   );
