@@ -38,7 +38,11 @@ const calculateHours = (start: string, end: string | null): number => {
 
 export function AttendanceOverview() {
   const [selectedView, setSelectedView] = useState<ViewType>("week");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const viewOptions = [
+    { value: "week", label: "Week" },
+    { value: "month", label: "Month" },
+  ];
   const { fetchDayTimeSheet, fetchUserTimeSheets, timeSheets = [], loading, error } = useTimeSheets();
   const { currentUser } = useMembersStore();
   const EXPECTED_HOURS_PER_DAY = currentUser?.hours || 8;
