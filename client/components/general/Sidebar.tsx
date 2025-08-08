@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
+import { MobileProfile } from "./MobileProfile";
 
 const getMenuItems = (userRole: string | undefined) => {
   const isAdmin = userRole === 'admin';
