@@ -16,9 +16,10 @@ import {
   X,
 } from "lucide-react";
 import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
+import { MobileProfile } from "./MobileProfile";
 
 const getMenuItems = (userRole: string | undefined) => {
-  const isAdmin = userRole === 'admin';
+  const isAdmin = userRole === "admin";
   const items = [
     { icon: Home, label: "Dashboard", path: "/dashboard" },
     { icon: Clock, label: "Timesheets", path: "/timesheets" },
@@ -57,9 +58,10 @@ export function Sidebar({
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isMobileProfileOpen, setIsMobileProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const menuItems = getMenuItems(isAdmin ? 'admin' : 'user');
+  const menuItems = getMenuItems(isAdmin ? "admin" : "user");
 
   useEffect(() => {
     const checkMobile = () => {
@@ -102,9 +104,16 @@ export function Sidebar({
     setIsLogoutModalOpen(false);
   };
 
+  const handleProfileClick = () => {
+    if (isMobile) {
+      setIsMobileProfileOpen(true);
+      setIsProfileDropdownOpen(false);
+    }
+  };
+
   return (
     <>
-      {/* Mobile Header with Hamburger Menu */}
+      {/* Mobile Header with Hamburger Menu - Always show on mobile */}
       {isMobile && (
         <div className="fixed top-0 left-0 right-0 h-16 bg-white flex items-center justify-between px-5 z-40 lg:hidden">
           <div className="flex items-center gap-3">
@@ -176,6 +185,7 @@ export function Sidebar({
               <div className="absolute top-full right-0 mt-1 bg-white rounded-[10.8px] shadow-[0_2.88px_8.64px_rgba(0,0,0,0.25)] border-none z-50 w-[145px]">
                 {/* Profile */}
                 <div
+                  onClick={handleProfileClick}
                   className="flex items-center gap-[10px] px-[21.6px] py-[10.8px] border-b-[0.36px] border-[#D9D9D9] hover:bg-gray-50 cursor-pointer rounded-t-[10.8px]"
                   style={{
                     fontFamily:
@@ -275,79 +285,18 @@ export function Sidebar({
         </div>
       )}
 
-      {/* User/Admin Toggle for Mobile - positioned below header */}
-      {isMobile && isAdminView !== undefined && onToggleView && (
-        <div className="fixed left-5 top-20 flex items-center px-1 py-1 border border-[#63CDFA]/50 bg-white rounded-full shadow-sm z-30 lg:hidden">
-          <button
-            className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
-              !isAdminView
-                ? "bg-[#63CDFA] shadow-sm"
-                : "bg-transparent hover:bg-gray-50"
-            }`}
-            onClick={onToggleView}
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.00452 7.73598C8.91322 7.73598 10.4605 6.18867 10.4605 4.27997C10.4605 2.37128 8.91322 0.823975 7.00452 0.823975C5.09583 0.823975 3.54852 2.37128 3.54852 4.27997C3.54852 6.18867 5.09583 7.73598 7.00452 7.73598Z"
-                fill={!isAdminView ? "white" : "#77838F"}
-              />
-              <path
-                d="M7.0045 8.88782C4.14277 8.891 1.82368 11.2101 1.8205 14.0718C1.8205 14.3899 2.07837 14.6478 2.39649 14.6478H11.6125C11.9306 14.6478 12.1885 14.3899 12.1885 14.0718C12.1853 11.2101 9.86623 8.89098 7.0045 8.88782Z"
-                fill={!isAdminView ? "white" : "#77838F"}
-              />
-            </svg>
-          </button>
-
-          <button
-            className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
-              isAdminView
-                ? "bg-[#63CDFA] shadow-sm"
-                : "bg-transparent hover:bg-gray-50"
-            }`}
-            onClick={onToggleView}
-          >
-            <svg
-              width="19"
-              height="19"
-              viewBox="0 0 19 19"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.6352 12.9615C9.99724 12.9615 9.37361 12.7723 8.84316 12.4179C8.31271 12.0634 7.89928 11.5597 7.65514 10.9703C7.411 10.3809 7.34712 9.73231 7.47158 9.1066C7.59604 8.4809 7.90325 7.90615 8.35436 7.45504C8.80547 7.00393 9.38022 6.69672 10.0059 6.57226C10.6316 6.4478 11.2802 6.51168 11.8696 6.75582C12.459 6.99996 12.9628 7.41339 13.3172 7.94384C13.6716 8.47428 13.8608 9.09792 13.8608 9.73588C13.8608 10.5914 13.521 11.4118 12.916 12.0167C12.3111 12.6216 11.4907 12.9615 10.6352 12.9615Z"
-                fill={isAdminView ? "white" : "#77838F"}
-              />
-              <path
-                d="M5.54118 12.9615H1.7648C1.55093 12.9615 1.34582 12.8765 1.19459 12.7253C1.04336 12.5741 0.958405 12.369 0.958405 12.1551C0.966046 10.9972 1.38719 9.88011 2.14587 9.00535C2.90456 8.13059 3.95085 7.55572 5.09604 7.38442C5.22912 7.36578 5.36474 7.38068 5.49059 7.42778C5.61644 7.47488 5.72852 7.55268 5.81665 7.65412C5.90478 7.75555 5.96617 7.8774 5.99524 8.00859C6.0243 8.13978 6.02013 8.27616 5.98308 8.40532C5.85951 8.83804 5.79681 9.28587 5.79681 9.73588C5.79704 10.4534 5.95853 11.1617 6.26936 11.8083C6.32782 11.9311 6.3543 12.0666 6.34633 12.2023C6.33837 12.3381 6.29622 12.4696 6.2238 12.5846C6.15138 12.6997 6.05105 12.7946 5.93212 12.8605C5.8132 12.9263 5.67955 12.9611 5.5436 12.9615H5.54118Z"
-                fill={isAdminView ? "white" : "#77838F"}
-              />
-              <path
-                d="M14.6672 19.4127H6.60321C6.38933 19.4127 6.18422 19.3277 6.03299 19.1765C5.88177 19.0253 5.79681 18.8202 5.79681 18.6063C5.79681 17.3231 6.30656 16.0924 7.21394 15.185C8.12132 14.2776 9.35198 13.7679 10.6352 13.7679C11.9184 13.7679 13.1491 14.2776 14.0565 15.185C14.9638 16.0924 15.4736 17.3231 15.4736 18.6063C15.4736 18.8202 15.3886 19.0253 15.2374 19.1765C15.0862 19.3277 14.8811 19.4127 14.6672 19.4127Z"
-                fill={isAdminView ? "white" : "#77838F"}
-              />
-            </svg>
-          </button>
-        </div>
-      )}
-
       {/* Mobile Overlay */}
       {!isCollapsed && isMobile && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-50 lg:hidden"
           onClick={onToggleCollapse}
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`fixed left-0 z-40 h-full transition-all duration-300 ${
-          isMobile ? "top-16" : "top-0"
+        className={`fixed left-0 z-50 h-full transition-all duration-300 ${
+          isMobile ? "top-0" : "top-0"
         } ${isMobile && isCollapsed ? "-translate-x-full" : "translate-x-0"}`}
       >
         {/* Active indicator background - positioned dynamically based on collapsed state */}
@@ -365,7 +314,7 @@ export function Sidebar({
         {/* Sidebar background */}
         <div
           className={`${isCollapsed && !isMobile ? "w-[90px]" : "w-[250px]"} ${
-            isMobile ? "h-[calc(100vh-4rem)]" : "h-screen"
+            isMobile ? "h-screen" : "h-screen"
           } bg-[#63CDFA] ${
             isMobile ? "rounded-r-[20px]" : "rounded-r-[40px]"
           } relative overflow-hidden transition-all duration-300 shadow-lg`}
@@ -489,6 +438,12 @@ export function Sidebar({
         isOpen={isLogoutModalOpen}
         onClose={handleLogoutCancel}
         onConfirm={handleLogoutConfirm}
+      />
+
+      {/* Mobile Profile */}
+      <MobileProfile
+        isOpen={isMobileProfileOpen}
+        onClose={() => setIsMobileProfileOpen(false)}
       />
     </>
   );
