@@ -36,8 +36,8 @@ export function MobileProfile({ isOpen, onClose }: MobileProfileProps) {
       </div>
 
       {/* Tab Navigation */}
-      <div className="px-6 py-4 sm:flex sm:flex-col">
-        <div className="flex gap-1 sm:gap-3 sm:mx-auto">
+      <div className="px-6 py-4 flex flex-col sm:flex sm:flex-col">
+        <div className="flex gap-3 mx-auto sm:gap-3 sm:mx-auto">
           <button
             onClick={() => setActiveTab("details")}
             className={`px-6 py-3 rounded-lg text-sm font-medium transition-colors ${
