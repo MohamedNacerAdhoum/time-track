@@ -187,15 +187,18 @@ export default function TimesheetsPage() {
         </div>
         
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-xl">
-            <span className="text-gray-500 font-medium">Last action</span>
-            <ChevronDown className="h-5 w-5 text-gray-400" />
-          </div>
-          
-          <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-xl">
-            <span className="text-gray-500 font-medium">25/07/2022</span>
-            <Calendar className="h-5 w-5 text-gray-400" />
-          </div>
+          <CustomDropdown
+            value={lastAction}
+            options={lastActionOptions}
+            onChange={setLastAction}
+            className="min-w-[160px]"
+          />
+
+          <CalendarWidget
+            value={selectedDate}
+            onChange={setSelectedDate}
+            className="min-w-[180px]"
+          />
         </div>
       </div>
 
