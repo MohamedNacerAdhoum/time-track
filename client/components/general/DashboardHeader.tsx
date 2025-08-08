@@ -22,7 +22,7 @@ export function DashboardHeader({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const { user, isAdmin } = useAuthStore();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
 
   // Check if user is admin on component mount
   useEffect(() => {
