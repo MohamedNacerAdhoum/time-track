@@ -268,26 +268,7 @@ export default function MembersPage() {
 
   return (
     <div className="space-y-6">
-      {/* Action Buttons */}
-      <div className="flex justify-end items-center gap-2">
-        <Button
-          onClick={() => console.log("Add new member")}
-          className="bg-[#63CDFA] hover:bg-[#4BA8E8] text-white px-5 py-4 rounded-xl shadow-lg flex items-center gap-3"
-        >
-          <Plus className="h-6 w-6" />
-        </Button>
-        
-        {selectedMembers.size > 0 && (
-          <Button
-            onClick={handleDeleteSelected}
-            className="bg-[#FF6262] hover:bg-[#FF4444] text-white px-5 py-4 rounded-xl shadow-lg flex items-center gap-3"
-          >
-            <Trash2 className="h-6 w-6" />
-          </Button>
-        )}
-      </div>
-
-      {/* Search */}
+      {/* Search + Action Buttons */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1 max-w-md">
           <div className="relative">
@@ -299,6 +280,24 @@ export default function MembersPage() {
               className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-xl text-lg"
             />
           </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => console.log("Add new member")}
+            className="bg-[#63CDFA] hover:bg-[#4BA8E8] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
+          >
+            <Plus className="h-6 w-6" />
+          </Button>
+
+          {selectedMembers.size > 0 && (
+            <Button
+              onClick={handleDeleteSelected}
+              className="bg-[#FF6262] hover:bg-[#FF4444] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
+            >
+              <Trash2 className="h-6 w-6" />
+            </Button>
+          )}
         </div>
       </div>
 
