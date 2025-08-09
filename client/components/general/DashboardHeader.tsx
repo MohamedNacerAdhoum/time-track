@@ -154,9 +154,9 @@ export function DashboardHeader({
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
               className="flex items-center gap-1.5 p-[2px] rounded-full border border-[#71839B]/50 bg-white hover:bg-gray-50 transition-colors w-[80px] h-[46px]"
             >
-              <div className="flex p-[2.16px] items-center">
+              <div className="flex p-[1.5px] items-center">
                 <div
-                  className={`w-[41px] h-[41px] rounded-full p-[2.16px] border-[2.16px] ${getStatusColor(displayUser?.status)}`}
+                  className={`w-[35px] h-[35px] rounded-full p-[1.5px] border-[1.5px] ${getStatusColor(displayUser?.status)}`}
                 >
                   {displayUser?.imageUrl ? (
                     <div
