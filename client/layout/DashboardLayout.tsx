@@ -111,27 +111,29 @@ export default function DashboardLayout() {
 
       {/* Main Content */}
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 ${isMobile
+        className={`flex-1 flex flex-col transition-all duration-300 ${
+          isMobile
             ? "ml-0" // Mobile: no left margin, full width
             : isSidebarCollapsed
               ? "lg:ml-[90px] ml-0"
               : "lg:ml-[250px] ml-0"
-          }`}
+        }`}
       >
-        {/* Header - Hidden on mobile */}
-        {!isMobile && (
-          <div className="relative">
-            <DashboardHeader
-              isAdminView={isAdminView}
-              onToggleView={handleToggleView}
-            />
-          </div>
-        )}
+        {/* Header - Now shown on both mobile and desktop */}
+        <div className="relative">
+          <DashboardHeader
+            isAdminView={isAdminView}
+            onToggleView={handleToggleView}
+            onToggleCollapse={handleToggleSidebar}
+            isCollapsed={isSidebarCollapsed}
+          />
+        </div>
 
         {/* Page Content with Transition */}
         <div
-          className={`flex-1 p-4 lg:p-6 transition-all duration-300 ${isTransitioning ? "opacity-60 scale-95" : "opacity-100 scale-100"
-            }`}
+          className={`flex-1 p-4 lg:p-6 transition-all duration-300 ${
+            isTransitioning ? "opacity-60 scale-95" : "opacity-100 scale-100"
+          } ${isMobile ? "pt-20" : ""}`}
         >
           <div className="max-w-7xl mx-auto">
             <AdminViewProvider isAdminView={isAdminView}>
