@@ -12,9 +12,9 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Menu,
-  X,
 } from "lucide-react";
+import { useMembersStore } from "@/contexts/MembersContext";
+
 import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
 import { MobileProfile } from "./MobileProfile";
 

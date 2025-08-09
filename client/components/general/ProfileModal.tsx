@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { X, Eye, EyeOff, Calendar, ChevronDown } from "lucide-react";
+import { X, Eye, EyeOff, Calendar, ChevronDown, Pencil } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { useAuthStore } from "@/contexts/UserContext";
 import { useMembersStore } from "@/contexts/MembersContext";
@@ -275,22 +275,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                       )}
                     </div>
                     <div className="absolute bottom-1 right-1 w-[36px] h-[36px] bg-[#F4F4F4] rounded-full border-[1px] border-[#63CDFA] flex items-center justify-center">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 31 31"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M1.5026 24.3987C0.564851 25.3362 0.0378808 26.6077 0.0375977 27.9337L0.0375977 30.5H2.60385C3.92982 30.4997 5.20138 29.9727 6.13885 29.035L22.8176 12.3562L18.1813 7.71997L1.5026 24.3987Z"
-                          fill="#63CDFA"
-                        />
-                        <path
-                          d="M28.9687 1.56883C28.6643 1.26413 28.3029 1.0224 27.905 0.857478C27.5071 0.692554 27.0807 0.607666 26.65 0.607666C26.2193 0.607666 25.7928 0.692554 25.3949 0.857478C24.9971 1.0224 24.6356 1.26413 24.3312 1.56883L19.9487 5.95258L24.585 10.5888L28.9687 6.20633C29.2734 5.90194 29.5152 5.54048 29.6801 5.14262C29.845 4.74475 29.9299 4.31828 29.9299 3.88758C29.9299 3.45689 29.845 3.03041 29.6801 2.63255C29.5152 2.23468 29.2734 1.87322 28.9687 1.56883Z"
-                          fill="#63CDFA"
-                        />
-                      </svg>
+                      <Pencil className="w-[23px] h-[23px] text-[#63CDFA]" />
                     </div>
                   </div>
                   <div className="text-center space-y-3">
@@ -374,22 +359,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   onClick={() => setActiveTab("edit")}
                   className="w-full bg-[#63CDFA] hover:bg-[#5ab8e8] text-white py-[12px] px-4 rounded-[8px] shadow-[-4px_4px_12px_rgba(0,0,0,0.25)] transition-colors flex items-center justify-center gap-[8px]"
                 >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 31 30"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M1.965 23.899C1.02725 24.8364 0.500283 26.108 0.5 27.434L0.5 30.0002H3.06625C4.39222 29.9999 5.66379 29.473 6.60125 28.5352L23.28 11.8565L18.6438 7.22021L1.965 23.899Z"
-                      fill="white"
-                    />
-                    <path
-                      d="M29.4314 1.06883C29.127 0.764126 28.7655 0.522401 28.3677 0.357478C27.9698 0.192554 27.5433 0.107666 27.1126 0.107666C26.6819 0.107666 26.2555 0.192554 25.8576 0.357478C25.4597 0.522401 25.0983 0.764126 24.7939 1.06883L20.4114 5.45258L25.0476 10.0888L29.4314 5.70633C29.7361 5.40194 29.9778 5.04048 30.1427 4.64262C30.3077 4.24475 30.3925 3.81828 30.3925 3.38758C30.3925 2.95689 30.3077 2.53041 30.1427 2.13255C29.9778 1.73468 29.7361 1.37322 29.4314 1.06883Z"
-                      fill="white"
-                    />
-                  </svg>
+                  <Pencil className="w-[23px] h-[23px] text-white" />
                   <span
                     className="text-[16px] font-semibold"
                     style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
