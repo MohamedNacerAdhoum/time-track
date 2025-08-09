@@ -198,7 +198,7 @@ export default function MembersPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [rowsPerPage]);
+  }, [searchQuery, rowsPerPage]);
 
   // Update select all state based on selected members
   useEffect(() => {
