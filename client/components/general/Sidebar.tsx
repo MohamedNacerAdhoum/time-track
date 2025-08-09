@@ -241,8 +241,8 @@ export function Sidebar({
             <button
               onClick={onToggleCollapse}
               className={`absolute top-[59px] ${
-                isCollapsed ? "right-[8px]" : "right-[15px]"
-              } w-[31px] h-[31px] bg-white rounded-full border border-[#71839B] flex items-center justify-center transition-all duration-300 hover:bg-gray-50 hover:border-[#63CDFA] z-10`}
+                isCollapsed ? "-right-[15px]" : "-right-[15px]"
+              } w-[31px] h-[31px] bg-white rounded-full border border-[#71839B] flex items-center justify-center transition-all duration-300 hover:bg-gray-50 hover:border-[#63CDFA] z-10 shadow-sm`}
             >
               {isCollapsed ? (
                 <ChevronRight className="w-[15px] h-[15px] text-[#71839B]" />
