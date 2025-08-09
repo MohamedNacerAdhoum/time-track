@@ -152,7 +152,7 @@ export function DashboardHeader({
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-              className="flex items-center gap-2.5 p-[3px] rounded-full border border-[#71839B]/50 bg-white hover:bg-gray-50 transition-colors w-[95px] h-[54px]"
+              className="flex items-center gap-1.5 p-[2px] rounded-full border border-[#71839B]/50 bg-white hover:bg-gray-50 transition-colors w-[80px] h-[46px]"
             >
               <div className="flex p-[2.16px] items-center">
                 <div
