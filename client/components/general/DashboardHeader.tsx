@@ -10,6 +10,8 @@ import { useIsMobile } from "@/hooks/useMobile";
 interface DashboardHeaderProps {
   isAdminView: boolean;
   onToggleView: () => void;
+  onToggleCollapse?: () => void;
+  isCollapsed?: boolean;
 }
 
 export function DashboardHeader({
