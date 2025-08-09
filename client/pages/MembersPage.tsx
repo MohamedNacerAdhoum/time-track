@@ -339,15 +339,15 @@ export default function MembersPage() {
                       className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
                     />
                   </TableCell>
-                  <TableCell className="font-semibold text-black">{member.name}</TableCell>
-                  <TableCell className="text-[#7F7F7F]">{member.email}</TableCell>
-                  <TableCell className="text-[#7F7F7F]">{member.age}</TableCell>
-                  <TableCell className="text-[#7F7F7F]">{member.role}</TableCell>
-                  <TableCell className="text-[#7F7F7F]">{member.location}</TableCell>
-                  <TableCell className="text-[#7F7F7F]">{member.experience}</TableCell>
-                  <TableCell className="text-[#7F7F7F]">{member.hours} h</TableCell>
-                  <TableCell className="text-[#7F7F7F]">{member.balance}</TableCell>
-                  <TableCell className="text-[#7F7F7F]">{member.joined}</TableCell>
+                  <TableCell className="font-semibold text-gray-900">{member.name}</TableCell>
+                  <TableCell className="text-gray-500">{member.email}</TableCell>
+                  <TableCell className="text-gray-500">{member.age}</TableCell>
+                  <TableCell className="text-gray-500">{member.role}</TableCell>
+                  <TableCell className="text-gray-500">{member.location}</TableCell>
+                  <TableCell className="text-gray-500">{member.experience}</TableCell>
+                  <TableCell className="text-gray-500">{member.hours} h</TableCell>
+                  <TableCell className="text-gray-500">{member.balance}</TableCell>
+                  <TableCell className="text-gray-500">{member.joined}</TableCell>
                   <TableCell className="text-center">
                     <Button
                       variant="ghost"
