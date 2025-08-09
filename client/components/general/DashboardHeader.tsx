@@ -6,6 +6,7 @@ import { NotificationPopup } from "../dashboard/NotificationPopup";
 import { useAuthStore } from "@/contexts/UserContext";
 import { useMembersStore } from "@/contexts/MembersContext";
 import { useIsMobile } from "@/hooks/useMobile";
+import { MobileProfile } from "./MobileProfile";
 
 interface DashboardHeaderProps {
   isAdminView: boolean;
