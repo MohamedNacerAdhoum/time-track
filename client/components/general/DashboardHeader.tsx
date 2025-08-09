@@ -179,8 +179,8 @@ export function DashboardHeader({
                     </div>
                   )}
                 </div>
-                <div className="flex items-center justify-center p-2 rounded-full">
-                  <ChevronDown className="w-[25px] h-[25px] text-[#71839B] rotate-0 transition-transform" />
+                <div className="flex items-center justify-center p-1.5 rounded-full">
+                  <ChevronDown className="w-[20px] h-[20px] text-[#71839B] rotate-0 transition-transform" />
                 </div>
               </div>
             </button>
