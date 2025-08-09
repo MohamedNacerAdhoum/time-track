@@ -131,7 +131,7 @@ export default function DashboardLayout() {
         {/* Page Content with Transition */}
         <div
           className={`flex-1 p-4 lg:p-6 transition-all duration-300 ${isTransitioning ? "opacity-60 scale-95" : "opacity-100 scale-100"
-            }`}
+            } ${isMobile ? "pt-20" : ""}`}
         >
           <div className="max-w-7xl mx-auto">
             <AdminViewProvider isAdminView={isAdminView}>
