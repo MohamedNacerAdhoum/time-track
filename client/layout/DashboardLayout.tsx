@@ -118,15 +118,15 @@ export default function DashboardLayout() {
               : "lg:ml-[250px] ml-0"
           }`}
       >
-        {/* Header - Hidden on mobile */}
-        {!isMobile && (
-          <div className="relative">
-            <DashboardHeader
-              isAdminView={isAdminView}
-              onToggleView={handleToggleView}
-            />
-          </div>
-        )}
+        {/* Header - Now shown on both mobile and desktop */}
+        <div className="relative">
+          <DashboardHeader
+            isAdminView={isAdminView}
+            onToggleView={handleToggleView}
+            onToggleCollapse={handleToggleSidebar}
+            isCollapsed={isSidebarCollapsed}
+          />
+        </div>
 
         {/* Page Content with Transition */}
         <div
