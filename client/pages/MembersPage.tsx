@@ -304,136 +304,71 @@ export default function MembersPage() {
 
       {/* Table */}
       <div className="bg-white rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          {/* Header */}
-          <div className="bg-[#63CDFA] px-5 py-5 flex items-center">
-            <div className="flex items-center justify-center w-6 mr-7">
-              <Checkbox
-                checked={selectAll}
-                onCheckedChange={handleSelectAll}
-                className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
-                style={{
-                  // Custom indeterminate state styling
-                  ...(isIndeterminate && {
-                    backgroundColor: '#FFF',
-                    borderColor: '#0061FF',
-                  })
-                }}
-              />
-              {isIndeterminate && (
-                <div className="absolute w-3.5 h-0.5 bg-[#0061FF] rounded-full" />
-              )}
-            </div>
-            
-            <div className="flex-1 flex items-center">
-              <div className="w-[138px] mr-7">
-                <SortableHeader>Name</SortableHeader>
-              </div>
-              
-              <div className="w-[111px] mr-7">
-                <SortableHeader showArrow={false}>Email</SortableHeader>
-              </div>
-              
-              <div className="w-[50px] mr-7">
-                <SortableHeader showArrow={false}>Age</SortableHeader>
-              </div>
-              
-              <div className="w-[120px] mr-7">
-                <SortableHeader showArrow={false}>Role</SortableHeader>
-              </div>
-              
-              <div className="w-[103px] mr-7">
-                <SortableHeader showArrow={false}>Location</SortableHeader>
-              </div>
-              
-              <div className="w-[130px] mr-7">
-                <SortableHeader showArrow={false}>Experience</SortableHeader>
-              </div>
-              
-              <div className="w-[95px] mr-7">
-                <SortableHeader>Hours</SortableHeader>
-              </div>
-              
-              <div className="w-[115px] mr-7">
-                <SortableHeader>Balance</SortableHeader>
-              </div>
-              
-              <div className="flex-1">
-                <SortableHeader showArrow={false}>Joined</SortableHeader>
-              </div>
-            </div>
-          </div>
-
-          {/* Rows */}
-          {currentData.length > 0 ? (
-            currentData.map((member, index) => (
-              <div
-                key={member.id}
-                className={cn(
-                  "px-5 py-5 flex items-center border-b border-gray-100",
-                  index % 2 === 1 ? "bg-[#F2FBFF]" : "bg-white"
-                )}
-              >
-                <div className="flex items-center justify-center w-6 mr-7">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-[#63CDFA] hover:bg-[#63CDFA]">
+              <TableHead className="text-white font-semibold py-4 w-10">
+                <div className="flex items-center justify-center">
                   <Checkbox
-                    checked={selectedMembers.has(member.id)}
-                    onCheckedChange={(checked) => handleSelectMember(member.id, checked as boolean)}
-                    className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
+                    checked={selectAll}
+                    onCheckedChange={handleSelectAll}
+                    className="w-6 h-6 border-2 border-white data-[state=checked]:bg-white data-[state=checked]:border-white data-[state=checked]:text-[#0061FF]"
                   />
                 </div>
-                
-                <div className="flex-1 flex items-center">
-                  <div className="w-[138px] mr-7">
-                    <span className="text-black font-semibold text-base">{member.name}</span>
-                  </div>
-                  
-                  <div className="w-[111px] mr-7">
-                    <span className="text-[#7F7F7F] text-base truncate block">{member.email}</span>
-                  </div>
-                  
-                  <div className="w-[50px] mr-7">
-                    <span className="text-[#7F7F7F] text-base">{member.age}</span>
-                  </div>
-                  
-                  <div className="w-[120px] mr-7">
-                    <span className="text-[#7F7F7F] text-base truncate block">{member.role}</span>
-                  </div>
-                  
-                  <div className="w-[103px] mr-7">
-                    <span className="text-[#7F7F7F] text-base truncate block">{member.location}</span>
-                  </div>
-                  
-                  <div className="w-[130px] mr-7">
-                    <span className="text-[#7F7F7F] text-base">{member.experience}</span>
-                  </div>
-                  
-                  <div className="w-[95px] mr-7">
-                    <span className="text-[#7F7F7F] text-base">{member.hours} h</span>
-                  </div>
-                  
-                  <div className="w-[115px] mr-7">
-                    <span className="text-[#7F7F7F] text-base">{member.balance}</span>
-                  </div>
-                  
-                  <div className="flex-1 flex items-center justify-between">
-                    <span className="text-[#7F7F7F] text-base">{member.joined}</span>
-                    
-                    <button
+              </TableHead>
+              <TableHead className="text-white font-semibold w-36"><SortableHeader>Name</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-40"><SortableHeader showArrow={false}>Email</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-16"><SortableHeader showArrow={false}>Age</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-24"><SortableHeader showArrow={false}>Role</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-24"><SortableHeader showArrow={false}>Location</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-28"><SortableHeader showArrow={false}>Experience</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-20"><SortableHeader>Hours</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-24"><SortableHeader>Balance</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold"><SortableHeader showArrow={false}>Joined</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-10"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {currentData.length > 0 ? (
+              currentData.map((member, index) => (
+                <TableRow key={member.id} className={cn("border-b border-gray-100", index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]")}>
+                  <TableCell className="text-center">
+                    <Checkbox
+                      checked={selectedMembers.has(member.id)}
+                      onCheckedChange={(checked) => handleSelectMember(member.id, checked as boolean)}
+                      className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
+                    />
+                  </TableCell>
+                  <TableCell className="font-semibold text-black">{member.name}</TableCell>
+                  <TableCell className="text-[#7F7F7F]">{member.email}</TableCell>
+                  <TableCell className="text-[#7F7F7F]">{member.age}</TableCell>
+                  <TableCell className="text-[#7F7F7F]">{member.role}</TableCell>
+                  <TableCell className="text-[#7F7F7F]">{member.location}</TableCell>
+                  <TableCell className="text-[#7F7F7F]">{member.experience}</TableCell>
+                  <TableCell className="text-[#7F7F7F]">{member.hours} h</TableCell>
+                  <TableCell className="text-[#7F7F7F]">{member.balance}</TableCell>
+                  <TableCell className="text-[#7F7F7F]">{member.joined}</TableCell>
+                  <TableCell className="text-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleEditMember(member.id)}
-                      className="ml-4 p-1 hover:bg-gray-100 rounded"
+                      className="h-8 w-8 text-[#63CDFA] hover:text-[#63CDFA] hover:bg-blue-50"
                     >
-                      <Edit className="h-7 w-7 text-[#63CDFA]" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="px-5 py-10 text-center text-gray-500 font-medium">
-              No members found
-            </div>
-          )}
-        </div>
+                      <Edit className="h-7 w-7" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={11} className="text-center py-10 text-gray-500 font-medium">
+                  No members found
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
 
       {/* Pagination */}
