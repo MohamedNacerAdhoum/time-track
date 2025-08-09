@@ -13,10 +13,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { useMembersStore } from "@/contexts/MembersContext";
 
 import { LogoutConfirmationModal } from "../dashboard/LogoutConfirmationModal";
-import { MobileProfile } from "./MobileProfile";
 
 const getMenuItems = (userRole: string | undefined) => {
   const isAdmin = userRole === "admin";

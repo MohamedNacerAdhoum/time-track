@@ -26,12 +26,20 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [selectedRole, setSelectedRole] = useState<string>('');
   const { toast } = useToast();
   const { changePassword } = useAuthStore();
   const hasFetched = useRef(false);
 
-  // Use MembersContext for user data
-  const { currentUser, loading, error, fetchCurrentUser } = useMembersStore();
+  // Use MembersContext for user data and roles
+  const { 
+    currentUser, 
+    loading, 
+    error, 
+    fetchCurrentUser, 
+    roles, 
+    fetchAllRoles 
+  } = useMembersStore();
   const { user: authUser } = useAuthStore();
 
   const getStatusColor = (status: string | undefined | null) => {
@@ -44,16 +52,25 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     return 'border-[#EF4444]'; // default to out
   };
 
-  // Fetch user data when modal opens
+  // Fetch user data and roles when modal opens
   useEffect(() => {
     if (!isOpen || !authUser?.token || hasFetched.current) return;
 
     const loadUserData = async () => {
       try {
-        await fetchCurrentUser();
+        const [userData, rolesData] = await Promise.all([
+          fetchCurrentUser(),
+          fetchAllRoles()
+        ]);
+        
+        // Set the selected role to the user's current role
+        if (userData?.role_name) {
+          setSelectedRole(userData.role_name);
+        }
+        
         hasFetched.current = true;
       } catch (err) {
-        console.error('Error loading user data:', err);
+        console.error('Error loading data:', err);
       } finally {
         if (isInitialLoad) {
           setIsInitialLoad(false);
@@ -69,7 +86,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         hasFetched.current = false;
       }
     };
-  }, [isOpen, isInitialLoad, fetchCurrentUser, authUser?.token]);
+  }, [isOpen, isInitialLoad, fetchCurrentUser, authUser?.token, fetchAllRoles]);
 
   if (!isOpen) return null;
 
@@ -383,7 +400,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type="text"
                     defaultValue={user?.name ?? "xxxxxxxxxxxxxxxxxxx"}
-                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F]"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
                     style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
                   />
                 </div>
@@ -397,7 +414,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type="email"
                     defaultValue={user?.email ?? "yyyy@gmail.com"}
-                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F]"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
                     style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
                   />
                 </div>
@@ -411,7 +428,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type="number"
                     defaultValue={user?.age ?? "35"}
-                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F]"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
                     style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
                   />
                 </div>
@@ -423,11 +440,16 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                     Role
                   </label>
                   <div className="relative">
-                    <select className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] appearance-none pr-8">
-                      <option>{user?.role_name ?? "Please select an option"}</option>
-                      <option>Admin</option>
-                      <option>Manager</option>
-                      <option>Employee</option>
+                    <select 
+                      value={selectedRole}
+                      onChange={(e) => setSelectedRole(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] appearance-none pr-8 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
+                    >
+                      {roles.map((role) => (
+                        <option key={role.id} value={role.name}>
+                          {role.name}
+                        </option>
+                      ))}
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
                   </div>
@@ -442,7 +464,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type="text"
                     defaultValue={user?.location ?? "yyyyyyyyy"}
-                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F]"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
                     style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
                   />
                 </div>
@@ -456,7 +478,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   <input
                     type="number"
                     defaultValue={user?.experience ?? "4"}
-                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F]"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
                     style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
                   />
                 </div>
@@ -471,7 +493,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                     <input
                       type="text"
                       defaultValue={user?.joined ? formatDate(user.joined) : "12/08/2022"}
-                      className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10"
+                      className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
                       style={{ fontFamily: "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif" }}
                     />
                     <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB]" />
@@ -514,7 +536,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                     name="current_password"
                     value={passwordData.current_password}
                     onChange={handlePasswordChange}
-                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] pr-10"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
                     style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
                   />
                   <button
@@ -539,7 +561,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                     name="new_password"
                     value={passwordData.new_password}
                     onChange={handlePasswordChange}
-                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#666] pr-10"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#666] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
                     style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
                   />
                   <button
@@ -564,7 +586,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                     name="confirm_password"
                     value={passwordData.confirm_password}
                     onChange={handlePasswordChange}
-                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] pr-10"
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
                     style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
                   />
                   <button
