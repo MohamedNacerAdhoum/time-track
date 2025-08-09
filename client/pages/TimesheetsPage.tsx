@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useTimeSheets } from "@/contexts/TimeSheetsContext";
+import { useMembersStore } from "@/contexts/MembersContext";
+import { useAdminView } from "@/contexts/AdminViewContext";
+import { TimeSheet } from "@/contexts/TimeSheetsContext";
 import {
   Search,
   ChevronDown,
-  Calendar,
   ArrowUpDown,
-  FileText,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
   X,
+  NotepadText
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -25,87 +28,26 @@ import {
 } from "@/components/ui/table";
 import { CustomDropdown } from "@/components/ui/custom-dropdown";
 import { CalendarWidget } from "@/components/ui/calendar-widget";
-// import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
-interface TimesheetEntry {
-  id: string;
-  date: string;
-  clockIn: string;
-  clockOut: string;
-  breakPeriod: string;
-  status: "IN" | "OUT" | "IN BREAK";
-  variant?: "default" | "alternate";
-}
+// Helper function to format date string to time (HH:MM:SS)
+const formatTime = (dateString?: string | null) => {
+  if (!dateString) return "--:--:--";
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("en-US", {
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  } catch {
+    return "--:--:--";
+  }
+};
 
-const mockData: TimesheetEntry[] = [
-  {
-    id: "1",
-    date: "21 - 02 - 2024",
-    clockIn: "09:00:00",
-    clockOut: "17:00:00",
-    breakPeriod: "01:00:00",
-    status: "IN",
-    variant: "default",
-  },
-  {
-    id: "2",
-    date: "21 - 02 - 2024",
-    clockIn: "09:15:00",
-    clockOut: "17:30:00",
-    breakPeriod: "01:15:00",
-    status: "OUT",
-    variant: "alternate",
-  },
-  {
-    id: "3",
-    date: "21 - 02 - 2024",
-    clockIn: "08:45:00",
-    clockOut: "16:45:00",
-    breakPeriod: "00:45:00",
-    status: "IN",
-    variant: "default",
-  },
-  {
-    id: "4",
-    date: "21 - 02 - 2024",
-    clockIn: "09:30:00",
-    clockOut: "18:00:00",
-    breakPeriod: "01:30:00",
-    status: "OUT",
-    variant: "alternate",
-  },
-  {
-    id: "5",
-    date: "21 - 02 - 2024",
-    clockIn: "09:00:00",
-    clockOut: "--:--:--",
-    breakPeriod: "00:30:00",
-    status: "IN BREAK",
-    variant: "default",
-  },
-  {
-    id: "6",
-    date: "21 - 02 - 2024",
-    clockIn: "08:30:00",
-    clockOut: "17:15:00",
-    breakPeriod: "01:00:00",
-    status: "OUT",
-    variant: "alternate",
-  },
-  {
-    id: "7",
-    date: "21 - 02 - 2024",
-    clockIn: "09:10:00",
-    clockOut: "17:45:00",
-    breakPeriod: "00:50:00",
-    status: "IN",
-    variant: "default",
-  },
-];
-
-function StatusBadge({ status }: { status: TimesheetEntry["status"] }) {
-  const getBadgeStyle = (status: TimesheetEntry["status"]) => {
+function StatusBadge({ status }: { status: "IN" | "OUT" | "IN BREAK" }) {
+  const getBadgeStyle = (status: string) => {
     switch (status) {
       case "IN":
         return "bg-green-100 text-green-700 border-green-200";
@@ -123,7 +65,7 @@ function StatusBadge({ status }: { status: TimesheetEntry["status"] }) {
       variant="outline"
       className={cn(
         "px-4 py-1 text-sm font-semibold rounded-full border",
-        getBadgeStyle(status),
+        getBadgeStyle(status)
       )}
     >
       {status}
@@ -142,7 +84,7 @@ function SortableHeader({
     <div
       className={cn(
         "flex items-center gap-2 cursor-pointer hover:text-white transition-colors",
-        className,
+        className
       )}
     >
       {children}
@@ -152,60 +94,108 @@ function SortableHeader({
 }
 
 export default function TimesheetsPage() {
+  const { isAdminView } = useAdminView();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [showRowsDropdown, setShowRowsDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("history");
+  const [activeTab, setActiveTab] = useState("today");
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
-  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+  const [selectedNote, setSelectedNote] = useState("");
   const [lastAction, setLastAction] = useState("last_action");
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date(2022, 6, 25)); // July 25, 2022
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [adminTimeSheets, setAdminTimeSheets] = useState<TimeSheet[]>([]);
 
-  const totalPages = Math.ceil(mockData.length / rowsPerPage);
+  const { timeSheets, allUsersTimeSheets, fetchUserTimeSheets, fetchAllUsersTodayTimeSheets, fetchAllUsersTimeSheets } = useTimeSheets();
+  const { currentUser } = useMembersStore();
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedDate, activeTab, rowsPerPage]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (isAdminView) {
+          if (activeTab === "today") {
+            const todayData = await fetchAllUsersTodayTimeSheets();
+            if (todayData) setAdminTimeSheets(todayData);
+          } else {
+            const allData = await fetchAllUsersTimeSheets();
+            if (allData?.results) setAdminTimeSheets(allData.results);
+          }
+        } else {
+          await fetchUserTimeSheets();
+        }
+      } catch (err) {
+        console.error("Error fetching timesheets:", err);
+      }
+    };
+    fetchData();
+  }, [activeTab, isAdminView, fetchAllUsersTodayTimeSheets, fetchAllUsersTimeSheets, fetchUserTimeSheets]);
+
+  // Which data to use
+  const displayData = isAdminView
+    ? activeTab === "today"
+      ? adminTimeSheets
+      : allUsersTimeSheets?.results || []
+    : timeSheets;
+
+  // Filtering
+  const filteredData = (displayData || []).filter((entry) => {
+    const matchesSearch = searchQuery
+      ? (isAdminView
+        ? entry.employee_name?.toLowerCase().includes(searchQuery.toLowerCase())
+        : new Date(entry.date).toLocaleDateString().includes(searchQuery))
+      : true;
+
+    const matchesLastAction = lastAction === "last_action" || entry.status === lastAction;
+
+    const matchesDate = selectedDate
+      ? new Date(entry.date).toLocaleDateString() ===
+      selectedDate.toLocaleDateString()
+      : true;
+
+    return matchesSearch && matchesLastAction && matchesDate;
+  });
+
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / rowsPerPage));
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
-  const currentData = mockData.slice(startIndex, endIndex);
+  const currentData = filteredData.slice(startIndex, startIndex + rowsPerPage);
 
   const handleNoteClick = (entryId: string) => {
-    setSelectedNoteId(entryId);
+    const entry = displayData?.find((e) => e.id === entryId);
+    setSelectedNote(entry?.note || "No note available");
     setIsNoteModalOpen(true);
   };
 
   const lastActionOptions = [
-    { value: "last_action", label: "Last action" },
-    { value: "clock_in", label: "Clock In" },
-    { value: "clock_out", label: "Clock Out" },
-    { value: "break_start", label: "Break Start" },
-    { value: "break_end", label: "Break End" },
+    { value: "last_action", label: "All Actions" },
+    { value: "IN", label: "Clocked In" },
+    { value: "OUT", label: "Clocked Out" },
+    { value: "IN BREAK", label: "On Break" },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Tab Navigation */}
-      <div className="flex justify-center">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 h-16 p-2 bg-gray-100 rounded-2xl border border-blue-200">
-            <TabsTrigger
-              value="today"
-              className="h-12 text-lg font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-gray-600 data-[state=active]:shadow-sm rounded-xl"
-            >
-              Today
-            </TabsTrigger>
-            <TabsTrigger
-              value="history"
-              className="h-12 text-lg font-medium text-white bg-[#63CDFA] data-[state=active]:bg-[#63CDFA] data-[state=active]:text-white data-[state=active]:shadow-sm rounded-xl"
-            >
-              History
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
+      {/* Tabs */}
+      {isAdminView && (
+        <div className="flex justify-center">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 h-16 p-2 bg-white rounded-2xl border border-blue-200">
+              <TabsTrigger value="today" className="h-12 text-lg font-medium data-[state=active]:text-white text-gray-600 data-[state=active]:bg-[#63CDFA] rounded-xl">Today</TabsTrigger>
+              <TabsTrigger value="history" className="h-12 text-lg font-medium data-[state=active]:text-white text-gray-600 data-[state=active]:bg-[#63CDFA] rounded-xl">History</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+      )}
 
-      {/* Search and Filters */}
+      {/* Search + Filters */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1 max-w-md">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
               placeholder="Quick Search..."
               value={searchQuery}
@@ -214,20 +204,26 @@ export default function TimesheetsPage() {
             />
           </div>
         </div>
-
         <div className="flex items-center gap-4">
-          <CustomDropdown
-            value={lastAction}
-            options={lastActionOptions}
-            onChange={setLastAction}
-            className="min-w-[160px]"
-          />
-
-          <CalendarWidget
-            value={selectedDate}
-            onChange={setSelectedDate}
-            className="min-w-[180px]"
-          />
+          <CustomDropdown value={lastAction} options={lastActionOptions} onChange={setLastAction} className="min-w-[160px]" />
+          <div className="relative flex items-center">
+            <CalendarWidget 
+              value={selectedDate || new Date()} 
+              onChange={setSelectedDate} 
+              className="min-w-[180px] pr-8"
+              placeholder="Select date..."
+            />
+            {selectedDate && (
+              <button
+                type="button"
+                onClick={() => setSelectedDate(null)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                title="Clear date filter"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -236,65 +232,43 @@ export default function TimesheetsPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-[#63CDFA] hover:bg-[#63CDFA]">
-              <TableHead className="text-white font-semibold py-6 w-32">
-                <SortableHeader>Name</SortableHeader>
-              </TableHead>
-              <TableHead className="text-white font-semibold w-24">
-                <SortableHeader>Date</SortableHeader>
-              </TableHead>
-              <TableHead className="text-white font-semibold w-24">
-                <SortableHeader>Clock In</SortableHeader>
-              </TableHead>
-              <TableHead className="text-white font-semibold w-24">
-                <SortableHeader>Clock Out</SortableHeader>
-              </TableHead>
-              <TableHead className="text-white font-semibold w-32">
-                <SortableHeader>Break Period / day</SortableHeader>
-              </TableHead>
-              <TableHead className="text-white font-semibold text-center w-32">
-                Last Action
-              </TableHead>
+              <TableHead className="text-white font-semibold py-4 w-32"><SortableHeader>Name</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-24"><SortableHeader>Date</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-24"><SortableHeader>Clock In</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-24"><SortableHeader>Clock Out</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-24"><SortableHeader>Break Period / day</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold text-center w-10">Last Action</TableHead>
+              <TableHead className="text-white font-semibold text-center w-10">Note</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentData.map((entry, index) => (
-              <TableRow
-                key={entry.id}
-                className={cn(
-                  "border-b border-gray-100",
-                  entry.variant === "alternate" ? "bg-[#F2FBFF]" : "bg-white",
-                )}
-              >
-                <TableCell className="font-semibold text-gray-900">
-                  {entry.date}
-                </TableCell>
-                <TableCell className="text-gray-500">
-                  {entry.clockIn || "hh:mm:ss"}
-                </TableCell>
-                <TableCell className="text-gray-500">
-                  {entry.clockOut || "hh:mm:ss"}
-                </TableCell>
-                <TableCell className="text-gray-500">
-                  {entry.breakPeriod || "hh:mm:ss"}
-                </TableCell>
-                <TableCell className="text-gray-500">
-                  {entry.breakPeriod || "hh:mm:ss"}
-                </TableCell>
-                <TableCell className="text-center">
-                  <div className="flex items-center justify-center gap-3">
-                    <StatusBadge status={entry.status} />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleNoteClick(entry.id)}
-                      className="h-8 w-8 text-[#63CDFA] hover:text-[#63CDFA] hover:bg-blue-50"
-                    >
-                      <FileText className="h-5 w-5" />
+            {currentData.length > 0 ? (
+              currentData.map((entry, index) => (
+                <TableRow key={entry.id} className={cn("border-b border-gray-100", index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]")}>
+                  <TableCell className="font-semibold text-gray-900">{isAdminView ? entry.employee_name : entry.date}</TableCell>
+                  <TableCell className="text-gray-500">{new Date(entry.date).toLocaleDateString()}</TableCell>
+                  <TableCell className="text-gray-500">{formatTime(entry.clock_in)}</TableCell>
+                  <TableCell className="text-gray-500">{formatTime(entry.clock_out)}</TableCell>
+                  <TableCell className="text-gray-500">
+                    {entry.break_start && entry.break_end
+                      ? `${formatTime(entry.break_start)} - ${formatTime(entry.break_end)}`
+                      : "--:--:-- | --:--:--"}
+                  </TableCell>
+                  <TableCell className="text-center"><StatusBadge status={entry.status} /></TableCell>
+                  <TableCell className="text-center">
+                    <Button variant="ghost" size="icon" onClick={() => handleNoteClick(entry.id)} className="h-8 w-8 text-[#63CDFA] hover:text-[#63CDFA] hover:bg-blue-50">
+                      <NotepadText className="h-5 w-5" />
                     </Button>
-                  </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} className="text-center py-10 text-gray-500 font-medium">
+                  No timesheet data available
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
@@ -303,130 +277,74 @@ export default function TimesheetsPage() {
       <div className="flex items-center justify-between py-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setCurrentPage(1)}
-              disabled={currentPage === 1}
-              className="h-8 w-8"
-            >
+            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="h-8 w-8">
               <ChevronsLeft className="h-4 w-4" />
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="h-8 w-8"
-            >
+            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className="h-8 w-8">
               <ChevronLeft className="h-4 w-4" />
             </Button>
-
             <div className="flex items-center gap-1">
-              {Array.from(
-                { length: Math.min(3, totalPages) },
-                (_, i) => i + 1,
-              ).map((page) => (
-                <Button
-                  key={page}
-                  variant={currentPage === page ? "default" : "ghost"}
-                  size="icon"
-                  onClick={() => setCurrentPage(page)}
-                  className={cn(
-                    "h-8 w-8 rounded-full",
-                    currentPage === page
-                      ? "bg-[#63CDFA] text-white hover:bg-[#63CDFA]/90"
-                      : "text-gray-500 hover:bg-gray-100",
-                  )}
-                >
+              {Array.from({ length: Math.min(3, totalPages) }, (_, i) => i + 1).map((page) => (
+                <Button key={page} variant={currentPage === page ? "default" : "ghost"} size="icon" onClick={() => setCurrentPage(page)}
+                  className={cn("h-8 w-8 rounded-full", currentPage === page ? "bg-[#63CDFA] text-white hover:bg-[#63CDFA]/90" : "text-gray-500 hover:bg-gray-100")}>
                   {page}
                 </Button>
               ))}
             </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="h-8 w-8"
-            >
+            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages} className="h-8 w-8">
               <ChevronRight className="h-4 w-4" />
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setCurrentPage(totalPages)}
-              disabled={currentPage === totalPages}
-              className="h-8 w-8"
-            >
+            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} className="h-8 w-8">
               <ChevronsRight className="h-4 w-4" />
             </Button>
           </div>
-
-          <span className="text-sm text-gray-500">
-            {currentPage} of {totalPages}
-          </span>
+          <span className="text-sm text-gray-500">{currentPage} of {totalPages}</span>
         </div>
-
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 relative">
           <span className="text-sm text-gray-500">Rows per page</span>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-gray-900">
-              {rowsPerPage}
-            </span>
-            <ChevronDown className="h-3 w-3 text-gray-400" />
+          <div 
+            className="flex items-center gap-2 cursor-pointer select-none"
+            onClick={() => setShowRowsDropdown(!showRowsDropdown)}
+          >
+            <span className="text-sm font-semibold text-gray-900">{rowsPerPage}</span>
+            <ChevronDown className={`h-3 w-3 text-gray-400 transition-transform ${showRowsDropdown ? 'rotate-180' : ''}`} />
           </div>
+          {showRowsDropdown && (
+            <div className="absolute right-0 bottom-full mb-1 w-20 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+              {[5, 10, 20, 50].map((option) => (
+                <div
+                  key={option}
+                  className={`px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${rowsPerPage === option ? 'bg-blue-50 text-blue-600' : 'text-gray-700'}`}
+                  onClick={() => {
+                    setRowsPerPage(option);
+                    setShowRowsDropdown(false);
+                  }}
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Note Modal */}
       {isNoteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setIsNoteModalOpen(false)}
-          />
-
-          {/* Modal Content */}
+          <div className="absolute inset-0 bg-black/50" onClick={() => setIsNoteModalOpen(false)} />
           <div className="relative bg-white border-2 border-[#63CDFA]/40 rounded-xl max-w-[575px] w-full mx-4 overflow-hidden">
             <div className="p-8">
-              {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
-                  <svg
-                    width="30"
-                    height="30"
-                    viewBox="0 0 30 30"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M23.75 3.7775C23.75 3.7675 23.75 3.76 23.75 3.75V1.25C23.75 0.918479 23.6183 0.600537 23.3839 0.366117C23.1495 0.131696 22.8315 0 22.5 0C22.1685 0 21.8505 0.131696 21.6161 0.366117C21.3817 0.600537 21.25 0.918479 21.25 1.25V2.625C20.8386 2.54146 20.4198 2.49958 20 2.5H18.75V1.25C18.75 0.918479 18.6183 0.600537 18.3839 0.366117C18.1495 0.131696 17.8315 0 17.5 0C17.1685 0 16.8505 0.131696 16.6161 0.366117C16.3817 0.600537 16.25 0.918479 16.25 1.25V2.5H13.75V1.25C13.75 0.918479 13.6183 0.600537 13.3839 0.366117C13.1495 0.131696 12.8315 0 12.5 0C12.1685 0 11.8505 0.131696 11.6161 0.366117C11.3817 0.600537 11.25 0.918479 11.25 1.25V2.5H10C9.58019 2.49958 9.16141 2.54146 8.75 2.625V1.25C8.75 0.918479 8.6183 0.600537 8.38388 0.366117C8.14946 0.131696 7.83152 0 7.5 0C7.16848 0 6.85054 0.131696 6.61612 0.366117C6.3817 0.600537 6.25 0.918479 6.25 1.25V3.75V3.7775C5.47598 4.35547 4.84712 5.10567 4.41321 5.96873C3.97929 6.83179 3.75223 7.784 3.75 8.75V23.75C3.75198 25.407 4.4111 26.9956 5.58277 28.1672C6.75445 29.3389 8.34301 29.998 10 30H20C21.657 29.998 23.2456 29.3389 24.4172 28.1672C25.5889 26.9956 26.248 25.407 26.25 23.75V8.75C26.2478 7.784 26.0207 6.83179 25.5868 5.96873C25.1529 5.10567 24.524 4.35547 23.75 3.7775ZM15 21.25H10C9.66848 21.25 9.35054 21.1183 9.11612 20.8839C8.8817 20.6495 8.75 20.3315 8.75 20C8.75 19.6685 8.8817 19.3505 9.11612 19.1161C9.35054 18.8817 9.66848 18.75 10 18.75H15C15.3315 18.75 15.6495 18.8817 15.8839 19.1161C16.1183 19.3505 16.25 19.6685 16.25 20C16.25 20.3315 16.1183 20.6495 15.8839 20.8839C15.6495 21.1183 15.3315 21.25 15 21.25ZM20 16.25H10C9.66848 16.25 9.35054 16.1183 9.11612 15.8839C8.8817 15.6495 8.75 15.3315 8.75 15C8.75 14.6685 8.8817 14.3505 9.11612 14.1161C9.35054 13.8817 9.66848 13.75 10 13.75H20C20.3315 13.75 20.6495 13.8817 20.8839 14.1161C21.1183 14.3505 21.25 14.6685 21.25 15C21.25 15.3315 21.1183 15.6495 20.8839 15.8839C20.6495 16.1183 20.3315 16.25 20 16.25ZM20 11.25H10C9.66848 11.25 9.35054 11.1183 9.11612 10.8839C8.8817 10.6495 8.75 10.3315 8.75 10C8.75 9.66848 8.8817 9.35054 9.11612 9.11612C9.35054 8.8817 9.66848 8.75 10 8.75H20C20.3315 8.75 20.6495 8.8817 20.8839 9.11612C21.1183 9.35054 21.25 9.66848 21.25 10C21.25 10.3315 21.1183 10.6495 20.8839 10.8839C20.6495 11.1183 20.3315 11.25 20 11.25Z"
-                      fill="#63CDFA"
-                    />
-                  </svg>
-                  <h2 className="text-2xl font-semibold text-[#63CDFA]">
-                    Note
-                  </h2>
+                  <NotepadText />
+                  <h2 className="text-2xl font-semibold text-[#63CDFA]">Note</h2>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsNoteModalOpen(false)}
-                  className="h-10 w-10 text-gray-400 hover:text-gray-600"
-                >
+                <Button variant="ghost" size="icon" onClick={() => setIsNoteModalOpen(false)} className="h-10 w-10 text-gray-400 hover:text-gray-600">
                   <X className="h-6 w-6" />
                 </Button>
               </div>
-
-              {/* Content */}
-              <div className="text-[#00003C] text-lg leading-7 font-light">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-                consequat eros ut nunc lacinia, iaculis maximus sapien
-                efficitur. Praesent augue erat, accumsan id diam quis, ornare
-                vulputate eros.
+              <div className="text-[#00003C] text-lg leading-7 font-light whitespace-pre-wrap">
+                {selectedNote}
               </div>
             </div>
           </div>

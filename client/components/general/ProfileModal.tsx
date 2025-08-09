@@ -34,6 +34,16 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const { currentUser, loading, error, fetchCurrentUser } = useMembersStore();
   const { user: authUser } = useAuthStore();
 
+  const getStatusColor = (status: string | undefined | null) => {
+    const raw = (status || '').toString().trim().toLowerCase();
+    // Normalize common backend variants
+    if (!raw) return 'border-[#EF4444]';
+    if (raw.includes('break')) return 'border-[#F59E0B]'; // 'IN BREAK', 'break'
+    if (raw === 'in') return 'border-[#0FBA83]';
+    if (raw.startsWith('in')) return 'border-[#0FBA83]'; // handle any other 'in*' variants
+    return 'border-[#EF4444]'; // default to out
+  };
+
   // Fetch user data when modal opens
   useEffect(() => {
     if (!isOpen || !authUser?.token || hasFetched.current) return;
@@ -248,7 +258,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               <div className="flex flex-col items-center">
                 <div className="flex flex-col items-center gap-4">
                   <div className="relative w-[160px] h-[160px]">
-                    <div className={`w-full h-full rounded-full p-[3px] ${user?.status === 'in' ? 'border-[3px] border-[#0FBA83]' : user?.status === 'break' ? 'border-[3px] border-[#F59E0B]' : 'border-[3px] border-[#EF4444]'}`}>
+                    <div className={`w-full h-full rounded-full p-[3px] border-[3px] ${getStatusColor(user?.status)}`}>
                       {user?.imageUrl ? (
                         <div
                           className="w-full h-full rounded-full bg-cover bg-center border-[2px] border-white"

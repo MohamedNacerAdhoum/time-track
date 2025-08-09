@@ -291,16 +291,17 @@ const useTimeSheetsStore = create<TimeSheetsState>()(
           set({ loading: true, error: null });
           try {
             console.log('[TimeSheetsContext] Fetching user timesheets from API...');
-            const response = await api.get<TimeSheetsListResponse>('/time_sheets/get_user_time_sheets/', {
+            const response = await api.get<TimeSheet[]>('/time_sheets/get_user_time_sheets/', {
               params: filters,
               headers: { Authorization: `Bearer ${token}` },
             });
+            // The API returns the array directly, not wrapped in a results object
+            const data = Array.isArray(response.data) ? response.data : [];
             console.log('[TimeSheetsContext] User timesheets response:', {
               status: response.status,
-              count: response.data?.results?.length || 0,
-              sample: response.data?.results?.[0] || 'No data'
+              count: data.length,
+              sample: data[0] || 'No data'
             });
-            const data = response.data.results || [];
             set({ timeSheets: data });
             return data;
           } catch (err) {
@@ -322,13 +323,16 @@ const useTimeSheetsStore = create<TimeSheetsState>()(
 
           set({ loading: true, error: null });
           try {
-            const response = await api.get<TimeSheetsListResponse>('/time_sheets/get_all_users_today_time_sheets/', {
+            const response = await api.get<TimeSheet[]>('/time_sheets/get_all_users_today_time_sheets/', {
               headers: { Authorization: `Bearer ${token}` },
             });
-            const data = response.data.results || [];
+            // The API returns the array directly, not wrapped in a results object
+            const data = Array.isArray(response.data) ? response.data : [];
+            console.log('Fetched today\'s timesheets:', data);
             return data;
           } catch (err) {
             const errorMessage = extractError(err);
+            console.error('Error fetching today\'s timesheets:', errorMessage);
             set({ error: errorMessage });
             return [];
           } finally {

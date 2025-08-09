@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import { NotebookPen, ArrowLeftToLine, Coffee, ArrowRightFromLine, Loader2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ArrowLeftToLine, Coffee, ArrowRightFromLine, Loader2, NotepadText } from "lucide-react";
 import { useTimeSheets } from "@/contexts/TimeSheetsContext";
+import { useMembers } from "@/contexts/MembersContext";
 import { toast } from "sonner";
 
 type ActionType = 'clock_in' | 'break' | 'clock_out';
@@ -23,6 +24,8 @@ const TimeClockControl = () => {
     loading
   } = useTimeSheets();
 
+  const { fetchCurrentUser } = useMembers();
+
   useEffect(() => {
     fetchTodayTimeSheet();
   }, [fetchTodayTimeSheet]);
@@ -41,27 +44,38 @@ const TimeClockControl = () => {
       switch (action) {
         case 'clock_in':
           await clockIn(note);
+          // Only refresh current user data after clock in
+          await fetchCurrentUser(true); // Force refresh
           break;
         case 'break':
           if (todayTimeSheet?.time_sheet?.status === 'IN BREAK') {
-            await endBreak();
+            await endBreak(note);
           } else {
             await startBreak(note);
           }
+          // Force refresh user data after break action
+          await fetchCurrentUser(true); // Force refresh
           break;
         case 'clock_out':
           if (todayTimeSheet?.time_sheet?.status === 'IN BREAK') {
             await endBreak();
           }
           await clockOut(note);
+          // Only refresh current user data after clock out
+          await fetchCurrentUser(true); // Force refresh
           break;
       }
 
-      await fetchTodayTimeSheet();
+      // Fetch the latest time sheet to get the updated status
+      const updatedTimeSheet = await fetchTodayTimeSheet();
 
-      const actionText = action === 'break'
-        ? (todayTimeSheet?.time_sheet?.status === 'IN BREAK' ? 'started break' : 'ended break')
-        : action.replace('_', ' ');
+      let actionText = action.replace('_', ' ');
+
+      if (action === 'break') {
+        // Determine if we just started or ended the break based on the updated status
+        const isNowOnBreak = updatedTimeSheet?.time_sheet?.status === 'IN BREAK';
+        actionText = isNowOnBreak ? 'started break' : 'ended break';
+      }
 
       toast.success(`Successfully ${actionText}`);
       setNotes({ clock_in: '', break: '', clock_out: '' });
@@ -105,7 +119,7 @@ const TimeClockControl = () => {
           className="flex-1 w-full text-[#666] text-xs font-normal font-poppins resize-none bg-transparent border-none outline-none placeholder:text-[#666]"
         />
         <div className="flex items-center gap-2 w-full">
-          <NotebookPen className="w-4 h-4 text-[#77838F] opacity-50 flex-shrink-0" />
+          <NotepadText className="w-4 h-4 text-[#77838F] opacity-50 flex-shrink-0" />
           <span className="text-[#77838F] opacity-50 text-[11px] font-normal font-poppins">
             Note
           </span>
@@ -117,16 +131,37 @@ const TimeClockControl = () => {
   const renderActionButton = (action: ActionType, icon: React.ReactNode, label: string, color: string) => {
     const state = getButtonState(action);
     const isActive = activeAction === action && loading;
+    const isNotClockedIn = !todayTimeSheet?.time_sheet?.clock_in;
     const isDone = state === 'DONE';
     const isBreakInProgress = action === 'break' && todayTimeSheet?.time_sheet?.status === 'IN BREAK';
-    const isNotClockedIn = !todayTimeSheet?.time_sheet?.clock_in;
 
+    // Determine if the button should be disabled
+    const shouldDisable = (() => {
+      if (action === 'break') {
+        // Allow clicking the break button to end the break if it's in progress
+        if (isBreakInProgress) {
+          return isActive; // Only disable if action is in progress
+        }
+        // Otherwise, disable if not clocked in, clocked out, or action is active
+        return isNotClockedIn || 
+               todayTimeSheet?.time_sheet?.status === 'OUT' || 
+               isActive;
+      } else if (action === 'clock_in') {
+        return isDone || isActive;
+      } else if (action === 'clock_out') {
+        return isDone || isNotClockedIn || isActive;
+      }
+      return false;
+    })();
+
+    // Base button class
     let buttonClass = `flex w-full lg:w-[150px] h-[44px] px-5 py-2.5 justify-center items-center gap-2.5 rounded-full shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] transition-transform ${color}`;
 
-    if (isDone && action !== 'break' || (action !== 'clock_in' && isNotClockedIn)) {
+    // Apply appropriate styles based on button state
+    if (shouldDisable) {
       buttonClass += ' opacity-70 cursor-not-allowed';
     } else if (action === 'break' && isBreakInProgress) {
-      buttonClass = buttonClass.replace('bg-amber-500', 'bg-opacity-10 border-2 border-amber-500 text-amber-500');
+      buttonClass = 'flex w-full lg:w-[150px] h-[44px] px-5 py-2.5 justify-center items-center gap-2.5 rounded-full shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] bg-opacity-10 border-2 border-amber-500 text-amber-500';
     } else {
       buttonClass += ' hover:scale-105 active:scale-95';
     }
@@ -143,7 +178,9 @@ const TimeClockControl = () => {
       </div>
     ) : (
       <div className="flex items-center gap-2">
-        {icon}
+        {React.cloneElement(icon as React.ReactElement, {
+          className: `w-4 h-4 ${action === 'break' && isBreakInProgress ? 'text-amber-500' : 'currentColor'}`
+        })}
         <span className="font-semibold text-sm lg:text-base font-poppins">
           {buttonText}
         </span>
@@ -152,7 +189,7 @@ const TimeClockControl = () => {
 
     const isDisabled = (action === 'clock_in' && isDone) ||
       (action === 'clock_out' && (isDone || isNotClockedIn)) ||
-      (action === 'break' && (isDone || isNotClockedIn)) ||
+      (action === 'break' && (isNotClockedIn || (isDone && !isBreakInProgress))) ||
       isActive;
 
     return (

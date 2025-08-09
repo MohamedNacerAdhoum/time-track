@@ -48,13 +48,13 @@ interface MembersState {
   loading: boolean;
   error: string | null;
   initialized: boolean;
-  
+
   // Actions - API Calls
-  fetchCurrentUser: () => Promise<MemberData | null>;
+  fetchCurrentUser: (force?: boolean) => Promise<MemberData | null>;
   fetchAllMembers: () => Promise<MemberData[]>;
   fetchAllRoles: () => Promise<RoleData[]>;
   addMember: (memberData: AddMemberPayload) => Promise<MemberData | null>;
-  
+
   // State Setters
   setCurrentUser: (user: MemberData | null) => void;
   setMembers: (members: MemberData[]) => void;
@@ -67,41 +67,41 @@ interface MembersState {
 // Helper function to extract error message from API response
 const extractError = (error: any): string => {
   if (!error) return 'No error object provided';
-  
+
   // Log the full error for debugging
   console.error('[MembersContext] Extracting error from:', error);
-  
+
   if (!error.response) {
     return error.message || 'Network error: Could not connect to the server';
   }
-  
+
   const { status, data } = error.response;
-  
+
   // Handle different error formats
   if (data) {
     if (data.detail) return data.detail;
     if (data.non_field_errors) return Array.isArray(data.non_field_errors) ? data.non_field_errors[0] : data.non_field_errors;
     if (data.email) return Array.isArray(data.email) ? data.email[0] : data.email;
     if (data.password) return Array.isArray(data.password) ? data.password[0] : data.password;
-    
+
     // Handle validation errors
     const fieldErrors = Object.entries(data)
       .filter(([_, value]) => value && Array.isArray(value))
       .map(([key, value]) => `${key}: ${value[0]}`)
       .join('; ');
-    
+
     if (fieldErrors) return fieldErrors;
-    
+
     // If we have data but couldn't extract a specific message
     return typeof data === 'string' ? data : JSON.stringify(data);
   }
-  
+
   // Fallback status-based messages
   if (status === 401) return 'Unauthorized: Please log in again';
   if (status === 403) return 'Forbidden: You do not have permission to perform this action';
   if (status === 404) return 'Resource not found';
   if (status >= 500) return `Server error (${status}): Please try again later`;
-  
+
   return `Request failed with status ${status}`;
 };
 
@@ -119,7 +119,7 @@ export const useMembersStore = create<MembersState>()(
         initialized: false,
 
         // Actions
-        fetchCurrentUser: async () => {
+        fetchCurrentUser: async (force = false) => {
           const authUser = useAuthStore.getState().user;
           if (!authUser?.token) {
             console.log('[MembersContext] No authenticated user, skipping fetchCurrentUser');
@@ -128,14 +128,14 @@ export const useMembersStore = create<MembersState>()(
 
           // If we already have the current user data and it matches the auth user, return it
           const { currentUser } = get();
-          if (currentUser?.id === authUser.id) {
+          if (!force && currentUser?.id === authUser.id) {
             console.log('[MembersContext] Using cached current user data');
             return currentUser;
           }
 
           console.log('[MembersContext] Fetching member data for user:', authUser.id);
           set({ loading: true, error: null });
-          
+
           try {
             console.log('[MembersContext] Sending request to /members/get_member/');
             const response = await api.get('/members/get_member/');
@@ -144,7 +144,7 @@ export const useMembersStore = create<MembersState>()(
               data: response.data,
               headers: response.headers
             });
-            
+
             // Merge auth user data with member data
             const memberData = {
               ...response.data,
@@ -158,11 +158,11 @@ export const useMembersStore = create<MembersState>()(
               // Remove nested user object
               user: undefined
             };
-            
+
             console.log('[MembersContext] Merged member data:', memberData);
-            set({ 
+            set({
               currentUser: memberData,
-              initialized: true 
+              initialized: true
             });
             return memberData;
           } catch (error: any) {
@@ -189,7 +189,7 @@ export const useMembersStore = create<MembersState>()(
 
           console.log('[MembersContext] Fetching all members');
           set({ loading: true, error: null });
-          
+
           try {
             console.log('[MembersContext] Sending request to /members/get_all_members/');
             const response = await api.get('/members/get_all_members/');
@@ -199,26 +199,26 @@ export const useMembersStore = create<MembersState>()(
               count: response.data?.length || 0,
               headers: response.headers
             });
-            
+
             // Process each member to flatten the user data structure
-            const processedMembers = Array.isArray(response.data) 
+            const processedMembers = Array.isArray(response.data)
               ? response.data.map(member => ({
-                  ...member,
-                  // Move nested user properties to root level
-                  id: member.user?.id || member.id,
-                  email: member.user?.email || '',
-                  name: member.user?.name || '',
-                  is_admin: member.user?.is_superuser || false,
-                  // Keep other existing properties
-                  ...member.user,
-                  // Remove the nested user object to avoid duplication
-                  user: undefined
-                }))
+                ...member,
+                // Move nested user properties to root level
+                id: member.user?.id || member.id,
+                email: member.user?.email || '',
+                name: member.user?.name || '',
+                is_admin: member.user?.is_superuser || false,
+                // Keep other existing properties
+                ...member.user,
+                // Remove the nested user object to avoid duplication
+                user: undefined
+              }))
               : [];
-            
-            set({ 
+
+            set({
               members: processedMembers,
-              initialized: true 
+              initialized: true
             });
             return processedMembers;
           } catch (error: any) {
@@ -241,7 +241,7 @@ export const useMembersStore = create<MembersState>()(
         setRoles: (roles) => set({ roles }),
         setLoading: (loading) => set({ loading }),
         setError: (error) => set({ error }),
-        
+
         // Role Management
         fetchAllRoles: async () => {
           const token = useAuthStore.getState().user?.token;
@@ -252,7 +252,7 @@ export const useMembersStore = create<MembersState>()(
 
           console.log('[MembersContext] Fetching all roles');
           set({ loading: true, error: null });
-          
+
           try {
             const response = await api.get('/members/get_all_roles/');
             console.log('[MembersContext] All roles response:', {
@@ -260,10 +260,10 @@ export const useMembersStore = create<MembersState>()(
               count: response.data?.length || 0,
               data: response.data
             });
-            
-            set({ 
+
+            set({
               roles: response.data || [],
-              initialized: true 
+              initialized: true
             });
             return response.data || [];
           } catch (error: any) {
@@ -289,7 +289,7 @@ export const useMembersStore = create<MembersState>()(
 
           console.log('[MembersContext] Adding new member:', memberData);
           set({ loading: true, error: null });
-          
+
           try {
             const response = await api.post('/members/add_member/', memberData);
             console.log('[MembersContext] Add member response:', {
@@ -300,7 +300,7 @@ export const useMembersStore = create<MembersState>()(
             // Refresh the members list
             const { fetchAllMembers } = get();
             await fetchAllMembers();
-            
+
             return response.data;
           } catch (error: any) {
             console.error('[MembersContext] Error adding member:', {
@@ -330,8 +330,8 @@ export const useMembersStore = create<MembersState>()(
       {
         name: 'members-storage',
         partialize: (state) => ({
-          currentUser: state.currentUser,
           members: state.members,
+          currentUser: state.currentUser
         }),
       }
     )
@@ -351,20 +351,20 @@ export const useMembers = () => {
     roles: store.roles,
     loading: store.loading,
     error: store.error,
-    
+
     // API Calls
     fetchCurrentUser: store.fetchCurrentUser,
     fetchAllMembers: store.fetchAllMembers,
     fetchAllRoles: store.fetchAllRoles,
     addMember: store.addMember,
-    
+
     // State Setters
     setCurrentUser: store.setCurrentUser,
     setMembers: store.setMembers,
     setRoles: store.setRoles,
     setLoading: store.setLoading,
     setError: store.setError,
-    
+
     // Initialization
     initialized: store.initialized,
   };

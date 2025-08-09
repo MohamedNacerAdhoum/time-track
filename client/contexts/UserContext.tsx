@@ -138,6 +138,18 @@ export const useAuthStore = create<AuthState>()(
                     delete api.defaults.headers.common['Authorization'];
                     setTokenGetter(undefined);
 
+                    // Clear all Zustand stores
+                    const stores = ['auth-storage', 'members-storage', 'timesheets-storage'];
+                    stores.forEach(store => {
+                        localStorage.removeItem(store);
+                    });
+                    
+                    // Clear any remaining local storage items
+                    localStorage.clear();
+                    
+                    // Clear session storage as well
+                    sessionStorage.clear();
+
                     // Reset the store state
                     set({
                         user: null,
