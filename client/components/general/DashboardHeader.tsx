@@ -17,6 +17,8 @@ interface DashboardHeaderProps {
 export function DashboardHeader({
   isAdminView,
   onToggleView,
+  onToggleCollapse,
+  isCollapsed,
 }: DashboardHeaderProps) {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
