@@ -138,7 +138,7 @@ export function Sidebar({
             isMobile ? "h-screen" : "h-screen"
           } bg-[#63CDFA] ${
             isMobile ? "rounded-r-[20px]" : "rounded-r-[40px]"
-          } relative overflow-hidden transition-all duration-300 shadow-lg`}
+          } relative transition-all duration-300 shadow-lg`}
         >
           {/* Top section */}
           <div
