@@ -113,7 +113,9 @@ export function DashboardHeader({
             </button>
 
             {/* Dashboard Title */}
-            <span className="text-base font-semibold text-black">Dashboard</span>
+            <span className="text-base font-semibold text-black">
+              Dashboard
+            </span>
           </div>
 
           {/* Center section - Admin Toggle for admin users */}

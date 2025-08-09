@@ -10,7 +10,7 @@ import {
   ChevronsRight,
   Plus,
   Trash2,
-  Edit
+  Edit,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -50,7 +50,7 @@ const mockMembers: Member[] = [
     experience: "1 year",
     hours: 20,
     balance: 102.3,
-    joined: "31/08/2022"
+    joined: "31/08/2022",
   },
   {
     id: "2",
@@ -62,7 +62,7 @@ const mockMembers: Member[] = [
     experience: "1 year",
     hours: 20,
     balance: 102.3,
-    joined: "31/08/2022"
+    joined: "31/08/2022",
   },
   {
     id: "3",
@@ -74,7 +74,7 @@ const mockMembers: Member[] = [
     experience: "1 year",
     hours: 20,
     balance: 102.3,
-    joined: "31/08/2022"
+    joined: "31/08/2022",
   },
   {
     id: "4",
@@ -86,7 +86,7 @@ const mockMembers: Member[] = [
     experience: "1 year",
     hours: 20,
     balance: 102.3,
-    joined: "31/08/2022"
+    joined: "31/08/2022",
   },
   {
     id: "5",
@@ -98,7 +98,7 @@ const mockMembers: Member[] = [
     experience: "1 year",
     hours: 20,
     balance: 102.3,
-    joined: "31/08/2022"
+    joined: "31/08/2022",
   },
   {
     id: "6",
@@ -110,7 +110,7 @@ const mockMembers: Member[] = [
     experience: "1 year",
     hours: 20,
     balance: 102.3,
-    joined: "31/08/2022"
+    joined: "31/08/2022",
   },
   {
     id: "7",
@@ -122,7 +122,7 @@ const mockMembers: Member[] = [
     experience: "1 year",
     hours: 20,
     balance: 102.3,
-    joined: "31/08/2022"
+    joined: "31/08/2022",
   },
   {
     id: "8",
@@ -134,7 +134,7 @@ const mockMembers: Member[] = [
     experience: "1 year",
     hours: 20,
     balance: 102.3,
-    joined: "31/08/2022"
+    joined: "31/08/2022",
   },
   {
     id: "9",
@@ -146,7 +146,7 @@ const mockMembers: Member[] = [
     experience: "1 year",
     hours: 20,
     balance: 102.3,
-    joined: "31/08/2022"
+    joined: "31/08/2022",
   },
   {
     id: "10",
@@ -158,8 +158,8 @@ const mockMembers: Member[] = [
     experience: "1 year",
     hours: 20,
     balance: 102.3,
-    joined: "31/08/2022"
-  }
+    joined: "31/08/2022",
+  },
 ];
 
 function SortableHeader({
@@ -175,7 +175,7 @@ function SortableHeader({
     <div
       className={cn(
         "flex items-center gap-2 cursor-pointer hover:text-white transition-colors",
-        className
+        className,
       )}
     >
       {children}
@@ -189,7 +189,9 @@ export default function MembersPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [showRowsDropdown, setShowRowsDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedMembers, setSelectedMembers] = useState<Set<string>>(new Set());
+  const [selectedMembers, setSelectedMembers] = useState<Set<string>>(
+    new Set(),
+  );
   const [selectAll, setSelectAll] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
 
@@ -202,9 +204,14 @@ export default function MembersPage() {
 
   // Update select all state based on selected members
   useEffect(() => {
-    const currentPageData = filteredData.slice(startIndex, startIndex + rowsPerPage);
-    const selectedOnPage = currentPageData.filter(member => selectedMembers.has(member.id));
-    
+    const currentPageData = filteredData.slice(
+      startIndex,
+      startIndex + rowsPerPage,
+    );
+    const selectedOnPage = currentPageData.filter((member) =>
+      selectedMembers.has(member.id),
+    );
+
     if (selectedOnPage.length === 0) {
       setSelectAll(false);
       setIsIndeterminate(false);
@@ -221,8 +228,8 @@ export default function MembersPage() {
   const filteredData = members.filter((member) => {
     return searchQuery
       ? member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        member.role.toLowerCase().includes(searchQuery.toLowerCase())
+          member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          member.role.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
   });
 
@@ -233,27 +240,27 @@ export default function MembersPage() {
 
   const handleSelectAll = (checked: boolean) => {
     const newSelected = new Set(selectedMembers);
-    
+
     if (checked) {
       // Add all current page members to selection
-      currentData.forEach(member => newSelected.add(member.id));
+      currentData.forEach((member) => newSelected.add(member.id));
     } else {
       // Remove all current page members from selection
-      currentData.forEach(member => newSelected.delete(member.id));
+      currentData.forEach((member) => newSelected.delete(member.id));
     }
-    
+
     setSelectedMembers(newSelected);
   };
 
   const handleSelectMember = (memberId: string, checked: boolean) => {
     const newSelected = new Set(selectedMembers);
-    
+
     if (checked) {
       newSelected.add(memberId);
     } else {
       newSelected.delete(memberId);
     }
-    
+
     setSelectedMembers(newSelected);
   };
 
@@ -315,38 +322,78 @@ export default function MembersPage() {
                   />
                 </div>
               </TableHead>
-              <TableHead className="text-white font-semibold w-36"><SortableHeader>Name</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-40"><SortableHeader showArrow={false}>Email</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-16"><SortableHeader showArrow={false}>Age</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-24"><SortableHeader showArrow={false}>Role</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-24"><SortableHeader showArrow={false}>Location</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-28"><SortableHeader showArrow={false}>Experience</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-20"><SortableHeader>Hours</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-24"><SortableHeader>Balance</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold"><SortableHeader showArrow={false}>Joined</SortableHeader></TableHead>
+              <TableHead className="text-white font-semibold w-36">
+                <SortableHeader>Name</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-40">
+                <SortableHeader showArrow={false}>Email</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-16">
+                <SortableHeader showArrow={false}>Age</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-24">
+                <SortableHeader showArrow={false}>Role</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-24">
+                <SortableHeader showArrow={false}>Location</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-28">
+                <SortableHeader showArrow={false}>Experience</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-20">
+                <SortableHeader>Hours</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-24">
+                <SortableHeader>Balance</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold">
+                <SortableHeader showArrow={false}>Joined</SortableHeader>
+              </TableHead>
               <TableHead className="text-white font-semibold w-10"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {currentData.length > 0 ? (
               currentData.map((member, index) => (
-                <TableRow key={member.id} className={cn("border-b border-gray-100", index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]")}>
+                <TableRow
+                  key={member.id}
+                  className={cn(
+                    "border-b border-gray-100",
+                    index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]",
+                  )}
+                >
                   <TableCell className="text-center">
                     <Checkbox
                       checked={selectedMembers.has(member.id)}
-                      onCheckedChange={(checked) => handleSelectMember(member.id, checked as boolean)}
+                      onCheckedChange={(checked) =>
+                        handleSelectMember(member.id, checked as boolean)
+                      }
                       className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
                     />
                   </TableCell>
-                  <TableCell className="font-semibold text-gray-900">{member.name}</TableCell>
-                  <TableCell className="text-gray-500">{member.email}</TableCell>
+                  <TableCell className="font-semibold text-gray-900">
+                    {member.name}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {member.email}
+                  </TableCell>
                   <TableCell className="text-gray-500">{member.age}</TableCell>
                   <TableCell className="text-gray-500">{member.role}</TableCell>
-                  <TableCell className="text-gray-500">{member.location}</TableCell>
-                  <TableCell className="text-gray-500">{member.experience}</TableCell>
-                  <TableCell className="text-gray-500">{member.hours} h</TableCell>
-                  <TableCell className="text-gray-500">{member.balance}</TableCell>
-                  <TableCell className="text-gray-500">{member.joined}</TableCell>
+                  <TableCell className="text-gray-500">
+                    {member.location}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {member.experience}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {member.hours} h
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {member.balance}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {member.joined}
+                  </TableCell>
                   <TableCell className="text-center">
                     <Button
                       variant="ghost"
@@ -361,7 +408,10 @@ export default function MembersPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={11} className="text-center py-10 text-gray-500 font-medium">
+                <TableCell
+                  colSpan={11}
+                  className="text-center py-10 text-gray-500 font-medium"
+                >
                   No members found
                 </TableCell>
               </TableRow>
@@ -374,28 +424,67 @@ export default function MembersPage() {
       <div className="flex items-center justify-between py-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1}
+              className="h-8 w-8"
+            >
               <ChevronsLeft className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className="h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="h-8 w-8"
+            >
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <div className="flex items-center gap-1">
-              {Array.from({ length: Math.min(3, totalPages) }, (_, i) => i + 1).map((page) => (
-                <Button key={page} variant={currentPage === page ? "default" : "ghost"} size="icon" onClick={() => setCurrentPage(page)}
-                  className={cn("h-8 w-8 rounded-full", currentPage === page ? "bg-[#63CDFA] text-white hover:bg-[#63CDFA]/90" : "text-gray-500 hover:bg-gray-100")}>
+              {Array.from(
+                { length: Math.min(3, totalPages) },
+                (_, i) => i + 1,
+              ).map((page) => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "ghost"}
+                  size="icon"
+                  onClick={() => setCurrentPage(page)}
+                  className={cn(
+                    "h-8 w-8 rounded-full",
+                    currentPage === page
+                      ? "bg-[#63CDFA] text-white hover:bg-[#63CDFA]/90"
+                      : "text-gray-500 hover:bg-gray-100",
+                  )}
+                >
                   {page}
                 </Button>
               ))}
             </div>
-            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages} className="h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="h-8 w-8"
+            >
               <ChevronRight className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} className="h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setCurrentPage(totalPages)}
+              disabled={currentPage === totalPages}
+              className="h-8 w-8"
+            >
               <ChevronsRight className="h-4 w-4" />
             </Button>
           </div>
-          <span className="text-sm text-gray-500">{currentPage} of {totalPages}</span>
+          <span className="text-sm text-gray-500">
+            {currentPage} of {totalPages}
+          </span>
         </div>
         <div className="flex items-center gap-4 relative">
           <span className="text-sm text-gray-500">Rows per page</span>
@@ -403,15 +492,19 @@ export default function MembersPage() {
             className="flex items-center gap-2 cursor-pointer select-none"
             onClick={() => setShowRowsDropdown(!showRowsDropdown)}
           >
-            <span className="text-sm font-semibold text-gray-900">{rowsPerPage}</span>
-            <ChevronDown className={`h-3 w-3 text-gray-400 transition-transform ${showRowsDropdown ? 'rotate-180' : ''}`} />
+            <span className="text-sm font-semibold text-gray-900">
+              {rowsPerPage}
+            </span>
+            <ChevronDown
+              className={`h-3 w-3 text-gray-400 transition-transform ${showRowsDropdown ? "rotate-180" : ""}`}
+            />
           </div>
           {showRowsDropdown && (
             <div className="absolute right-0 bottom-full mb-1 w-20 bg-white border border-gray-200 rounded-md shadow-lg z-10">
               {[5, 10, 20, 50].map((option) => (
                 <div
                   key={option}
-                  className={`px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${rowsPerPage === option ? 'bg-blue-50 text-blue-600' : 'text-gray-700'}`}
+                  className={`px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${rowsPerPage === option ? "bg-blue-50 text-blue-600" : "text-gray-700"}`}
                   onClick={() => {
                     setRowsPerPage(option);
                     setShowRowsDropdown(false);
