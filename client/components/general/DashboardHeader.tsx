@@ -102,18 +102,50 @@ export function DashboardHeader({
     <>
       {/* Mobile Header with Hamburger Menu - Always show on mobile */}
       {isMobile && (
-        <div className="fixed top-0 left-0 right-0 h-16 bg-white flex items-center justify-between px-5 z-40 lg:hidden">
-          <div className="flex items-center gap-3">
+        <div className="fixed top-0 left-0 right-0 h-16 bg-white flex items-center justify-between px-3 z-40 lg:hidden">
+          <div className="flex items-center gap-2">
             {/* Hamburger Menu */}
             <button
               onClick={onToggleCollapse}
               className="flex items-center justify-center transition-colors"
             >
-              <Menu className="w-[30px] h-[30px] text-[#63CDFA]" />
+              <Menu className="w-[26px] h-[26px] text-[#63CDFA]" />
             </button>
 
             {/* Dashboard Title */}
-            <span className="text-lg font-semibold text-black">Dashboard</span>
+            <span className="text-base font-semibold text-black">Dashboard</span>
+          </div>
+
+          {/* Center section - Admin Toggle for admin users */}
+          <div className="flex items-center">
+            {isAdmin && (
+              <div className="flex w-[70px] p-1 items-center gap-1 rounded-full border border-[#63CDFA]/50 bg-white">
+                <button
+                  onClick={onToggleView}
+                  className={`flex-1 flex items-center justify-center w-7 h-7 rounded-full transition-all duration-200 ${
+                    !isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                  }`}
+                >
+                  <User
+                    className={`w-3.5 h-3.5 transition-colors ${
+                      !isAdminView ? "text-white" : "text-[#77838F]"
+                    }`}
+                  />
+                </button>
+                <button
+                  onClick={onToggleView}
+                  className={`flex-1 flex items-center justify-center w-7 h-7 rounded-full transition-all duration-200 ${
+                    isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                  }`}
+                >
+                  <Users
+                    className={`w-3.5 h-3.5 transition-colors ${
+                      isAdminView ? "text-white" : "text-[#77838F]"
+                    }`}
+                  />
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Profile with Dropdown */}
