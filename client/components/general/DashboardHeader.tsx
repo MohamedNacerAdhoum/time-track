@@ -139,10 +139,10 @@ export function DashboardHeader({
                     <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-xl font-medium text-gray-500">
                       {displayUser?.name
                         ? displayUser.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase()
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()
                         : "U"}
                     </div>
                   )}
@@ -156,10 +156,50 @@ export function DashboardHeader({
             {/* Profile Dropdown */}
             {isProfileDropdownOpen && (
               <div className="absolute top-full right-0 mt-1 bg-white rounded-[10.8px] shadow-[0_2.88px_8.64px_rgba(0,0,0,0.25)] border-none z-50 w-[145px]">
+                {/* Admin Toggle - Only show for admin users */}
+                {isAdmin && (
+                  <div className="px-[15px] py-[10px] border-b-[0.36px] border-[#D9D9D9]">
+                    <div className="flex items-center justify-center">
+                      <div className="flex w-[110px] p-1 items-center gap-1 rounded-full border border-[#63CDFA]/50 bg-white">
+                        <button
+                          onClick={() => {
+                            onToggleView();
+                            setIsProfileDropdownOpen(false);
+                          }}
+                          className={`flex-1 flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 ${
+                            !isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                          }`}
+                        >
+                          <User
+                            className={`w-4 h-4 transition-colors ${
+                              !isAdminView ? "text-white" : "text-[#77838F]"
+                            }`}
+                          />
+                        </button>
+                        <button
+                          onClick={() => {
+                            onToggleView();
+                            setIsProfileDropdownOpen(false);
+                          }}
+                          className={`flex-1 flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 ${
+                            isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                          }`}
+                        >
+                          <Users
+                            className={`w-4 h-4 transition-colors ${
+                              isAdminView ? "text-white" : "text-[#77838F]"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Profile */}
                 <div
                   onClick={handleProfileClick}
-                  className="flex items-center gap-[10px] px-[20px] py-[10px] border-b-[0.36px] border-[#D9D9D9] hover:bg-gray-50 cursor-pointer rounded-t-[10.8px]"
+                  className="flex items-center gap-[10px] px-[20px] py-[10px] border-b-[0.36px] border-[#D9D9D9] hover:bg-gray-50 cursor-pointer"
                   style={{
                     fontFamily:
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
@@ -218,22 +258,26 @@ export function DashboardHeader({
                 <div className="flex w-[84px] p-1 items-center gap-1 rounded-full border border-[#63CDFA]/50 bg-white">
                   <button
                     onClick={onToggleView}
-                    className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${!isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                      }`}
+                    className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
+                      !isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                    }`}
                   >
                     <User
-                      className={`w-5 h-5 transition-colors ${!isAdminView ? "text-white" : "text-[#77838F]"
-                        }`}
+                      className={`w-5 h-5 transition-colors ${
+                        !isAdminView ? "text-white" : "text-[#77838F]"
+                      }`}
                     />
                   </button>
                   <button
                     onClick={onToggleView}
-                    className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                      }`}
+                    className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
+                      isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                    }`}
                   >
                     <Users
-                      className={`w-5 h-5 transition-colors ${isAdminView ? "text-white" : "text-[#77838F]"
-                        }`}
+                      className={`w-5 h-5 transition-colors ${
+                        isAdminView ? "text-white" : "text-[#77838F]"
+                      }`}
                     />
                   </button>
                 </div>
@@ -245,22 +289,26 @@ export function DashboardHeader({
                   <div className="flex w-[126px] p-2 items-center gap-3 rounded-full border border-[#63CDFA]/50 bg-white">
                     <button
                       onClick={onToggleView}
-                      className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${!isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                        }`}
+                      className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${
+                        !isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                      }`}
                     >
                       <User
-                        className={`w-7 h-7 transition-colors ${!isAdminView ? "text-white" : "text-[#77838F]"
-                          }`}
+                        className={`w-7 h-7 transition-colors ${
+                          !isAdminView ? "text-white" : "text-[#77838F]"
+                        }`}
                       />
                     </button>
                     <button
                       onClick={onToggleView}
-                      className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                        }`}
+                      className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${
+                        isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                      }`}
                     >
                       <Users
-                        className={`w-7 h-7 transition-colors ${isAdminView ? "text-white" : "text-[#77838F]"
-                          }`}
+                        className={`w-7 h-7 transition-colors ${
+                          isAdminView ? "text-white" : "text-[#77838F]"
+                        }`}
                       />
                     </button>
                   </div>
@@ -325,10 +373,10 @@ export function DashboardHeader({
                     <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-2xl font-medium text-gray-500">
                       {displayUser?.name
                         ? displayUser.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase()
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()
                         : "U"}
                     </div>
                   )}
