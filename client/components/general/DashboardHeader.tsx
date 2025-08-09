@@ -91,6 +91,13 @@ export function DashboardHeader({
     setIsNotificationOpen(!isNotificationOpen);
   };
 
+  const handleProfileClick = () => {
+    if (isMobile) {
+      setIsMobileProfileOpen(true);
+      setIsProfileDropdownOpen(false);
+    }
+  };
+
   return (
     <div className="flex w-full items-center gap-2.5 px-6 py-4 bg-white">
       {/* User/Admin Toggle - show for admin users, on mobile show on left, on desktop show as before */}
