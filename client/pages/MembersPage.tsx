@@ -374,75 +374,38 @@ export default function MembersPage() {
       {/* Pagination */}
       <div className="flex items-center justify-between py-4">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setCurrentPage(1)} 
-              disabled={currentPage === 1} 
-              className="h-6 w-6"
-            >
-              <ChevronsLeft className="h-4 w-4 fill-[#9FA2B4] opacity-50" />
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="h-8 w-8">
+              <ChevronsLeft className="h-4 w-4" />
             </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setCurrentPage(currentPage - 1)} 
-              disabled={currentPage === 1} 
-              className="h-6 w-6"
-            >
-              <ChevronLeft className="h-4 w-4 fill-[#9FA2B4] opacity-50" />
+            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className="h-8 w-8">
+              <ChevronLeft className="h-4 w-4" />
             </Button>
-            
             <div className="flex items-center gap-1">
               {Array.from({ length: Math.min(3, totalPages) }, (_, i) => i + 1).map((page) => (
-                <Button 
-                  key={page} 
-                  variant={currentPage === page ? "default" : "ghost"} 
-                  size="sm"
-                  onClick={() => setCurrentPage(page)}
-                  className={cn(
-                    "h-8 w-8 rounded-full text-sm",
-                    currentPage === page 
-                      ? "bg-[#63CDFA] text-white hover:bg-[#63CDFA]/90" 
-                      : "text-[#7F7F7F] hover:bg-gray-100"
-                  )}
-                >
+                <Button key={page} variant={currentPage === page ? "default" : "ghost"} size="icon" onClick={() => setCurrentPage(page)}
+                  className={cn("h-8 w-8 rounded-full", currentPage === page ? "bg-[#63CDFA] text-white hover:bg-[#63CDFA]/90" : "text-gray-500 hover:bg-gray-100")}>
                   {page}
                 </Button>
               ))}
             </div>
-            
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setCurrentPage(currentPage + 1)} 
-              disabled={currentPage === totalPages} 
-              className="h-6 w-6"
-            >
-              <ChevronRight className="h-4 w-4 fill-[#9FA2B4]" />
+            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages} className="h-8 w-8">
+              <ChevronRight className="h-4 w-4" />
             </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setCurrentPage(totalPages)} 
-              disabled={currentPage === totalPages} 
-              className="h-6 w-6"
-            >
-              <ChevronsRight className="h-4 w-4 fill-[#9FA2B4]" />
+            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} className="h-8 w-8">
+              <ChevronsRight className="h-4 w-4" />
             </Button>
           </div>
-          <span className="text-sm text-[#9FA2B4] font-light">{currentPage} of {totalPages}</span>
+          <span className="text-sm text-gray-500">{currentPage} of {totalPages}</span>
         </div>
-        
         <div className="flex items-center gap-4 relative">
-          <span className="text-sm text-[#9FA2B4] font-light">Rows per page</span>
-          <div 
+          <span className="text-sm text-gray-500">Rows per page</span>
+          <div
             className="flex items-center gap-2 cursor-pointer select-none"
             onClick={() => setShowRowsDropdown(!showRowsDropdown)}
           >
-            <span className="text-sm font-semibold text-black">{rowsPerPage}</span>
-            <ChevronDown className={`h-3 w-3 text-black transition-transform ${showRowsDropdown ? 'rotate-180' : ''}`} />
+            <span className="text-sm font-semibold text-gray-900">{rowsPerPage}</span>
+            <ChevronDown className={`h-3 w-3 text-gray-400 transition-transform ${showRowsDropdown ? 'rotate-180' : ''}`} />
           </div>
           {showRowsDropdown && (
             <div className="absolute right-0 bottom-full mb-1 w-20 bg-white border border-gray-200 rounded-md shadow-lg z-10">
