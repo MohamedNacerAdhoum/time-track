@@ -35,12 +35,12 @@ export function DashboardHeader({
 
   // Match ProfileModal's border color logic
   const getStatusColor = (status: string | undefined | null) => {
-    const raw = (status || '').toString().trim().toLowerCase();
-    if (!raw) return 'border-[#EF4444]';
-    if (raw.includes('break')) return 'border-[#F59E0B]';
-    if (raw === 'in') return 'border-[#0FBA83]';
-    if (raw.startsWith('in')) return 'border-[#0FBA83]';
-    return 'border-[#EF4444]';
+    const raw = (status || "").toString().trim().toLowerCase();
+    if (!raw) return "border-[#EF4444]";
+    if (raw.includes("break")) return "border-[#F59E0B]";
+    if (raw === "in") return "border-[#0FBA83]";
+    if (raw.startsWith("in")) return "border-[#0FBA83]";
+    return "border-[#EF4444]";
   };
 
   // Check if user is admin on component mount
@@ -273,7 +273,9 @@ export function DashboardHeader({
       )}
 
       {/* Desktop Header */}
-      <div className={`flex w-full items-center gap-2.5 px-6 py-4 bg-white ${isMobile ? 'hidden' : ''}`}>
+      <div
+        className={`flex w-full items-center gap-2.5 px-6 py-4 bg-white ${isMobile ? "hidden" : ""}`}
+      >
         {/* User/Admin Toggle - show for admin users, on mobile show on left, on desktop show as before */}
         {isAdmin ? (
           <>
@@ -283,22 +285,26 @@ export function DashboardHeader({
                 <div className="flex w-[84px] p-1 items-center gap-1 rounded-full border border-[#63CDFA]/50 bg-white">
                   <button
                     onClick={onToggleView}
-                    className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${!isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                      }`}
+                    className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
+                      !isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                    }`}
                   >
                     <User
-                      className={`w-5 h-5 transition-colors ${!isAdminView ? "text-white" : "text-[#77838F]"
-                        }`}
+                      className={`w-5 h-5 transition-colors ${
+                        !isAdminView ? "text-white" : "text-[#77838F]"
+                      }`}
                     />
                   </button>
                   <button
                     onClick={onToggleView}
-                    className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                      }`}
+                    className={`flex-1 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200 ${
+                      isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                    }`}
                   >
                     <Users
-                      className={`w-5 h-5 transition-colors ${isAdminView ? "text-white" : "text-[#77838F]"
-                        }`}
+                      className={`w-5 h-5 transition-colors ${
+                        isAdminView ? "text-white" : "text-[#77838F]"
+                      }`}
                     />
                   </button>
                 </div>
@@ -310,22 +316,26 @@ export function DashboardHeader({
                   <div className="flex w-[126px] p-2 items-center gap-3 rounded-full border border-[#63CDFA]/50 bg-white">
                     <button
                       onClick={onToggleView}
-                      className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${!isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                        }`}
+                      className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${
+                        !isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                      }`}
                     >
                       <User
-                        className={`w-7 h-7 transition-colors ${!isAdminView ? "text-white" : "text-[#77838F]"
-                          }`}
+                        className={`w-7 h-7 transition-colors ${
+                          !isAdminView ? "text-white" : "text-[#77838F]"
+                        }`}
                       />
                     </button>
                     <button
                       onClick={onToggleView}
-                      className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
-                        }`}
+                      className={`flex-1 flex items-center justify-center p-2 rounded-full transition-all duration-200 ${
+                        isAdminView ? "bg-[#63CDFA]" : "hover:bg-gray-50"
+                      }`}
                     >
                       <Users
-                        className={`w-7 h-7 transition-colors ${isAdminView ? "text-white" : "text-[#77838F]"
-                          }`}
+                        className={`w-7 h-7 transition-colors ${
+                          isAdminView ? "text-white" : "text-[#77838F]"
+                        }`}
                       />
                     </button>
                   </div>
@@ -374,19 +384,27 @@ export function DashboardHeader({
               className="hidden md:flex p-[3px] items-start gap-2.5 rounded-full relative hover:bg-gray-50 transition-colors"
             >
               <div className="w-[63px] h-[63px] rounded-full relative">
-                <div className={`w-full h-full rounded-full p-[3px] border-[3px] ${getStatusColor(displayUser?.status)}`}>
+                <div
+                  className={`w-full h-full rounded-full p-[3px] border-[3px] ${getStatusColor(displayUser?.status)}`}
+                >
                   {displayUser?.imageUrl ? (
                     <div
                       className="w-full h-full rounded-full bg-cover bg-center"
                       style={{
                         backgroundImage: `url(${displayUser.imageUrl})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center'
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
                       }}
                     />
                   ) : (
                     <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-2xl font-medium text-gray-500">
-                      {displayUser?.name ? displayUser.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+                      {displayUser?.name
+                        ? displayUser.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()
+                        : "U"}
                     </div>
                   )}
                 </div>
@@ -399,19 +417,27 @@ export function DashboardHeader({
               className="hidden"
             >
               <div className="flex p-[2.16px] items-center">
-                <div className={`w-[41px] h-[41px] rounded-full p-[2.16px] border-[2.16px] ${getStatusColor(displayUser?.status)}`}>
+                <div
+                  className={`w-[41px] h-[41px] rounded-full p-[2.16px] border-[2.16px] ${getStatusColor(displayUser?.status)}`}
+                >
                   {displayUser?.imageUrl ? (
                     <div
                       className="w-full h-full rounded-full bg-cover bg-center"
                       style={{
                         backgroundImage: `url(${displayUser.imageUrl})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center'
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
                       }}
                     />
                   ) : (
                     <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium text-gray-500">
-                      {displayUser?.name ? displayUser.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+                      {displayUser?.name
+                        ? displayUser.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()
+                        : "U"}
                     </div>
                   )}
                 </div>

@@ -103,7 +103,6 @@ export function Sidebar({
     setIsLogoutModalOpen(false);
   };
 
-
   return (
     <>
       {/* Mobile Overlay */}
@@ -260,7 +259,6 @@ export function Sidebar({
         onClose={handleLogoutCancel}
         onConfirm={handleLogoutConfirm}
       />
-
     </>
   );
 }
