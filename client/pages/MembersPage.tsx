@@ -174,12 +174,12 @@ function SortableHeader({
   return (
     <div
       className={cn(
-        "flex items-center justify-center gap-2 cursor-pointer hover:text-white transition-colors text-white font-semibold text-base",
+        "flex items-center gap-2 cursor-pointer hover:text-white transition-colors",
         className
       )}
     >
       {children}
-      {showArrow && <ArrowUpDown className="h-6 w-6" />}
+      {showArrow && <ArrowUpDown className="h-4 w-4" />}
     </div>
   );
 }
