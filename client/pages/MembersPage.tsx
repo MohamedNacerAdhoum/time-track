@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useMembersStore } from "@/contexts/MembersContext";
+import { MemberData } from "@/contexts/MembersContext";
 import {
   Search,
   ChevronDown,
@@ -24,143 +25,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { DeleteItemModal } from "@/components/general/DeleteItemModal";
 
-interface Member {
-  id: string;
-  name: string;
-  email: string;
-  age: number;
-  role: string;
-  location: string;
-  experience: string;
-  hours: number;
-  balance: number;
-  joined: string;
-}
-
-// Mock data based on the Figma design
-const mockMembers: Member[] = [
-  {
-    id: "1",
-    name: "User xxxxx",
-    email: "xxxx@gmail.com",
-    age: 35,
-    role: "yyyyy",
-    location: "yyyyy",
-    experience: "1 year",
-    hours: 20,
-    balance: 102.3,
-    joined: "31/08/2022",
-  },
-  {
-    id: "2",
-    name: "User xxxxx",
-    email: "xxxx@gmail.com",
-    age: 35,
-    role: "yyyyy",
-    location: "yyyyy",
-    experience: "1 year",
-    hours: 20,
-    balance: 102.3,
-    joined: "31/08/2022",
-  },
-  {
-    id: "3",
-    name: "User xxxxx",
-    email: "xxxx@gmail.com",
-    age: 35,
-    role: "yyyyy",
-    location: "yyyyy",
-    experience: "1 year",
-    hours: 20,
-    balance: 102.3,
-    joined: "31/08/2022",
-  },
-  {
-    id: "4",
-    name: "User xxxxx",
-    email: "xxxx@gmail.com",
-    age: 35,
-    role: "yyyyy",
-    location: "yyyyy",
-    experience: "1 year",
-    hours: 20,
-    balance: 102.3,
-    joined: "31/08/2022",
-  },
-  {
-    id: "5",
-    name: "User xxxxx",
-    email: "xxxx@gmail.com",
-    age: 35,
-    role: "yyyyy",
-    location: "yyyyy",
-    experience: "1 year",
-    hours: 20,
-    balance: 102.3,
-    joined: "31/08/2022",
-  },
-  {
-    id: "6",
-    name: "User xxxxx",
-    email: "xxxx@gmail.com",
-    age: 35,
-    role: "yyyyy",
-    location: "yyyyy",
-    experience: "1 year",
-    hours: 20,
-    balance: 102.3,
-    joined: "31/08/2022",
-  },
-  {
-    id: "7",
-    name: "User xxxxx",
-    email: "xxxx@gmail.com",
-    age: 35,
-    role: "yyyyy",
-    location: "yyyyy",
-    experience: "1 year",
-    hours: 20,
-    balance: 102.3,
-    joined: "31/08/2022",
-  },
-  {
-    id: "8",
-    name: "User xxxxx",
-    email: "xxxx@gmail.com",
-    age: 35,
-    role: "yyyyy",
-    location: "yyyyy",
-    experience: "1 year",
-    hours: 20,
-    balance: 102.3,
-    joined: "31/08/2022",
-  },
-  {
-    id: "9",
-    name: "User xxxxx",
-    email: "xxxx@gmail.com",
-    age: 35,
-    role: "yyyyy",
-    location: "yyyyy",
-    experience: "1 year",
-    hours: 20,
-    balance: 102.3,
-    joined: "31/08/2022",
-  },
-  {
-    id: "10",
-    name: "User xxxxx",
-    email: "xxxx@gmail.com",
-    age: 35,
-    role: "yyyyy",
-    location: "yyyyy",
-    experience: "1 year",
-    hours: 20,
-    balance: 102.3,
-    joined: "31/08/2022",
-  },
-];
+const formatDate = (dateString: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+  return new Date(dateString).toLocaleDateString('en-US', options);
+};
 
 function SortableHeader({
   children,
@@ -192,11 +69,27 @@ export default function MembersPage() {
   const [selectedMembers, setSelectedMembers] = useState<Set<string>>(
     new Set(),
   );
+  const [membersdata, setMembersData] = useState<MemberData[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const { fetchAllMembers } = useMembersStore();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchAllMembers();
+        if (data) setMembersData(data);
+      } catch (err) {
+        console.error("Error fetching members:", err);
+      }
+    };
+    fetchData();
+  }, [fetchAllMembers]);
 
   // Use mock data for now
-  const members = mockMembers;
+  const members = membersdata;
 
   useEffect(() => {
     setCurrentPage(1);
@@ -228,8 +121,8 @@ export default function MembersPage() {
   const filteredData = members.filter((member) => {
     return searchQuery
       ? member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          member.role.toLowerCase().includes(searchQuery.toLowerCase())
+      member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      member.role_name.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
   });
 
@@ -264,9 +157,36 @@ export default function MembersPage() {
     setSelectedMembers(newSelected);
   };
 
-  const handleDeleteSelected = () => {
-    console.log("Delete selected members:", Array.from(selectedMembers));
-    setSelectedMembers(new Set());
+  const handleDeleteSelected = async () => {
+    try {
+      // Here you would typically call your API to delete the selected members
+      console.log("Deleting members:", Array.from(selectedMembers));
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Update the local state to remove the deleted members
+      setMembersData(prevMembers =>
+        prevMembers.filter(member => !selectedMembers.has(member.id))
+      );
+
+      // Clear selection
+      setSelectedMembers(new Set());
+
+      // Show success message (you might want to use a toast notification here)
+      console.log("Members deleted successfully");
+    } catch (error) {
+      console.error("Error deleting members:", error);
+      throw error; // This will be caught by the DeleteItemModal
+    }
+  };
+
+  const handleOpenDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   const handleEditMember = (memberId: string) => {
@@ -298,12 +218,24 @@ export default function MembersPage() {
           </Button>
 
           {selectedMembers.size > 0 && (
-            <Button
-              onClick={handleDeleteSelected}
-              className="bg-[#FF6262] hover:bg-[#FF4444] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
-            >
-              <Trash2 className="h-6 w-6" />
-            </Button>
+            <>
+              <Button
+                onClick={handleOpenDeleteModal}
+                className="bg-[#FF6262] hover:bg-[#FF4444] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
+              >
+                <Trash2 className="h-6 w-6" />
+              </Button>
+
+              <DeleteItemModal
+                isOpen={isDeleteModalOpen}
+                onClose={handleCloseDeleteModal}
+                onConfirm={handleDeleteSelected}
+                title={`Delete ${selectedMembers.size} Member${selectedMembers.size > 1 ? 's' : ''}?`}
+                description={`Are you sure you want to delete the selected ${selectedMembers.size} member${selectedMembers.size > 1 ? 's' : ''}? This action cannot be undone.`}
+                confirmButtonText={`Delete ${selectedMembers.size > 0 ? selectedMembers.size : ''} Member${selectedMembers.size > 1 ? 's' : ''}`}
+                itemName={selectedMembers.size > 1 ? `${selectedMembers.size} members` : 'member'}
+              />
+            </>
           )}
         </div>
       </div>
@@ -322,7 +254,7 @@ export default function MembersPage() {
                   />
                 </div>
               </TableHead>
-              <TableHead className="text-white font-semibold w-36">
+              <TableHead className="text-white font-semibold w-40">
                 <SortableHeader>Name</SortableHeader>
               </TableHead>
               <TableHead className="text-white font-semibold w-40">
@@ -349,7 +281,7 @@ export default function MembersPage() {
               <TableHead className="text-white font-semibold">
                 <SortableHeader showArrow={false}>Joined</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold w-10"></TableHead>
+              <TableHead className="text-white font-semibold">Edit</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -378,7 +310,7 @@ export default function MembersPage() {
                     {member.email}
                   </TableCell>
                   <TableCell className="text-gray-500">{member.age}</TableCell>
-                  <TableCell className="text-gray-500">{member.role}</TableCell>
+                  <TableCell className="text-gray-500">{member.role_name}</TableCell>
                   <TableCell className="text-gray-500">
                     {member.location}
                   </TableCell>
@@ -389,12 +321,12 @@ export default function MembersPage() {
                     {member.hours} h
                   </TableCell>
                   <TableCell className="text-gray-500">
-                    {member.balance}
+                    {member.payrate}
                   </TableCell>
                   <TableCell className="text-gray-500">
-                    {member.joined}
+                    {formatDate(member.joined)}
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell>
                     <Button
                       variant="ghost"
                       size="icon"

@@ -75,20 +75,22 @@ function StatusBadge({ status }: { status: "IN" | "OUT" | "IN BREAK" }) {
 
 function SortableHeader({
   children,
+  showArrow = true,
   className,
 }: {
   children: React.ReactNode;
+  showArrow?: boolean;
   className?: string;
 }) {
   return (
     <div
       className={cn(
         "flex items-center gap-2 cursor-pointer hover:text-white transition-colors",
-        className
+        className,
       )}
     >
       {children}
-      <ArrowUpDown className="h-4 w-4" />
+      {showArrow && <ArrowUpDown className="h-4 w-4" />}
     </div>
   );
 }
@@ -207,9 +209,9 @@ export default function TimesheetsPage() {
         <div className="flex items-center gap-4">
           <CustomDropdown value={lastAction} options={lastActionOptions} onChange={setLastAction} className="min-w-[160px]" />
           <div className="relative flex items-center">
-            <CalendarWidget 
-              value={selectedDate || new Date()} 
-              onChange={setSelectedDate} 
+            <CalendarWidget
+              value={selectedDate || new Date()}
+              onChange={setSelectedDate}
               className="min-w-[180px] pr-8"
               placeholder="Select date..."
             />
@@ -302,7 +304,7 @@ export default function TimesheetsPage() {
         </div>
         <div className="flex items-center gap-4 relative">
           <span className="text-sm text-gray-500">Rows per page</span>
-          <div 
+          <div
             className="flex items-center gap-2 cursor-pointer select-none"
             onClick={() => setShowRowsDropdown(!showRowsDropdown)}
           >
