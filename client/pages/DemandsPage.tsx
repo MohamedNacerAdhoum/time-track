@@ -379,12 +379,12 @@ export default function DemandsPage() {
                   <TableCell className="font-semibold text-gray-900">
                     {demand.name}
                   </TableCell>
-                  <TableCell className="text-gray-500 max-w-xs">
-                    <div className="truncate" title={demand.subject}>
+                  <TableCell className="text-gray-500">
+                    <div className="truncate max-w-md" title={demand.subject}>
                       {demand.subject}
                     </div>
                   </TableCell>
-                  <TableCell className="text-gray-500 text-center">
+                  <TableCell className="text-gray-500">
                     {demand.createdAt}
                   </TableCell>
                   <TableCell className="text-center">
