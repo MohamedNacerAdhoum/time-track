@@ -24,7 +24,7 @@ export function DeleteItemModal({
   confirmButtonText = "Delete",
   cancelButtonText = "Cancel",
   loadingText = "Deleting...",
-  itemName = ""
+  itemName = "",
 }: DeleteItemModalProps) {
   const { toast } = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -38,7 +38,7 @@ export function DeleteItemModal({
       console.error("Delete error:", error);
       toast({
         title: "Delete failed",
-        description: `There was an error while deleting ${itemName ? itemName : 'the item'}. Please try again.`,
+        description: `There was an error while deleting ${itemName ? itemName : "the item"}. Please try again.`,
         variant: "destructive",
       });
     } finally {
@@ -97,17 +97,29 @@ export function DeleteItemModal({
           <button
             onClick={handleConfirm}
             disabled={isDeleting}
-            className={`flex px-4 py-2 justify-center items-center gap-[10px] rounded-[10px] bg-[#FF6262] hover:bg-[#FF5252] transition-colors ${isDeleting ? 'opacity-70 cursor-not-allowed' : ''}`}
+            className={`flex px-4 py-2 justify-center items-center gap-[10px] rounded-[10px] bg-[#FF6262] hover:bg-[#FF5252] transition-colors ${isDeleting ? "opacity-70 cursor-not-allowed" : ""}`}
           >
             {isDeleting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin text-white" />
-                <span className="text-white text-base font-normal leading-normal" style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}>
+                <span
+                  className="text-white text-base font-normal leading-normal"
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
+                >
                   {loadingText}
                 </span>
               </>
             ) : (
-              <span className="text-white text-base font-normal leading-normal" style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}>
+              <span
+                className="text-white text-base font-normal leading-normal"
+                style={{
+                  fontFamily:
+                    "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                }}
+              >
                 {confirmButtonText}
               </span>
             )}

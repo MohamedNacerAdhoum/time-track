@@ -110,7 +110,7 @@ function StateBadge({ state }: { state: "Pending" | "Approved" | "Declined" }) {
       variant="outline"
       className={cn(
         "px-4 py-1 text-sm font-semibold rounded-full border",
-        getBadgeStyle(state)
+        getBadgeStyle(state),
       )}
     >
       {state}
@@ -146,7 +146,9 @@ export default function DemandsPage() {
   const [showRowsDropdown, setShowRowsDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
-  const [selectedDemands, setSelectedDemands] = useState<Set<string>>(new Set());
+  const [selectedDemands, setSelectedDemands] = useState<Set<string>>(
+    new Set(),
+  );
   const [selectAll, setSelectAll] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -181,8 +183,8 @@ export default function DemandsPage() {
         demand.subject.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
 
-    const matchesTab = 
-      activeTab === "all" || 
+    const matchesTab =
+      activeTab === "all" ||
       (activeTab === "sent" && demand.type === "sent") ||
       (activeTab === "received" && demand.type === "received");
 
@@ -226,7 +228,7 @@ export default function DemandsPage() {
       console.log("Deleting demands:", Array.from(selectedDemands));
 
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Clear selection
       setSelectedDemands(new Set());
@@ -258,20 +260,20 @@ export default function DemandsPage() {
       <div className="flex justify-center">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 h-16 p-2 bg-white rounded-2xl border border-blue-200">
-            <TabsTrigger 
-              value="all" 
+            <TabsTrigger
+              value="all"
               className="h-12 text-lg font-medium data-[state=active]:text-white text-gray-600 data-[state=active]:bg-[#63CDFA] rounded-xl"
             >
               All
             </TabsTrigger>
-            <TabsTrigger 
-              value="sent" 
+            <TabsTrigger
+              value="sent"
               className="h-12 text-lg font-medium data-[state=active]:text-white text-gray-600 data-[state=active]:bg-[#63CDFA] rounded-xl"
             >
               Sent
             </TabsTrigger>
-            <TabsTrigger 
-              value="received" 
+            <TabsTrigger
+              value="received"
               className="h-12 text-lg font-medium data-[state=active]:text-white text-gray-600 data-[state=active]:bg-[#63CDFA] rounded-xl"
             >
               Received
@@ -315,10 +317,14 @@ export default function DemandsPage() {
                 isOpen={isDeleteModalOpen}
                 onClose={handleCloseDeleteModal}
                 onConfirm={handleDeleteSelected}
-                title={`Delete ${selectedDemands.size} Demand${selectedDemands.size > 1 ? 's' : ''}?`}
-                description={`Are you sure you want to delete the selected ${selectedDemands.size} demand${selectedDemands.size > 1 ? 's' : ''}? This action cannot be undone.`}
-                confirmButtonText={`Delete ${selectedDemands.size > 0 ? selectedDemands.size : ''} Demand${selectedDemands.size > 1 ? 's' : ''}`}
-                itemName={selectedDemands.size > 1 ? `${selectedDemands.size} demands` : 'demand'}
+                title={`Delete ${selectedDemands.size} Demand${selectedDemands.size > 1 ? "s" : ""}?`}
+                description={`Are you sure you want to delete the selected ${selectedDemands.size} demand${selectedDemands.size > 1 ? "s" : ""}? This action cannot be undone.`}
+                confirmButtonText={`Delete ${selectedDemands.size > 0 ? selectedDemands.size : ""} Demand${selectedDemands.size > 1 ? "s" : ""}`}
+                itemName={
+                  selectedDemands.size > 1
+                    ? `${selectedDemands.size} demands`
+                    : "demand"
+                }
               />
             </>
           )}
@@ -354,7 +360,9 @@ export default function DemandsPage() {
               <TableHead className="text-white font-semibold w-24 text-center">
                 <SortableHeader showArrow={false}>State</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold w-40 text-center">Actions</TableHead>
+              <TableHead className="text-white font-semibold w-40 text-center">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -395,13 +403,17 @@ export default function DemandsPage() {
                       {/* Reply Button */}
                       <div className="flex items-center bg-[#F2FBFF] rounded-lg px-2 py-1 gap-1">
                         <RotateCcw className="h-4 w-4 text-[#63CDFA]" />
-                        <span className="text-xs font-semibold text-[#63CDFA]">Reply</span>
+                        <span className="text-xs font-semibold text-[#63CDFA]">
+                          Reply
+                        </span>
                       </div>
 
                       {/* View Reply Button */}
                       <div className="flex items-center bg-[#F2FBFF] rounded-lg px-2 py-1 gap-1">
                         <Eye className="h-4 w-4 text-[#63CDFA]" />
-                        <span className="text-xs font-semibold text-[#63CDFA]">View</span>
+                        <span className="text-xs font-semibold text-[#63CDFA]">
+                          View
+                        </span>
                       </div>
 
                       {/* Circular Action Button */}

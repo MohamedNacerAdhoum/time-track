@@ -25,12 +25,12 @@ interface UserFormData {
   confirmPassword: string;
 }
 
-export function UserFormModal({ 
-  isOpen, 
-  onClose, 
-  mode, 
+export function UserFormModal({
+  isOpen,
+  onClose,
+  mode,
   userData = null,
-  onSuccess 
+  onSuccess,
 }: UserFormModalProps) {
   const { toast } = useToast();
   const { roles, fetchAllRoles, addMember } = useMembersStore();
@@ -49,7 +49,7 @@ export function UserFormModal({
     experience: "",
     payrate: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   // Load roles when modal opens
@@ -72,7 +72,7 @@ export function UserFormModal({
           experience: userData.experience?.toString() || "",
           payrate: userData.payrate || "",
           password: "",
-          confirmPassword: ""
+          confirmPassword: "",
         });
       } else if (mode === "add") {
         // Reset form for add mode
@@ -85,22 +85,24 @@ export function UserFormModal({
           experience: "",
           payrate: "",
           password: "",
-          confirmPassword: ""
+          confirmPassword: "",
         });
       }
     }
   }, [isOpen, mode, userData, roles]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
-    setShowPasswords(prev => ({
+    setShowPasswords((prev) => ({
       ...prev,
       [field]: !prev[field],
     }));
@@ -168,7 +170,7 @@ export function UserFormModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsSubmitting(true);
@@ -182,13 +184,15 @@ export function UserFormModal({
           role: formData.role,
           age: formData.age ? parseInt(formData.age) : undefined,
           location: formData.location.trim() || undefined,
-          experience: formData.experience ? parseInt(formData.experience) : undefined,
+          experience: formData.experience
+            ? parseInt(formData.experience)
+            : undefined,
           payrate: formData.payrate.trim() || undefined,
           password: formData.password,
         };
 
         await addMember(memberData);
-        
+
         toast({
           title: "Success",
           description: "User created successfully",
@@ -197,7 +201,7 @@ export function UserFormModal({
         // Update existing user
         // TODO: Implement user update API call
         console.log("Update user:", formData);
-        
+
         toast({
           title: "Success",
           description: "User updated successfully",
@@ -224,7 +228,10 @@ export function UserFormModal({
           <div className="flex items-center justify-between mb-6">
             <h1
               className="text-[24px] font-semibold text-black leading-4"
-              style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+              style={{
+                fontFamily:
+                  "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+              }}
             >
               {mode === "add" ? "Add New User" : "Edit User"}
             </h1>
@@ -241,7 +248,10 @@ export function UserFormModal({
               <div className="space-y-1">
                 <label
                   className="block text-[14px] font-semibold text-[#0A0A0A]"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 >
                   Name *
                 </label>
@@ -252,14 +262,20 @@ export function UserFormModal({
                   onChange={handleInputChange}
                   required
                   className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 />
               </div>
 
               <div className="space-y-1">
                 <label
                   className="block text-[14px] font-semibold text-[#0A0A0A]"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 >
                   Email *
                 </label>
@@ -270,14 +286,20 @@ export function UserFormModal({
                   onChange={handleInputChange}
                   required
                   className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 />
               </div>
 
               <div className="space-y-1">
                 <label
                   className="block text-[14px] font-semibold text-[#0A0A0A]"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 >
                   Age
                 </label>
@@ -289,19 +311,25 @@ export function UserFormModal({
                   min="18"
                   max="100"
                   className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 />
               </div>
 
               <div className="space-y-1">
                 <label
                   className="block text-[14px] font-semibold text-[#0A0A0A]"
-                  style={{ fontFamily: "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 >
                   Role *
                 </label>
                 <div className="relative">
-                  <select 
+                  <select
                     name="role"
                     value={formData.role}
                     onChange={handleInputChange}
@@ -322,7 +350,10 @@ export function UserFormModal({
               <div className="space-y-1">
                 <label
                   className="block text-[14px] font-semibold text-[#0A0A0A]"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 >
                   Location
                 </label>
@@ -332,14 +363,20 @@ export function UserFormModal({
                   value={formData.location}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 />
               </div>
 
               <div className="space-y-1">
                 <label
                   className="block text-[14px] font-semibold text-[#0A0A0A]"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 >
                   Experience (years)
                 </label>
@@ -351,14 +388,20 @@ export function UserFormModal({
                   min="0"
                   max="50"
                   className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 />
               </div>
 
               <div className="md:col-span-2 space-y-1">
                 <label
                   className="block text-[14px] font-semibold text-[#0A0A0A]"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 >
                   Pay Rate
                 </label>
@@ -369,7 +412,10 @@ export function UserFormModal({
                   onChange={handleInputChange}
                   placeholder="e.g., $25/hour"
                   className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                  style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
                 />
               </div>
 
@@ -378,7 +424,10 @@ export function UserFormModal({
                   <div className="space-y-1">
                     <label
                       className="block text-[14px] font-semibold text-[#0A0A0A]"
-                      style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                      style={{
+                        fontFamily:
+                          "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                      }}
                     >
                       Password *
                     </label>
@@ -390,14 +439,21 @@ export function UserFormModal({
                         onChange={handleInputChange}
                         required
                         className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                        style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                        style={{
+                          fontFamily:
+                            "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
                       />
                       <button
                         type="button"
                         onClick={() => togglePasswordVisibility("password")}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#71839B]"
                       >
-                        {showPasswords.password ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                        {showPasswords.password ? (
+                          <Eye className="w-4 h-4" />
+                        ) : (
+                          <EyeOff className="w-4 h-4" />
+                        )}
                       </button>
                     </div>
                   </div>
@@ -405,26 +461,40 @@ export function UserFormModal({
                   <div className="space-y-1">
                     <label
                       className="block text-[14px] font-semibold text-[#0A0A0A]"
-                      style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                      style={{
+                        fontFamily:
+                          "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                      }}
                     >
                       Confirm Password *
                     </label>
                     <div className="relative">
                       <input
-                        type={showPasswords.confirmPassword ? "text" : "password"}
+                        type={
+                          showPasswords.confirmPassword ? "text" : "password"
+                        }
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
                         required
                         className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                        style={{ fontFamily: "Poppins, -apple-system, Roboto, Helvetica, sans-serif" }}
+                        style={{
+                          fontFamily:
+                            "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
                       />
                       <button
                         type="button"
-                        onClick={() => togglePasswordVisibility("confirmPassword")}
+                        onClick={() =>
+                          togglePasswordVisibility("confirmPassword")
+                        }
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#71839B]"
                       >
-                        {showPasswords.confirmPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                        {showPasswords.confirmPassword ? (
+                          <Eye className="w-4 h-4" />
+                        ) : (
+                          <EyeOff className="w-4 h-4" />
+                        )}
                       </button>
                     </div>
                   </div>
@@ -438,7 +508,10 @@ export function UserFormModal({
                 onClick={onClose}
                 disabled={isSubmitting}
                 className="px-4 py-[8px] border border-[#63CDFA] text-[#0A0A0A] rounded-lg hover:bg-gray-50 transition-colors text-[14px] disabled:opacity-50"
-                style={{ fontFamily: "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif" }}
+                style={{
+                  fontFamily:
+                    "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+                }}
               >
                 Cancel
               </button>
@@ -446,9 +519,16 @@ export function UserFormModal({
                 type="submit"
                 disabled={isSubmitting}
                 className="px-6 py-[8px] bg-[#63CDFA] text-white rounded-lg hover:bg-[#5ab8e8] transition-colors text-[14px] disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ fontFamily: "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif" }}
+                style={{
+                  fontFamily:
+                    "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+                }}
               >
-                {isSubmitting ? 'Saving...' : mode === "add" ? 'Create User' : 'Save Changes'}
+                {isSubmitting
+                  ? "Saving..."
+                  : mode === "add"
+                    ? "Create User"
+                    : "Save Changes"}
               </button>
             </div>
           </form>
