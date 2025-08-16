@@ -50,7 +50,11 @@ function App() {
             <Route
               path="/"
               element={
+<<<<<<< HEAD
                   <DashboardLayout />
+=======
+                <DashboardLayout />
+>>>>>>> refs/remotes/origin/main
               }
             >
               <Route index element={<Navigate to="/dashboard" replace />} />
