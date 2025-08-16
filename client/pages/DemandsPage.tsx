@@ -507,7 +507,7 @@ export default function DemandsPage() {
           </div>
           {showRowsDropdown && (
             <div className="absolute right-0 bottom-full mb-1 w-20 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-              {[5, 10, 20, 50].map((option) => (
+              {[6, 10, 20, 50].map((option) => (
                 <div
                   key={option}
                   className={`px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${rowsPerPage === option ? "bg-blue-50 text-blue-600" : "text-gray-700"}`}
