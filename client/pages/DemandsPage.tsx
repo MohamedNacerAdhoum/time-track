@@ -28,6 +28,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DeleteItemModal } from "@/components/general/DeleteItemModal";
+import { DemandResponseModal } from "@/components/general/DemandResponseModal";
+import { DemandViewModal } from "@/components/general/DemandViewModal";
 import { cn } from "@/lib/utils";
 
 // Mock data for demands
@@ -38,6 +40,14 @@ interface Demand {
   createdAt: string;
   state: "Pending" | "Approved" | "Declined";
   type: "sent" | "received";
+  role?: string;
+  content?: string;
+  attachments?: Array<{
+    name: string;
+    size: string;
+    url?: string;
+  }>;
+  userAvatar?: string;
 }
 
 const mockDemands: Demand[] = [
@@ -48,6 +58,13 @@ const mockDemands: Demand[] = [
     createdAt: "31/08/2022 - 08:20",
     state: "Pending",
     type: "received",
+    role: "Role xxx",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
+    attachments: [{
+      name: "proquirment_tc.pdf",
+      size: "500kb",
+      url: "#"
+    }],
   },
   {
     id: "2",
@@ -152,6 +169,9 @@ export default function DemandsPage() {
   const [selectAll, setSelectAll] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedDemand, setSelectedDemand] = useState<Demand | null>(null);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -252,6 +272,42 @@ export default function DemandsPage() {
   const handleAddDemand = () => {
     // This will do nothing for now as requested
     console.log("Add demand button clicked - no action implemented yet");
+  };
+
+  const handleReply = (demand: Demand) => {
+    setSelectedDemand(demand);
+    setIsResponseModalOpen(true);
+  };
+
+  const handleView = (demand: Demand) => {
+    setSelectedDemand(demand);
+    setIsViewModalOpen(true);
+  };
+
+  const handleResponseSubmit = async (data: { body: string; file?: File }) => {
+    console.log("Response submitted:", data, "for demand:", selectedDemand?.id);
+    // Here you would typically send the response to your API
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+  };
+
+  const handleApproveDemand = async (demandId: string) => {
+    console.log("Approving demand:", demandId);
+    // Here you would typically call your API to approve the demand
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+  };
+
+  const handleDeclineDemand = async (demandId: string) => {
+    console.log("Declining demand:", demandId);
+    // Here you would typically call your API to decline the demand
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+  };
+
+  const handleDownloadAttachment = (attachment: { name: string; url?: string }) => {
+    console.log("Downloading:", attachment.name);
+    // Here you would typically handle the file download
+    if (attachment.url) {
+      window.open(attachment.url, '_blank');
+    }
   };
 
   return (
@@ -404,6 +460,7 @@ export default function DemandsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => handleReply(demand)}
                         className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
                       >
                         <RotateCcw className="h-4 w-4" />
@@ -414,6 +471,7 @@ export default function DemandsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => handleView(demand)}
                         className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
                       >
                         <Eye className="h-4 w-4" />
@@ -543,6 +601,41 @@ export default function DemandsPage() {
           )}
         </div>
       </div>
+
+      {/* Demand Response Modal */}
+      <DemandResponseModal
+        isOpen={isResponseModalOpen}
+        onClose={() => {
+          setIsResponseModalOpen(false);
+          setSelectedDemand(null);
+        }}
+        onSubmit={handleResponseSubmit}
+        demandId={selectedDemand?.id}
+      />
+
+      {/* Demand View Modal */}
+      <DemandViewModal
+        isOpen={isViewModalOpen}
+        onClose={() => {
+          setIsViewModalOpen(false);
+          setSelectedDemand(null);
+        }}
+        demand={selectedDemand ? {
+          id: selectedDemand.id,
+          name: selectedDemand.name,
+          role: selectedDemand.role,
+          subject: selectedDemand.subject,
+          content: selectedDemand.content || selectedDemand.subject,
+          createdAt: selectedDemand.createdAt,
+          state: selectedDemand.state,
+          attachments: selectedDemand.attachments,
+          userAvatar: selectedDemand.userAvatar,
+        } : undefined}
+        onApprove={handleApproveDemand}
+        onDecline={handleDeclineDemand}
+        onDownload={handleDownloadAttachment}
+        showActions={selectedDemand?.type === "received"}
+      />
     </div>
   );
 }
