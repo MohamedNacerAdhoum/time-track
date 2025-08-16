@@ -221,8 +221,8 @@ export default function TimesheetsPage() {
       )}
 
       {/* Search + Filters */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex-1 max-w-md">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        <div className="flex-1 w-full lg:max-w-md">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
@@ -233,7 +233,7 @@ export default function TimesheetsPage() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
           <CustomDropdown
             value={lastAction}
             options={lastActionOptions}
@@ -346,7 +346,7 @@ export default function TimesheetsPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between py-4">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 py-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Button
@@ -411,7 +411,7 @@ export default function TimesheetsPage() {
             {currentPage} of {totalPages}
           </span>
         </div>
-        <div className="flex items-center gap-4 relative">
+        <div className="flex items-center gap-4 relative order-first lg:order-last">
           <span className="text-sm text-gray-500">Rows per page</span>
           <div
             className="flex items-center gap-2 cursor-pointer select-none"
