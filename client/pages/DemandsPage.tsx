@@ -342,19 +342,19 @@ export default function DemandsPage() {
                   />
                 </div>
               </TableHead>
-              <TableHead className="text-white font-semibold w-40">
+              <TableHead className="text-white font-semibold w-32">
                 <SortableHeader>Name</SortableHeader>
               </TableHead>
               <TableHead className="text-white font-semibold">
                 <SortableHeader showArrow={false}>Subject</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold w-32">
+              <TableHead className="text-white font-semibold w-28">
                 <SortableHeader>Created at</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold w-32 text-center">
+              <TableHead className="text-white font-semibold w-24 text-center">
                 <SortableHeader showArrow={false}>State</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold w-48 text-center">Actions</TableHead>
+              <TableHead className="text-white font-semibold w-40 text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
