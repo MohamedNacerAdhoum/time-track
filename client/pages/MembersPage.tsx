@@ -194,7 +194,33 @@ export default function MembersPage() {
   };
 
   const handleEditMember = (memberId: string) => {
-    console.log("Edit member:", memberId);
+    const member = membersdata.find(m => m.id === memberId);
+    if (member) {
+      setSelectedUserData(member);
+      setUserFormMode("edit");
+      setIsUserFormModalOpen(true);
+    }
+  };
+
+  const handleAddMember = () => {
+    setSelectedUserData(null);
+    setUserFormMode("add");
+    setIsUserFormModalOpen(true);
+  };
+
+  const handleCloseUserFormModal = () => {
+    setIsUserFormModalOpen(false);
+    setSelectedUserData(null);
+  };
+
+  const handleUserFormSuccess = async () => {
+    // Refresh the members list
+    try {
+      const data = await fetchAllMembers();
+      if (data) setMembersData(data);
+    } catch (err) {
+      console.error("Error refreshing members:", err);
+    }
   };
 
   return (
