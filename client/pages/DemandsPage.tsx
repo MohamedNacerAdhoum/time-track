@@ -332,8 +332,8 @@ export default function DemandsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl overflow-hidden">
-        <Table>
+      <div className="bg-white rounded-xl overflow-hidden overflow-x-auto">
+        <Table className="min-w-full">
           <TableHeader>
             <TableRow className="bg-[#63CDFA] hover:bg-[#63CDFA]">
               <TableHead className="text-white font-semibold py-4 w-12">
