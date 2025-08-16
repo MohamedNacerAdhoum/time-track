@@ -74,6 +74,9 @@ export default function MembersPage() {
   const [selectAll, setSelectAll] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isUserFormModalOpen, setIsUserFormModalOpen] = useState(false);
+  const [userFormMode, setUserFormMode] = useState<"add" | "edit">("add");
+  const [selectedUserData, setSelectedUserData] = useState<MemberData | null>(null);
 
   const { fetchAllMembers } = useMembersStore();
 
