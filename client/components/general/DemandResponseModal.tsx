@@ -38,12 +38,12 @@ export function DemandResponseModal({
     try {
       setIsSubmitting(true);
       await onSubmit?.({ body: body.trim(), file: selectedFile || undefined });
-      
+
       // Reset form
       setBody("");
       setSelectedFile(null);
       onClose();
-      
+
       toast({
         title: "Response Sent",
         description: "Your demand response has been sent successfully.",
@@ -52,7 +52,8 @@ export function DemandResponseModal({
       console.error("Submit error:", error);
       toast({
         title: "Send Failed",
-        description: "There was an error sending your response. Please try again.",
+        description:
+          "There was an error sending your response. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -67,7 +68,7 @@ export function DemandResponseModal({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
       handleFileSelect(files[0]);
@@ -149,11 +150,11 @@ export function DemandResponseModal({
               onDragLeave={handleDragLeave}
             >
               <Upload className="w-10 h-10 text-[#63CDFA]" />
-              
+
               <p className="text-center text-lg font-semibold text-[#979797] font-ibm-plex">
                 Drag and drop file here or
               </p>
-              
+
               <Button
                 type="button"
                 variant="outline"
@@ -174,7 +175,7 @@ export function DemandResponseModal({
                 </div>
               )}
             </div>
-            
+
             <input
               type="file"
               ref={fileInputRef}

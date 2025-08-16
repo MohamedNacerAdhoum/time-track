@@ -117,10 +117,20 @@
 
   /* Font family utilities */
   .font-poppins {
-    font-family: 'Poppins', -apple-system, 'Roboto', 'Helvetica', sans-serif;
+    font-family:
+      "Poppins",
+      -apple-system,
+      "Roboto",
+      "Helvetica",
+      sans-serif;
   }
 
   .font-ibm-plex {
-    font-family: 'IBM Plex Sans', -apple-system, 'Roboto', 'Helvetica', sans-serif;
+    font-family:
+      "IBM Plex Sans",
+      -apple-system,
+      "Roboto",
+      "Helvetica",
+      sans-serif;
   }
 }

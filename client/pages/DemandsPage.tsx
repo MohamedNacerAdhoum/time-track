@@ -59,12 +59,15 @@ const mockDemands: Demand[] = [
     state: "Pending",
     type: "received",
     role: "Role xxx",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
-    attachments: [{
-      name: "proquirment_tc.pdf",
-      size: "500kb",
-      url: "#"
-    }],
+    content:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
+    attachments: [
+      {
+        name: "proquirment_tc.pdf",
+        size: "500kb",
+        url: "#",
+      },
+    ],
   },
   {
     id: "2",
@@ -287,26 +290,29 @@ export default function DemandsPage() {
   const handleResponseSubmit = async (data: { body: string; file?: File }) => {
     console.log("Response submitted:", data, "for demand:", selectedDemand?.id);
     // Here you would typically send the response to your API
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
   };
 
   const handleApproveDemand = async (demandId: string) => {
     console.log("Approving demand:", demandId);
     // Here you would typically call your API to approve the demand
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
   };
 
   const handleDeclineDemand = async (demandId: string) => {
     console.log("Declining demand:", demandId);
     // Here you would typically call your API to decline the demand
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
   };
 
-  const handleDownloadAttachment = (attachment: { name: string; url?: string }) => {
+  const handleDownloadAttachment = (attachment: {
+    name: string;
+    url?: string;
+  }) => {
     console.log("Downloading:", attachment.name);
     // Here you would typically handle the file download
     if (attachment.url) {
-      window.open(attachment.url, '_blank');
+      window.open(attachment.url, "_blank");
     }
   };
 
@@ -444,7 +450,10 @@ export default function DemandsPage() {
                     {demand.name}
                   </TableCell>
                   <TableCell className="text-gray-500">
-                    <div className="truncate max-w-[300px]" title={demand.subject}>
+                    <div
+                      className="truncate max-w-[300px]"
+                      title={demand.subject}
+                    >
                       {demand.subject}
                     </div>
                   </TableCell>
@@ -620,17 +629,21 @@ export default function DemandsPage() {
           setIsViewModalOpen(false);
           setSelectedDemand(null);
         }}
-        demand={selectedDemand ? {
-          id: selectedDemand.id,
-          name: selectedDemand.name,
-          role: selectedDemand.role,
-          subject: selectedDemand.subject,
-          content: selectedDemand.content || selectedDemand.subject,
-          createdAt: selectedDemand.createdAt,
-          state: selectedDemand.state,
-          attachments: selectedDemand.attachments,
-          userAvatar: selectedDemand.userAvatar,
-        } : undefined}
+        demand={
+          selectedDemand
+            ? {
+                id: selectedDemand.id,
+                name: selectedDemand.name,
+                role: selectedDemand.role,
+                subject: selectedDemand.subject,
+                content: selectedDemand.content || selectedDemand.subject,
+                createdAt: selectedDemand.createdAt,
+                state: selectedDemand.state,
+                attachments: selectedDemand.attachments,
+                userAvatar: selectedDemand.userAvatar,
+              }
+            : undefined
+        }
         onApprove={handleApproveDemand}
         onDecline={handleDeclineDemand}
         onDownload={handleDownloadAttachment}

@@ -44,7 +44,7 @@ export function DemandViewModal({
 
   const handleApprove = async () => {
     if (!demand || !onApprove) return;
-    
+
     try {
       setIsProcessing(true);
       await onApprove(demand.id);
@@ -57,7 +57,8 @@ export function DemandViewModal({
       console.error("Approve error:", error);
       toast({
         title: "Approval Failed",
-        description: "There was an error approving the demand. Please try again.",
+        description:
+          "There was an error approving the demand. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -67,7 +68,7 @@ export function DemandViewModal({
 
   const handleDecline = async () => {
     if (!demand || !onDecline) return;
-    
+
     try {
       setIsProcessing(true);
       await onDecline(demand.id);
@@ -80,7 +81,8 @@ export function DemandViewModal({
       console.error("Decline error:", error);
       toast({
         title: "Decline Failed",
-        description: "There was an error declining the demand. Please try again.",
+        description:
+          "There was an error declining the demand. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -135,7 +137,11 @@ export function DemandViewModal({
               />
             ) : (
               <div className="w-15 h-15 rounded-full bg-gray-200 flex items-center justify-center text-xl font-medium text-gray-500">
-                {demand.name.split(" ").map(n => n[0]).join("").toUpperCase()}
+                {demand.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .toUpperCase()}
               </div>
             )}
           </div>
