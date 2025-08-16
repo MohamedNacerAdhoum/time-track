@@ -241,7 +241,7 @@ export default function MembersPage() {
 
         <div className="flex items-center gap-2">
           <Button
-            onClick={() => console.log("Add new member")}
+            onClick={handleAddMember}
             className="bg-[#63CDFA] hover:bg-[#4BA8E8] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
           >
             <Plus className="h-6 w-6" />
