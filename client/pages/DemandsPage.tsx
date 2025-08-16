@@ -397,7 +397,7 @@ export default function DemandsPage() {
                   <Checkbox
                     checked={selectAll}
                     ref={(el) => {
-                      if (el) el.indeterminate = isIndeterminate;
+                      if (el) (el as any).indeterminate = isIndeterminate;
                     }}
                     onCheckedChange={handleSelectAll}
                     className="w-6 h-6 border-2 border-white data-[state=checked]:bg-white data-[state=checked]:border-white data-[state=checked]:text-[#0061FF]"
