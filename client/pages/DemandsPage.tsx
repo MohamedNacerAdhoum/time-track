@@ -142,7 +142,7 @@ function SortableHeader({
 
 export default function DemandsPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(6);
   const [showRowsDropdown, setShowRowsDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
