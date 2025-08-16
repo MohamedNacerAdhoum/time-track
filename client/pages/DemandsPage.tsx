@@ -142,7 +142,7 @@ function SortableHeader({
 
 export default function DemandsPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [showRowsDropdown, setShowRowsDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
@@ -283,8 +283,8 @@ export default function DemandsPage() {
       </div>
 
       {/* Search + Action Buttons */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex-1 max-w-md">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex-1 w-full sm:max-w-md">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
@@ -296,7 +296,7 @@ export default function DemandsPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
           <Button
             onClick={handleAddDemand}
             className="bg-[#63CDFA] hover:bg-[#4BA8E8] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
@@ -336,7 +336,7 @@ export default function DemandsPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-[#63CDFA] hover:bg-[#63CDFA]">
-              <TableHead className="text-white font-semibold py-4 w-10">
+              <TableHead className="text-white font-semibold py-4 w-12">
                 <div className="flex items-center justify-center">
                   <Checkbox
                     checked={selectAll}
@@ -351,16 +351,16 @@ export default function DemandsPage() {
               <TableHead className="text-white font-semibold w-32">
                 <SortableHeader>Name</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold">
+              <TableHead className="text-white font-semibold min-w-[300px]">
                 <SortableHeader showArrow={false}>Subject</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold w-28">
+              <TableHead className="text-white font-semibold w-36">
                 <SortableHeader>Created at</SortableHeader>
               </TableHead>
               <TableHead className="text-white font-semibold w-24 text-center">
                 <SortableHeader showArrow={false}>State</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold w-40 text-center">
+              <TableHead className="text-white font-semibold w-48 text-center">
                 Actions
               </TableHead>
             </TableRow>
@@ -388,7 +388,7 @@ export default function DemandsPage() {
                     {demand.name}
                   </TableCell>
                   <TableCell className="text-gray-500">
-                    <div className="truncate max-w-md" title={demand.subject}>
+                    <div className="truncate max-w-[300px]" title={demand.subject}>
                       {demand.subject}
                     </div>
                   </TableCell>
@@ -399,27 +399,35 @@ export default function DemandsPage() {
                     <StateBadge state={demand.state} />
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center justify-center gap-1">
+                    <div className="flex items-center justify-center gap-1 flex-wrap">
                       {/* Reply Button */}
-                      <div className="flex items-center bg-[#F2FBFF] rounded-lg px-2 py-1 gap-1">
-                        <RotateCcw className="h-4 w-4 text-[#63CDFA]" />
-                        <span className="text-xs font-semibold text-[#63CDFA]">
-                          Reply
-                        </span>
-                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
+                      >
+                        <RotateCcw className="h-4 w-4" />
+                        <span className="hidden sm:inline">Reply</span>
+                      </Button>
 
                       {/* View Reply Button */}
-                      <div className="flex items-center bg-[#F2FBFF] rounded-lg px-2 py-1 gap-1">
-                        <Eye className="h-4 w-4 text-[#63CDFA]" />
-                        <span className="text-xs font-semibold text-[#63CDFA]">
-                          View
-                        </span>
-                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
+                      >
+                        <Eye className="h-4 w-4" />
+                        <span className="hidden sm:inline">View</span>
+                      </Button>
 
-                      {/* Circular Action Button */}
-                      <button className="w-8 h-8 rounded-full border border-[#63CDFA] bg-white flex items-center justify-center hover:bg-[#F2FBFF] transition-colors">
-                        <Mail className="h-4 w-4 text-[#63CDFA]" />
-                      </button>
+                      {/* Mail Action Button */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="w-8 h-8 rounded-full border border-[#63CDFA] bg-white hover:bg-[#F2FBFF] text-[#63CDFA]"
+                      >
+                        <Mail className="h-4 w-4" />
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -439,7 +447,7 @@ export default function DemandsPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between py-4">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 py-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Button
@@ -504,7 +512,7 @@ export default function DemandsPage() {
             {currentPage} of {totalPages}
           </span>
         </div>
-        <div className="flex items-center gap-4 relative">
+        <div className="flex items-center gap-4 relative order-first lg:order-last">
           <span className="text-sm text-gray-500">Rows per page</span>
           <div
             className="flex items-center gap-2 cursor-pointer select-none"
@@ -519,7 +527,7 @@ export default function DemandsPage() {
           </div>
           {showRowsDropdown && (
             <div className="absolute right-0 bottom-full mb-1 w-20 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-              {[6, 10, 20, 50].map((option) => (
+              {[5, 10, 20, 50].map((option) => (
                 <div
                   key={option}
                   className={`px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${rowsPerPage === option ? "bg-blue-50 text-blue-600" : "text-gray-700"}`}
