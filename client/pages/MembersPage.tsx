@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { DeleteItemModal } from "@/components/general/DeleteItemModal";
+import { UserFormModal } from "@/components/general/UserFormModal";
 
 const formatDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = {
