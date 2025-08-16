@@ -479,6 +479,15 @@ export default function MembersPage() {
           )}
         </div>
       </div>
+
+      {/* User Form Modal */}
+      <UserFormModal
+        isOpen={isUserFormModalOpen}
+        onClose={handleCloseUserFormModal}
+        mode={userFormMode}
+        userData={selectedUserData}
+        onSuccess={handleUserFormSuccess}
+      />
     </div>
   );
 }
