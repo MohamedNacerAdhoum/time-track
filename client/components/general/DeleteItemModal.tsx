@@ -48,7 +48,7 @@ export function DeleteItemModal({
 
   if (!isOpen) return null;
 
-  return (
+  const modalContent = (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
@@ -116,4 +116,6 @@ export function DeleteItemModal({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
