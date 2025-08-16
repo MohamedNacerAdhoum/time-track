@@ -1,6 +1,7 @@
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 
 interface DeleteItemModalProps {
   isOpen: boolean;
