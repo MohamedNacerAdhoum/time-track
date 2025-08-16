@@ -391,22 +391,22 @@ export default function DemandsPage() {
                     <StateBadge state={demand.state} />
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex items-center justify-center gap-1">
                       {/* Reply Button */}
-                      <div className="flex items-center bg-[#F2FBFF] rounded-lg px-3 py-2 gap-2">
-                        <RotateCcw className="h-5 w-5 text-[#63CDFA]" />
-                        <span className="text-sm font-semibold text-[#63CDFA]">Reply</span>
+                      <div className="flex items-center bg-[#F2FBFF] rounded-lg px-2 py-1 gap-1">
+                        <RotateCcw className="h-4 w-4 text-[#63CDFA]" />
+                        <span className="text-xs font-semibold text-[#63CDFA]">Reply</span>
                       </div>
-                      
+
                       {/* View Reply Button */}
-                      <div className="flex items-center bg-[#F2FBFF] rounded-lg px-3 py-2 gap-2">
-                        <Eye className="h-5 w-5 text-[#63CDFA]" />
-                        <span className="text-sm font-semibold text-[#63CDFA]">View reply</span>
+                      <div className="flex items-center bg-[#F2FBFF] rounded-lg px-2 py-1 gap-1">
+                        <Eye className="h-4 w-4 text-[#63CDFA]" />
+                        <span className="text-xs font-semibold text-[#63CDFA]">View</span>
                       </div>
 
                       {/* Circular Action Button */}
-                      <button className="w-10 h-10 rounded-full border border-[#63CDFA] bg-white flex items-center justify-center hover:bg-[#F2FBFF] transition-colors">
-                        <Mail className="h-5 w-5 text-[#63CDFA]" />
+                      <button className="w-8 h-8 rounded-full border border-[#63CDFA] bg-white flex items-center justify-center hover:bg-[#F2FBFF] transition-colors">
+                        <Mail className="h-4 w-4 text-[#63CDFA]" />
                       </button>
                     </div>
                   </TableCell>
