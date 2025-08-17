@@ -362,7 +362,7 @@ export function MakeDemandModal({
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                   >
-                    <Upload className="w-10 h-10 text-[#63CDFA]" />
+                    <Upload className="w-8 h-8 text-[#63CDFA]" />
                     <p className="text-center text-lg font-semibold text-[#979797] font-ibm-plex">
                       Drag and drop file here or
                     </p>
@@ -544,7 +544,7 @@ export function MakeDemandModal({
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                   >
-                    <Upload className="w-10 h-10 text-[#63CDFA]" />
+                    <Upload className="w-8 h-8 text-[#63CDFA]" />
                     <p className="text-center text-lg font-semibold text-[#979797] font-ibm-plex">
                       Drag and drop file here or
                     </p>
