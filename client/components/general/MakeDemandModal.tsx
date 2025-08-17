@@ -353,7 +353,7 @@ export function MakeDemandModal({
                     File
                   </label>
                   <div
-                    className={`flex flex-col items-center justify-center gap-6 p-6 h-[290px] border-2 border-dashed rounded-xl transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-4 p-4 h-[220px] border-2 border-dashed rounded-xl transition-colors ${
                       isDragOver
                         ? "border-[#63CDFA] bg-[#E1F3FF]"
                         : "border-[#63CDFA] bg-[#F2FBFF]"
@@ -535,7 +535,7 @@ export function MakeDemandModal({
                     File
                   </label>
                   <div
-                    className={`flex flex-col items-center justify-center gap-6 p-6 h-[290px] border-2 border-dashed rounded-xl transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-4 p-4 h-[220px] border-2 border-dashed rounded-xl transition-colors ${
                       isDragOver
                         ? "border-[#63CDFA] bg-[#E1F3FF]"
                         : "border-[#63CDFA] bg-[#F2FBFF]"
