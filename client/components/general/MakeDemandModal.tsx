@@ -334,7 +334,7 @@ export function MakeDemandModal({
                 </div>
               </div>
 
-              <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+              <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
                 <div className="flex-1 space-y-2">
                   <label className="block text-base font-semibold text-black font-poppins">
                     Reason
@@ -516,7 +516,7 @@ export function MakeDemandModal({
                 </div>
               )}
 
-              <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+              <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
                 <div className="flex-1 space-y-2">
                   <label className="block text-base font-semibold text-black font-poppins">
                     Reason
