@@ -348,7 +348,7 @@ export function MakeDemandModal({
                 </div>
 
                 {/* File Upload Component - Same as Standard */}
-                <div className="w-full lg:w-[350px] space-y-2">
+                <div className="w-full lg:w-[300px] space-y-2">
                   <label className="block text-base font-semibold text-black font-poppins">
                     File
                   </label>
@@ -530,7 +530,7 @@ export function MakeDemandModal({
                 </div>
 
                 {/* File Upload Component - Same as other tabs */}
-                <div className="w-full lg:w-[350px] space-y-2">
+                <div className="w-full lg:w-[300px] space-y-2">
                   <label className="block text-base font-semibold text-black font-poppins">
                     File
                   </label>
