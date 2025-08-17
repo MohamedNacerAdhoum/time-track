@@ -26,17 +26,18 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { DeleteItemModal } from "@/components/general/DeleteItemModal";
+import { UserFormModal } from "@/components/general/UserFormModal";
 
 const formatDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
   };
-  return new Date(dateString).toLocaleDateString('en-US', options);
+  return new Date(dateString).toLocaleDateString("en-US", options);
 };
 
 function SortableHeader({
@@ -73,6 +74,11 @@ export default function MembersPage() {
   const [selectAll, setSelectAll] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isUserFormModalOpen, setIsUserFormModalOpen] = useState(false);
+  const [userFormMode, setUserFormMode] = useState<"add" | "edit">("add");
+  const [selectedUserData, setSelectedUserData] = useState<MemberData | null>(
+    null,
+  );
 
   const { fetchAllMembers } = useMembersStore();
 
@@ -121,8 +127,8 @@ export default function MembersPage() {
   const filteredData = members.filter((member) => {
     return searchQuery
       ? member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      member.role_name.toLowerCase().includes(searchQuery.toLowerCase())
+          member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          member.role_name.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
   });
 
@@ -163,11 +169,11 @@ export default function MembersPage() {
       console.log("Deleting members:", Array.from(selectedMembers));
 
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Update the local state to remove the deleted members
-      setMembersData(prevMembers =>
-        prevMembers.filter(member => !selectedMembers.has(member.id))
+      setMembersData((prevMembers) =>
+        prevMembers.filter((member) => !selectedMembers.has(member.id)),
       );
 
       // Clear selection
@@ -190,14 +196,40 @@ export default function MembersPage() {
   };
 
   const handleEditMember = (memberId: string) => {
-    console.log("Edit member:", memberId);
+    const member = membersdata.find((m) => m.id === memberId);
+    if (member) {
+      setSelectedUserData(member);
+      setUserFormMode("edit");
+      setIsUserFormModalOpen(true);
+    }
+  };
+
+  const handleAddMember = () => {
+    setSelectedUserData(null);
+    setUserFormMode("add");
+    setIsUserFormModalOpen(true);
+  };
+
+  const handleCloseUserFormModal = () => {
+    setIsUserFormModalOpen(false);
+    setSelectedUserData(null);
+  };
+
+  const handleUserFormSuccess = async () => {
+    // Refresh the members list
+    try {
+      const data = await fetchAllMembers();
+      if (data) setMembersData(data);
+    } catch (err) {
+      console.error("Error refreshing members:", err);
+    }
   };
 
   return (
     <div className="space-y-6">
       {/* Search + Action Buttons */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex-1 max-w-md">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex-1 w-full sm:max-w-md">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
@@ -209,9 +241,9 @@ export default function MembersPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
           <Button
-            onClick={() => console.log("Add new member")}
+            onClick={handleAddMember}
             className="bg-[#63CDFA] hover:bg-[#4BA8E8] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
           >
             <Plus className="h-6 w-6" />
@@ -230,10 +262,14 @@ export default function MembersPage() {
                 isOpen={isDeleteModalOpen}
                 onClose={handleCloseDeleteModal}
                 onConfirm={handleDeleteSelected}
-                title={`Delete ${selectedMembers.size} Member${selectedMembers.size > 1 ? 's' : ''}?`}
-                description={`Are you sure you want to delete the selected ${selectedMembers.size} member${selectedMembers.size > 1 ? 's' : ''}? This action cannot be undone.`}
-                confirmButtonText={`Delete ${selectedMembers.size > 0 ? selectedMembers.size : ''} Member${selectedMembers.size > 1 ? 's' : ''}`}
-                itemName={selectedMembers.size > 1 ? `${selectedMembers.size} members` : 'member'}
+                title={`Delete ${selectedMembers.size} Member${selectedMembers.size > 1 ? "s" : ""}?`}
+                description={`Are you sure you want to delete the selected ${selectedMembers.size} member${selectedMembers.size > 1 ? "s" : ""}? This action cannot be undone.`}
+                confirmButtonText={`Delete ${selectedMembers.size > 0 ? selectedMembers.size : ""} Member${selectedMembers.size > 1 ? "s" : ""}`}
+                itemName={
+                  selectedMembers.size > 1
+                    ? `${selectedMembers.size} members`
+                    : "member"
+                }
               />
             </>
           )}
@@ -241,8 +277,8 @@ export default function MembersPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl overflow-hidden">
-        <Table>
+      <div className="bg-white rounded-xl overflow-hidden overflow-x-auto">
+        <Table className="min-w-full">
           <TableHeader>
             <TableRow className="bg-[#63CDFA] hover:bg-[#63CDFA]">
               <TableHead className="text-white font-semibold py-4 w-10">
@@ -310,7 +346,9 @@ export default function MembersPage() {
                     {member.email}
                   </TableCell>
                   <TableCell className="text-gray-500">{member.age}</TableCell>
-                  <TableCell className="text-gray-500">{member.role_name}</TableCell>
+                  <TableCell className="text-gray-500">
+                    {member.role_name}
+                  </TableCell>
                   <TableCell className="text-gray-500">
                     {member.location}
                   </TableCell>
@@ -353,7 +391,7 @@ export default function MembersPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between py-4">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 py-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Button
@@ -418,7 +456,7 @@ export default function MembersPage() {
             {currentPage} of {totalPages}
           </span>
         </div>
-        <div className="flex items-center gap-4 relative">
+        <div className="flex items-center gap-4 relative order-first lg:order-last">
           <span className="text-sm text-gray-500">Rows per page</span>
           <div
             className="flex items-center gap-2 cursor-pointer select-none"
@@ -449,6 +487,15 @@ export default function MembersPage() {
           )}
         </div>
       </div>
+
+      {/* User Form Modal */}
+      <UserFormModal
+        isOpen={isUserFormModalOpen}
+        onClose={handleCloseUserFormModal}
+        mode={userFormMode}
+        userData={selectedUserData}
+        onSuccess={handleUserFormSuccess}
+      />
     </div>
   );
 }

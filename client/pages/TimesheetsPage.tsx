@@ -12,7 +12,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   X,
-  NotepadText
+  NotepadText,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -65,7 +65,7 @@ function StatusBadge({ status }: { status: "IN" | "OUT" | "IN BREAK" }) {
       variant="outline"
       className={cn(
         "px-4 py-1 text-sm font-semibold rounded-full border",
-        getBadgeStyle(status)
+        getBadgeStyle(status),
       )}
     >
       {status}
@@ -108,7 +108,13 @@ export default function TimesheetsPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [adminTimeSheets, setAdminTimeSheets] = useState<TimeSheet[]>([]);
 
-  const { timeSheets, allUsersTimeSheets, fetchUserTimeSheets, fetchAllUsersTodayTimeSheets, fetchAllUsersTimeSheets } = useTimeSheets();
+  const {
+    timeSheets,
+    allUsersTimeSheets,
+    fetchUserTimeSheets,
+    fetchAllUsersTodayTimeSheets,
+    fetchAllUsersTimeSheets,
+  } = useTimeSheets();
   const { currentUser } = useMembersStore();
 
   useEffect(() => {
@@ -134,7 +140,13 @@ export default function TimesheetsPage() {
       }
     };
     fetchData();
-  }, [activeTab, isAdminView, fetchAllUsersTodayTimeSheets, fetchAllUsersTimeSheets, fetchUserTimeSheets]);
+  }, [
+    activeTab,
+    isAdminView,
+    fetchAllUsersTodayTimeSheets,
+    fetchAllUsersTimeSheets,
+    fetchUserTimeSheets,
+  ]);
 
   // Which data to use
   const displayData = isAdminView
@@ -146,16 +158,17 @@ export default function TimesheetsPage() {
   // Filtering
   const filteredData = (displayData || []).filter((entry) => {
     const matchesSearch = searchQuery
-      ? (isAdminView
+      ? isAdminView
         ? entry.employee_name?.toLowerCase().includes(searchQuery.toLowerCase())
-        : new Date(entry.date).toLocaleDateString().includes(searchQuery))
+        : new Date(entry.date).toLocaleDateString().includes(searchQuery)
       : true;
 
-    const matchesLastAction = lastAction === "last_action" || entry.status === lastAction;
+    const matchesLastAction =
+      lastAction === "last_action" || entry.status === lastAction;
 
     const matchesDate = selectedDate
       ? new Date(entry.date).toLocaleDateString() ===
-      selectedDate.toLocaleDateString()
+        selectedDate.toLocaleDateString()
       : true;
 
     return matchesSearch && matchesLastAction && matchesDate;
@@ -184,18 +197,32 @@ export default function TimesheetsPage() {
       {/* Tabs */}
       {isAdminView && (
         <div className="flex justify-center">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-2 h-16 p-2 bg-white rounded-2xl border border-blue-200">
-              <TabsTrigger value="today" className="h-12 text-lg font-medium data-[state=active]:text-white text-gray-600 data-[state=active]:bg-[#63CDFA] rounded-xl">Today</TabsTrigger>
-              <TabsTrigger value="history" className="h-12 text-lg font-medium data-[state=active]:text-white text-gray-600 data-[state=active]:bg-[#63CDFA] rounded-xl">History</TabsTrigger>
+              <TabsTrigger
+                value="today"
+                className="h-12 text-lg font-medium data-[state=active]:text-white text-gray-600 data-[state=active]:bg-[#63CDFA] rounded-xl"
+              >
+                Today
+              </TabsTrigger>
+              <TabsTrigger
+                value="history"
+                className="h-12 text-lg font-medium data-[state=active]:text-white text-gray-600 data-[state=active]:bg-[#63CDFA] rounded-xl"
+              >
+                History
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
       )}
 
       {/* Search + Filters */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex-1 max-w-md">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        <div className="flex-1 w-full lg:max-w-md">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
@@ -206,8 +233,13 @@ export default function TimesheetsPage() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <CustomDropdown value={lastAction} options={lastActionOptions} onChange={setLastAction} className="min-w-[160px]" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
+          <CustomDropdown
+            value={lastAction}
+            options={lastActionOptions}
+            onChange={setLastAction}
+            className="min-w-[160px]"
+          />
           <div className="relative flex items-center">
             <CalendarWidget
               value={selectedDate || new Date()}
@@ -230,35 +262,70 @@ export default function TimesheetsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl overflow-hidden">
-        <Table>
+      <div className="bg-white rounded-xl overflow-hidden overflow-x-auto">
+        <Table className="min-w-full">
           <TableHeader>
             <TableRow className="bg-[#63CDFA] hover:bg-[#63CDFA]">
-              <TableHead className="text-white font-semibold py-4 w-32"><SortableHeader>Name</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-24"><SortableHeader>Date</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-24"><SortableHeader>Clock In</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-24"><SortableHeader>Clock Out</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold w-24"><SortableHeader>Break Period / day</SortableHeader></TableHead>
-              <TableHead className="text-white font-semibold text-center w-10">Last Action</TableHead>
-              <TableHead className="text-white font-semibold text-center w-10">Note</TableHead>
+              <TableHead className="text-white font-semibold py-4 w-32">
+                <SortableHeader>Name</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-24">
+                <SortableHeader>Date</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-24">
+                <SortableHeader>Clock In</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-24">
+                <SortableHeader>Clock Out</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold w-24">
+                <SortableHeader>Break Period / day</SortableHeader>
+              </TableHead>
+              <TableHead className="text-white font-semibold text-center w-10">
+                Last Action
+              </TableHead>
+              <TableHead className="text-white font-semibold text-center w-10">
+                Note
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {currentData.length > 0 ? (
               currentData.map((entry, index) => (
-                <TableRow key={entry.id} className={cn("border-b border-gray-100", index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]")}>
-                  <TableCell className="font-semibold text-gray-900">{isAdminView ? entry.employee_name : entry.date}</TableCell>
-                  <TableCell className="text-gray-500">{new Date(entry.date).toLocaleDateString()}</TableCell>
-                  <TableCell className="text-gray-500">{formatTime(entry.clock_in)}</TableCell>
-                  <TableCell className="text-gray-500">{formatTime(entry.clock_out)}</TableCell>
+                <TableRow
+                  key={entry.id}
+                  className={cn(
+                    "border-b border-gray-100",
+                    index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]",
+                  )}
+                >
+                  <TableCell className="font-semibold text-gray-900">
+                    {isAdminView ? entry.employee_name : entry.date}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {new Date(entry.date).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {formatTime(entry.clock_in)}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
+                    {formatTime(entry.clock_out)}
+                  </TableCell>
                   <TableCell className="text-gray-500">
                     {entry.break_start && entry.break_end
                       ? `${formatTime(entry.break_start)} - ${formatTime(entry.break_end)}`
                       : "--:--:-- | --:--:--"}
                   </TableCell>
-                  <TableCell className="text-center"><StatusBadge status={entry.status} /></TableCell>
                   <TableCell className="text-center">
-                    <Button variant="ghost" size="icon" onClick={() => handleNoteClick(entry.id)} className="h-8 w-8 text-[#63CDFA] hover:text-[#63CDFA] hover:bg-blue-50">
+                    <StatusBadge status={entry.status} />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleNoteClick(entry.id)}
+                      className="h-8 w-8 text-[#63CDFA] hover:text-[#63CDFA] hover:bg-blue-50"
+                    >
                       <NotepadText className="h-5 w-5" />
                     </Button>
                   </TableCell>
@@ -266,7 +333,10 @@ export default function TimesheetsPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-10 text-gray-500 font-medium">
+                <TableCell
+                  colSpan={7}
+                  className="text-center py-10 text-gray-500 font-medium"
+                >
                   No timesheet data available
                 </TableCell>
               </TableRow>
@@ -276,47 +346,90 @@ export default function TimesheetsPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between py-4">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 py-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1}
+              className="h-8 w-8"
+            >
               <ChevronsLeft className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className="h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="h-8 w-8"
+            >
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <div className="flex items-center gap-1">
-              {Array.from({ length: Math.min(3, totalPages) }, (_, i) => i + 1).map((page) => (
-                <Button key={page} variant={currentPage === page ? "default" : "ghost"} size="icon" onClick={() => setCurrentPage(page)}
-                  className={cn("h-8 w-8 rounded-full", currentPage === page ? "bg-[#63CDFA] text-white hover:bg-[#63CDFA]/90" : "text-gray-500 hover:bg-gray-100")}>
+              {Array.from(
+                { length: Math.min(3, totalPages) },
+                (_, i) => i + 1,
+              ).map((page) => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "ghost"}
+                  size="icon"
+                  onClick={() => setCurrentPage(page)}
+                  className={cn(
+                    "h-8 w-8 rounded-full",
+                    currentPage === page
+                      ? "bg-[#63CDFA] text-white hover:bg-[#63CDFA]/90"
+                      : "text-gray-500 hover:bg-gray-100",
+                  )}
+                >
                   {page}
                 </Button>
               ))}
             </div>
-            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages} className="h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="h-8 w-8"
+            >
               <ChevronRight className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} className="h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setCurrentPage(totalPages)}
+              disabled={currentPage === totalPages}
+              className="h-8 w-8"
+            >
               <ChevronsRight className="h-4 w-4" />
             </Button>
           </div>
-          <span className="text-sm text-gray-500">{currentPage} of {totalPages}</span>
+          <span className="text-sm text-gray-500">
+            {currentPage} of {totalPages}
+          </span>
         </div>
-        <div className="flex items-center gap-4 relative">
+        <div className="flex items-center gap-4 relative order-first lg:order-last">
           <span className="text-sm text-gray-500">Rows per page</span>
           <div
             className="flex items-center gap-2 cursor-pointer select-none"
             onClick={() => setShowRowsDropdown(!showRowsDropdown)}
           >
-            <span className="text-sm font-semibold text-gray-900">{rowsPerPage}</span>
-            <ChevronDown className={`h-3 w-3 text-gray-400 transition-transform ${showRowsDropdown ? 'rotate-180' : ''}`} />
+            <span className="text-sm font-semibold text-gray-900">
+              {rowsPerPage}
+            </span>
+            <ChevronDown
+              className={`h-3 w-3 text-gray-400 transition-transform ${showRowsDropdown ? "rotate-180" : ""}`}
+            />
           </div>
           {showRowsDropdown && (
             <div className="absolute right-0 bottom-full mb-1 w-20 bg-white border border-gray-200 rounded-md shadow-lg z-10">
               {[5, 10, 20, 50].map((option) => (
                 <div
                   key={option}
-                  className={`px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${rowsPerPage === option ? 'bg-blue-50 text-blue-600' : 'text-gray-700'}`}
+                  className={`px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${rowsPerPage === option ? "bg-blue-50 text-blue-600" : "text-gray-700"}`}
                   onClick={() => {
                     setRowsPerPage(option);
                     setShowRowsDropdown(false);
@@ -333,15 +446,25 @@ export default function TimesheetsPage() {
       {/* Note Modal */}
       {isNoteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setIsNoteModalOpen(false)} />
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsNoteModalOpen(false)}
+          />
           <div className="relative bg-white border-2 border-[#63CDFA]/40 rounded-xl max-w-[575px] w-full mx-4 overflow-hidden">
             <div className="p-8">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
                   <NotepadText />
-                  <h2 className="text-2xl font-semibold text-[#63CDFA]">Note</h2>
+                  <h2 className="text-2xl font-semibold text-[#63CDFA]">
+                    Note
+                  </h2>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => setIsNoteModalOpen(false)} className="h-10 w-10 text-gray-400 hover:text-gray-600">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsNoteModalOpen(false)}
+                  className="h-10 w-10 text-gray-400 hover:text-gray-600"
+                >
                   <X className="h-6 w-6" />
                 </Button>
               </div>
