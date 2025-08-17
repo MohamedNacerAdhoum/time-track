@@ -298,7 +298,7 @@ export function MakeDemandModal({
           {/* Permission Tab */}
           {activeTab === "permission" && (
             <>
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <div className="flex-1 space-y-2">
                   <label className="block text-base font-semibold text-black font-poppins">
                     Date picker
@@ -444,7 +444,7 @@ export function MakeDemandModal({
 
               {/* Date fields - conditional based on leave type */}
               {formData.leaveType === "multiple" ? (
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <div className="flex-1 space-y-2">
                     <label className="block text-base font-semibold text-black font-poppins">
                       From
@@ -469,7 +469,7 @@ export function MakeDemandModal({
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <div className="flex-1 space-y-2">
                     <label className="block text-base font-semibold text-black font-poppins">
                       Date picker
