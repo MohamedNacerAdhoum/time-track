@@ -50,7 +50,8 @@ function App() {
             <Route
               path="/"
               element={
-                <DashboardLayout />
+                <ProtectedRoute><DashboardLayout /></ProtectedRoute>
+
               }
             >
               <Route index element={<Navigate to="/dashboard" replace />} />
