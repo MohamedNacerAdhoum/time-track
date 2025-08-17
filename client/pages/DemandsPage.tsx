@@ -30,6 +30,7 @@ import {
 import { DeleteItemModal } from "@/components/general/DeleteItemModal";
 import { DemandResponseModal } from "@/components/general/DemandResponseModal";
 import { DemandViewModal } from "@/components/general/DemandViewModal";
+import { MakeDemandModal } from "@/components/general/MakeDemandModal";
 import { cn } from "@/lib/utils";
 
 // Mock data for demands
@@ -174,6 +175,7 @@ export default function DemandsPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isMakeDemandModalOpen, setIsMakeDemandModalOpen] = useState(false);
   const [selectedDemand, setSelectedDemand] = useState<Demand | null>(null);
 
   useEffect(() => {
@@ -273,8 +275,7 @@ export default function DemandsPage() {
   };
 
   const handleAddDemand = () => {
-    // This will do nothing for now as requested
-    console.log("Add demand button clicked - no action implemented yet");
+    setIsMakeDemandModalOpen(true);
   };
 
   const handleReply = (demand: Demand) => {
@@ -314,6 +315,12 @@ export default function DemandsPage() {
     if (attachment.url) {
       window.open(attachment.url, "_blank");
     }
+  };
+
+  const handleMakeDemandSubmit = async (data: any) => {
+    console.log("Make demand submitted:", data);
+    // Here you would typically send the demand to your API
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
   };
 
   return (
