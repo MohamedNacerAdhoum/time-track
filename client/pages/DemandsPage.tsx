@@ -656,6 +656,13 @@ export default function DemandsPage() {
         onDownload={handleDownloadAttachment}
         showActions={selectedDemand?.type === "received"}
       />
+
+      {/* Make Demand Modal */}
+      <MakeDemandModal
+        isOpen={isMakeDemandModalOpen}
+        onClose={() => setIsMakeDemandModalOpen(false)}
+        onSubmit={handleMakeDemandSubmit}
+      />
     </div>
   );
 }
