@@ -228,8 +228,8 @@ export default function MembersPage() {
   return (
     <div className="space-y-6">
       {/* Search + Action Buttons */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex-1 max-w-md">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex-1 w-full sm:max-w-md">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
@@ -241,7 +241,7 @@ export default function MembersPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
           <Button
             onClick={handleAddMember}
             className="bg-[#63CDFA] hover:bg-[#4BA8E8] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
@@ -277,8 +277,8 @@ export default function MembersPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl overflow-hidden">
-        <Table>
+      <div className="bg-white rounded-xl overflow-hidden overflow-x-auto">
+        <Table className="min-w-full">
           <TableHeader>
             <TableRow className="bg-[#63CDFA] hover:bg-[#63CDFA]">
               <TableHead className="text-white font-semibold py-4 w-10">
@@ -391,7 +391,7 @@ export default function MembersPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between py-4">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 py-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Button
@@ -456,7 +456,7 @@ export default function MembersPage() {
             {currentPage} of {totalPages}
           </span>
         </div>
-        <div className="flex items-center gap-4 relative">
+        <div className="flex items-center gap-4 relative order-first lg:order-last">
           <span className="text-sm text-gray-500">Rows per page</span>
           <div
             className="flex items-center gap-2 cursor-pointer select-none"

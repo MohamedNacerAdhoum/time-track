@@ -114,4 +114,23 @@
     --login-text-light: rgb(119, 131, 143);
     --login-brand-blue: rgb(30, 39, 114);
   }
+
+  /* Font family utilities */
+  .font-poppins {
+    font-family:
+      "Poppins",
+      -apple-system,
+      "Roboto",
+      "Helvetica",
+      sans-serif;
+  }
+
+  .font-ibm-plex {
+    font-family:
+      "IBM Plex Sans",
+      -apple-system,
+      "Roboto",
+      "Helvetica",
+      sans-serif;
+  }
 }

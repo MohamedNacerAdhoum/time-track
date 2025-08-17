@@ -3,10 +3,13 @@ import "./global.css";
 import { registerLicense } from "@syncfusion/ej2-base";
 
 // Debug: Log the Syncfusion license key (remove in production)
-console.log('Syncfusion License Key:', import.meta.env.VITE_SYNCFUSION_LICENSE_KEY ? 'Key found' : 'Key not found');
+console.log(
+  "Syncfusion License Key:",
+  import.meta.env.VITE_SYNCFUSION_LICENSE_KEY ? "Key found" : "Key not found",
+);
 
 // Register the license key
-registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY || '');
+registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY || "");
 
 import { createRoot, Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -47,12 +50,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route
-              path="/"
-              element={
-                <DashboardLayout />
-              }
-            >
+            <Route path="/" element={<DashboardLayout />}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="timesheets" element={<TimesheetsPage />} />
