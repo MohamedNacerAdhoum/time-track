@@ -363,7 +363,7 @@ export function MakeDemandModal({
                     onDragLeave={handleDragLeave}
                   >
                     <Upload className="w-8 h-8 text-[#63CDFA]" />
-                    <p className="text-center text-lg font-semibold text-[#979797] font-ibm-plex">
+                    <p className="text-center text-base font-semibold text-[#979797] font-ibm-plex">
                       Drag and drop file here or
                     </p>
                     <Button
@@ -545,7 +545,7 @@ export function MakeDemandModal({
                     onDragLeave={handleDragLeave}
                   >
                     <Upload className="w-8 h-8 text-[#63CDFA]" />
-                    <p className="text-center text-lg font-semibold text-[#979797] font-ibm-plex">
+                    <p className="text-center text-base font-semibold text-[#979797] font-ibm-plex">
                       Drag and drop file here or
                     </p>
                     <Button
