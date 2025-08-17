@@ -236,7 +236,7 @@ export function MakeDemandModal({
                 />
               </div>
 
-              <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+              <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
                 <div className="flex-1 space-y-2">
                   <label className="block text-base font-semibold text-black font-poppins">
                     Body
@@ -244,18 +244,18 @@ export function MakeDemandModal({
                   <Textarea
                     value={formData.body || ""}
                     onChange={(e) => updateFormData({ body: e.target.value })}
-                    className="min-h-[290px] bg-[#F2FBFF] border-[#CCDFFF] border-2 rounded-lg resize-none p-4 text-base font-poppins focus:border-[#63CDFA] focus:ring-[#63CDFA]"
+                    className="min-h-[220px] bg-[#F2FBFF] border-[#CCDFFF] border-2 rounded-lg resize-none p-4 text-base font-poppins focus:border-[#63CDFA] focus:ring-[#63CDFA]"
                     placeholder="Enter your message..."
                   />
                 </div>
 
                 {/* File Upload Component */}
-                <div className="w-full lg:w-[350px] space-y-2">
+                <div className="w-full lg:w-[300px] space-y-2">
                   <label className="block text-base font-semibold text-black font-poppins">
                     File
                   </label>
                   <div
-                    className={`flex flex-col items-center justify-center gap-6 p-6 h-[290px] border-2 border-dashed rounded-xl transition-colors ${
+                    className={`flex flex-col items-center justify-center gap-4 p-4 h-[220px] border-2 border-dashed rounded-xl transition-colors ${
                       isDragOver
                         ? "border-[#63CDFA] bg-[#E1F3FF]"
                         : "border-[#63CDFA] bg-[#F2FBFF]"
