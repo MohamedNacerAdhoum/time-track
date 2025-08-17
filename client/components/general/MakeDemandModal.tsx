@@ -220,7 +220,7 @@ export function MakeDemandModal({
         </div>
 
         {/* Tab Content */}
-        <div className="space-y-6 sm:space-y-8">
+        <div className="space-y-4 sm:space-y-6">
           {/* Standard Tab */}
           {activeTab === "standard" && (
             <>
