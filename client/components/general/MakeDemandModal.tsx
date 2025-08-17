@@ -342,7 +342,7 @@ export function MakeDemandModal({
                   <Textarea
                     value={formData.reason || ""}
                     onChange={(e) => updateFormData({ reason: e.target.value })}
-                    className="min-h-[290px] bg-[#F2FBFF] border-[#CCDFFF] border-2 rounded-lg resize-none p-4 text-base font-poppins focus:border-[#63CDFA] focus:ring-[#63CDFA]"
+                    className="min-h-[220px] bg-[#F2FBFF] border-[#CCDFFF] border-2 rounded-lg resize-none p-4 text-base font-poppins focus:border-[#63CDFA] focus:ring-[#63CDFA]"
                     placeholder="Enter reason..."
                   />
                 </div>
@@ -524,7 +524,7 @@ export function MakeDemandModal({
                   <Textarea
                     value={formData.reason || ""}
                     onChange={(e) => updateFormData({ reason: e.target.value })}
-                    className="min-h-[290px] bg-[#F2FBFF] border-[#CCDFFF] border-2 rounded-lg resize-none p-4 text-base font-poppins focus:border-[#63CDFA] focus:ring-[#63CDFA]"
+                    className="min-h-[220px] bg-[#F2FBFF] border-[#CCDFFF] border-2 rounded-lg resize-none p-4 text-base font-poppins focus:border-[#63CDFA] focus:ring-[#63CDFA]"
                     placeholder="Enter reason..."
                   />
                 </div>
