@@ -320,7 +320,7 @@ export default function DemandsPage() {
   const handleMakeDemandSubmit = async (data: any) => {
     console.log("Make demand submitted:", data);
     // Here you would typically send the demand to your API
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
   };
 
   return (

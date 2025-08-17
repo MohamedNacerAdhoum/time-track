@@ -39,7 +39,7 @@ interface MakeDemandModalProps {
 const TIME_PERIODS = [
   "Full Day",
   "Half Day - Morning",
-  "Half Day - Afternoon", 
+  "Half Day - Afternoon",
   "1 Hour",
   "2 Hours",
   "3 Hours",
@@ -65,8 +65,10 @@ export function MakeDemandModal({
 
   const handleSubmit = async () => {
     const requiredFields = getRequiredFields();
-    const missingFields = requiredFields.filter(field => !getFieldValue(field));
-    
+    const missingFields = requiredFields.filter(
+      (field) => !getFieldValue(field),
+    );
+
     if (missingFields.length > 0) {
       toast({
         title: "Validation Error",
@@ -83,13 +85,13 @@ export function MakeDemandModal({
         type: activeTab,
         file: selectedFile || undefined,
       };
-      
+
       await onSubmit?.(submitData);
-      
+
       // Reset form
       resetForm();
       onClose();
-      
+
       toast({
         title: "Demand Submitted",
         description: "Your demand has been submitted successfully.",
@@ -98,7 +100,8 @@ export function MakeDemandModal({
       console.error("Submit error:", error);
       toast({
         title: "Submit Failed",
-        description: "There was an error submitting your demand. Please try again.",
+        description:
+          "There was an error submitting your demand. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -140,7 +143,7 @@ export function MakeDemandModal({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
       handleFileSelect(files[0]);
@@ -174,7 +177,7 @@ export function MakeDemandModal({
   };
 
   const updateFormData = (updates: Partial<FormData>) => {
-    setFormData(prev => ({ ...prev, ...updates }));
+    setFormData((prev) => ({ ...prev, ...updates }));
   };
 
   if (!isOpen) return null;
@@ -262,11 +265,11 @@ export function MakeDemandModal({
                     onDragLeave={handleDragLeave}
                   >
                     <Upload className="w-10 h-10 text-[#63CDFA]" />
-                    
+
                     <p className="text-center text-lg font-semibold text-[#979797] font-ibm-plex">
                       Drag and drop file here or
                     </p>
-                    
+
                     <Button
                       type="button"
                       variant="outline"
@@ -400,9 +403,13 @@ export function MakeDemandModal({
                   }`}
                   onClick={() => updateFormData({ leaveType: "multiple" })}
                 >
-                  <div className={`w-6 h-6 rounded-full border-2 border-[#CCDFFF] flex items-center justify-center ${
-                    formData.leaveType === "multiple" ? "bg-white" : "bg-white"
-                  }`}>
+                  <div
+                    className={`w-6 h-6 rounded-full border-2 border-[#CCDFFF] flex items-center justify-center ${
+                      formData.leaveType === "multiple"
+                        ? "bg-white"
+                        : "bg-white"
+                    }`}
+                  >
                     {formData.leaveType === "multiple" && (
                       <div className="w-3 h-3 rounded-full bg-[#63CDFA]" />
                     )}
@@ -420,9 +427,11 @@ export function MakeDemandModal({
                   }`}
                   onClick={() => updateFormData({ leaveType: "single" })}
                 >
-                  <div className={`w-6 h-6 rounded-full border-2 border-[#CCDFFF] flex items-center justify-center ${
-                    formData.leaveType === "single" ? "bg-white" : "bg-white"
-                  }`}>
+                  <div
+                    className={`w-6 h-6 rounded-full border-2 border-[#CCDFFF] flex items-center justify-center ${
+                      formData.leaveType === "single" ? "bg-white" : "bg-white"
+                    }`}
+                  >
                     {formData.leaveType === "single" && (
                       <div className="w-3 h-3 rounded-full bg-[#63CDFA]" />
                     )}
@@ -477,7 +486,9 @@ export function MakeDemandModal({
                       Time period
                     </label>
                     <div
-                      onClick={() => setShowTimePeriodDropdown(!showTimePeriodDropdown)}
+                      onClick={() =>
+                        setShowTimePeriodDropdown(!showTimePeriodDropdown)
+                      }
                       className="flex items-center justify-between px-4 py-3 bg-[#F2FBFF] border border-[#CCDFFF] rounded-lg cursor-pointer hover:bg-[#E1F3FF] transition-colors"
                     >
                       <span className="text-base text-[#7F7F7F] font-ibm-plex">
