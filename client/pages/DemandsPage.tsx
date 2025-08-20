@@ -28,89 +28,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DeleteItemModal } from "@/components/general/DeleteItemModal";
-import { DemandResponseModal } from "@/components/general/DemandResponseModal";
-import { DemandViewModal } from "@/components/general/DemandViewModal";
-import { MakeDemandModal } from "@/components/general/MakeDemandModal";
+import { DemandResponseModal } from "@/components/demands/DemandResponseModal";
+import { DemandViewModal } from "@/components/demands/DemandViewModal";
+import { MakeDemandModal } from "@/components/demands/MakeDemandModal";
 import { cn } from "@/lib/utils";
 
-// Mock data for demands
-interface Demand {
-  id: string;
-  name: string;
-  subject: string;
-  createdAt: string;
-  state: "Pending" | "Approved" | "Declined";
-  type: "sent" | "received";
-  role?: string;
-  content?: string;
-  attachments?: Array<{
-    name: string;
-    size: string;
-    url?: string;
-  }>;
-  userAvatar?: string;
-}
-
-const mockDemands: Demand[] = [
-  {
-    id: "1",
-    name: "User xxxxx",
-    subject: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
-    createdAt: "31/08/2022 - 08:20",
-    state: "Pending",
-    type: "received",
-    role: "Role xxx",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
-    attachments: [
-      {
-        name: "proquirment_tc.pdf",
-        size: "500kb",
-        url: "#",
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "User xxxxx",
-    subject: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
-    createdAt: "31/08/2022 - 08:20",
-    state: "Declined",
-    type: "received",
-  },
-  {
-    id: "3",
-    name: "User xxxxx",
-    subject: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
-    createdAt: "31/08/2022 - 08:20",
-    state: "Pending",
-    type: "sent",
-  },
-  {
-    id: "4",
-    name: "User xxxxx",
-    subject: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
-    createdAt: "31/08/2022 - 08:20",
-    state: "Approved",
-    type: "received",
-  },
-  {
-    id: "5",
-    name: "User xxxxx",
-    subject: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
-    createdAt: "31/08/2022 - 08:20",
-    state: "Declined",
-    type: "sent",
-  },
-  {
-    id: "6",
-    name: "User xxxxx",
-    subject: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
-    createdAt: "31/08/2022 - 08:20",
-    state: "Pending",
-    type: "received",
-  },
-];
+import {
+  useDemands,
+  type DemandData,
+  type EmployeeData
+} from '@/contexts/DemandsContext';
+import { useMembersStore } from '@/contexts/MembersContext';
+import { useAdminView } from '@/contexts/AdminViewContext';
 
 function StateBadge({ state }: { state: "Pending" | "Approved" | "Declined" }) {
   const getBadgeStyle = (state: string) => {
@@ -162,29 +91,126 @@ function SortableHeader({
 }
 
 export default function DemandsPage() {
+  const { isAdminView } = useAdminView();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [showRowsDropdown, setShowRowsDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
-  const [selectedDemands, setSelectedDemands] = useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedDemands, setSelectedDemands] = useState<Set<string>>(new Set());
   const [selectAll, setSelectAll] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isMakeDemandModalOpen, setIsMakeDemandModalOpen] = useState(false);
-  const [selectedDemand, setSelectedDemand] = useState<Demand | null>(null);
+  const [selectedDemand, setSelectedDemand] = useState<any | null>(null);
+  const [viewMode, setViewMode] = useState<'demand' | 'response'>('demand');
+  const [currentResponse, setCurrentResponse] = useState<any>(null);
 
+  // Get all necessary data and methods from contexts
+  const {
+    demands,
+    userDemands,
+    loading: demandsLoading,
+    error: demandsError,
+    fetchAllDemands,
+    fetchUserDemands,
+    fetchDemandSilently,
+    createDemand,
+    createDemandResponse,
+    getDemandResponse,
+    deleteDemands,
+    approveDemand,
+    rejectDemand
+  } = useDemands();
+
+  const { currentUser: memberUser } = useMembersStore();
+  const isAdmin = memberUser?.is_staff;
+  const currentUser = memberUser;
+
+  // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, rowsPerPage, activeTab]);
+  }, [activeTab, rowsPerPage, isAdminView]);
+
+  // Initial data fetch
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        if (isAdminView) {
+          await fetchAllDemands();
+        } else {
+          await fetchUserDemands();
+        }
+      } catch (err) {
+        console.error('Error fetching initial demands:', err);
+      }
+    };
+
+    fetchInitialData();
+  }, [isAdminView, fetchAllDemands, fetchUserDemands]);
+
+  // Reset selected demands when data changes
+  useEffect(() => {
+    setSelectedDemands(new Set());
+    setSelectAll(false);
+    setIsIndeterminate(false);
+  }, [demands, userDemands]);
+
+  // Get the appropriate demands based on view, tab, and search query
+  const getFilteredDemands = (): DemandData[] => {
+    const sourceDemands = isAdminView ? demands : userDemands;
+
+    return sourceDemands.filter((demand: DemandData) => {
+      // Filter by tab
+      if (activeTab === 'sent') {
+        // Check if the current user is the sender
+        const senderUserId = demand.sender?.user;
+        const isSentByCurrentUser = senderUserId === currentUser?.id;
+        if (!isSentByCurrentUser) return false;
+      }
+      else if (activeTab === 'received') {
+        // Check if the current user is in the receivers list
+        const receiverUserIds = demand.receivers?.map((r: EmployeeData) => r.user).filter(Boolean) || [];
+        const isReceivedByCurrentUser = receiverUserIds.includes(currentUser?.id);
+        if (!isReceivedByCurrentUser) return false;
+      }
+
+      // Filter by state if tab is a state filter
+      if (activeTab !== 'all' && activeTab !== 'sent' && activeTab !== 'received') {
+        if (demand.state !== activeTab.toUpperCase()) {
+          return false;
+        }
+      }
+
+      // Filter by search query
+      if (searchQuery) {
+        const searchLower = searchQuery.toLowerCase();
+        const matchesSubject = demand.subject?.toLowerCase().includes(searchLower) || false;
+        const matchesBody = demand.body?.toLowerCase().includes(searchLower) || false;
+        const senderName = typeof demand.sender?.name === 'string' ? demand.sender.name.toLowerCase() : '';
+        const matchesSender = senderName.includes(searchLower);
+
+        if (!matchesSubject && !matchesBody && !matchesSender) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  };
+
+  const filteredDemands = getFilteredDemands();
+
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(filteredDemands.length / rowsPerPage));
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const paginatedDemands = filteredDemands.slice(startIndex, startIndex + rowsPerPage);
 
   // Update select all state based on selected demands
   useEffect(() => {
-    const currentPageData = currentData;
+    const currentPageData = paginatedDemands;
     const selectedOnPage = currentPageData.filter((demand) =>
       selectedDemands.has(demand.id),
     );
@@ -201,35 +227,41 @@ export default function DemandsPage() {
     }
   }, [selectedDemands, currentPage, rowsPerPage]);
 
-  // Filtering
-  const filteredData = mockDemands.filter((demand) => {
-    const matchesSearch = searchQuery
-      ? demand.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        demand.subject.toLowerCase().includes(searchQuery.toLowerCase())
-      : true;
+  // State changes effect
+  useEffect(() => {
+    // State change handling if needed
+  }, [filteredDemands, paginatedDemands, isAdminView, activeTab]);
 
-    const matchesTab =
-      activeTab === "all" ||
-      (activeTab === "sent" && demand.type === "sent") ||
-      (activeTab === "received" && demand.type === "received");
+  // Handle tab changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, searchQuery, rowsPerPage]);
 
-    return matchesSearch && matchesTab;
-  });
+  if (demandsLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
-  // Pagination
-  const totalPages = Math.max(1, Math.ceil(filteredData.length / rowsPerPage));
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const currentData = filteredData.slice(startIndex, startIndex + rowsPerPage);
+  if (demandsError) {
+    return (
+      <div className="text-red-500 p-4 text-center">
+        Error loading demands: {String(demandsError)}
+      </div>
+    );
+  }
 
   const handleSelectAll = (checked: boolean) => {
     const newSelected = new Set(selectedDemands);
 
     if (checked) {
       // Add all current page demands to selection
-      currentData.forEach((demand) => newSelected.add(demand.id));
+      filteredDemands.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((demand) => newSelected.add(demand.id));
     } else {
       // Remove all current page demands from selection
-      currentData.forEach((demand) => newSelected.delete(demand.id));
+      filteredDemands.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((demand) => newSelected.delete(demand.id));
     }
 
     setSelectedDemands(newSelected);
@@ -249,20 +281,11 @@ export default function DemandsPage() {
 
   const handleDeleteSelected = async () => {
     try {
-      // Here you would typically call your API to delete the selected demands
-      console.log("Deleting demands:", Array.from(selectedDemands));
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Clear selection
+      await deleteDemands(Array.from(selectedDemands));
       setSelectedDemands(new Set());
-
-      // Show success message (you might want to use a toast notification here)
-      console.log("Demands deleted successfully");
     } catch (error) {
       console.error("Error deleting demands:", error);
-      throw error; // This will be caught by the DeleteItemModal
+      throw error;
     }
   };
 
@@ -278,56 +301,188 @@ export default function DemandsPage() {
     setIsMakeDemandModalOpen(true);
   };
 
-  const handleReply = (demand: Demand) => {
+  const handleReply = (demand: any) => {
     setSelectedDemand(demand);
     setIsResponseModalOpen(true);
   };
 
-  const handleView = (demand: Demand) => {
+  const handleView = async (demand: any, isResponse = false) => {
+    console.log('handleView called with:', { demand, isResponse, currentUser });
     setSelectedDemand(demand);
+    setViewMode(isResponse ? 'response' : 'demand');
+    
+    if (isResponse) {
+      // Case 1: response is a full object
+      if (demand.response && typeof demand.response === 'object') {
+        console.log('Using full response object from demand:', demand.response);
+        setCurrentResponse(demand.response);
+      } 
+      // Case 2: response is just an ID string or we have a response_id
+      else if (typeof demand.response === 'string' || demand.response_id) {
+        const responseId = demand.response_id || demand.response;
+        console.log('Fetching response data for demand ID:', demand.id);
+        try {
+          // Get the full demand with its response without showing loading state
+          const fullDemand = await fetchDemandSilently(demand.id);
+          if (fullDemand?.response) {
+            console.log('Received response data:', fullDemand.response);
+            setCurrentResponse(fullDemand.response);
+          } else {
+            console.log('No response found for demand:', demand.id);
+            setCurrentResponse(null);
+          }
+        } catch (error) {
+          console.error('Error fetching demand with response:', error);
+          setCurrentResponse(null);
+        }
+      } else {
+        console.log('No valid response data found in demand:', demand);
+        setCurrentResponse(null);
+      }
+    } else {
+      console.log('Viewing demand, not response');
+      setCurrentResponse(null);
+    }
+    
+    console.log('Opening view modal with state:', { 
+      demand, 
+      isResponse, 
+      viewMode: isResponse ? 'response' : 'demand',
+      currentResponse: isResponse ? 'fetching...' : null 
+    });
     setIsViewModalOpen(true);
   };
 
   const handleResponseSubmit = async (data: { body: string; file?: File }) => {
-    console.log("Response submitted:", data, "for demand:", selectedDemand?.id);
-    // Here you would typically send the response to your API
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+    if (!selectedDemand) return;
+    await createDemandResponse({ demand_id: selectedDemand.id, body: data.body });
+    setIsResponseModalOpen(false);
   };
 
   const handleApproveDemand = async (demandId: string) => {
-    console.log("Approving demand:", demandId);
-    // Here you would typically call your API to approve the demand
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+    await approveDemand(demandId);
   };
 
   const handleDeclineDemand = async (demandId: string) => {
-    console.log("Declining demand:", demandId);
-    // Here you would typically call your API to decline the demand
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+    await rejectDemand(demandId);
   };
 
   const handleDownloadAttachment = (attachment: {
     name: string;
     url?: string;
   }) => {
-    console.log("Downloading:", attachment.name);
-    // Here you would typically handle the file download
+    // Handle file download
     if (attachment.url) {
       window.open(attachment.url, "_blank");
     }
   };
 
-  const handleMakeDemandSubmit = async (data: any) => {
-    console.log("Make demand submitted:", data);
-    // Here you would typically send the demand to your API
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+  const handleMakeDemandSubmit = async (formData: any) => {
+    try {
+      // Set subject based on demand type
+      const subject = formData.type === 'permission'
+        ? 'Permission Demand'
+        : formData.type === 'leave'
+          ? 'Leave Demand'
+          : formData.subject || 'No Subject';
+
+      let demandData: any = {
+        subject,
+        body: formData.body || formData.reason || '',
+        demand_type: formData.type.toUpperCase(),
+      };
+
+      // Handle file attachment if present
+      if (formData.file) {
+        // You'll need to implement file upload logic here
+        // For now, we'll just include the file object
+        demandData.attachment = formData.file;
+      }
+
+      // Handle different demand types
+      if (formData.type === 'permission') {
+        // Format permission demand data
+        demandData.permission_demand = {
+          date: formData.datePicker?.toISOString().split('T')[0],
+          start_time: formData.from || '09:00:00',
+          end_time: formData.hours ? calculateEndTime(formData.from, formData.hours) : '10:00:00',
+          reason: formData.reason || '',
+        };
+      } else if (formData.type === 'leave') {
+        // Format leave demand data
+        demandData.leave_demand = {
+          leave_type: formData.leaveType === 'multiple' ? 'MULTIDAY' : 'SINGLEDAY',
+        };
+
+        if (formData.leaveType === 'multiple') {
+          demandData.leave_demand.multiday = {
+            start_date: formData.fromDate?.toISOString().split('T')[0],
+            end_date: formData.toDate?.toISOString().split('T')[0],
+          };
+        } else {
+          demandData.leave_demand.singleday = {
+            date: formData.singleDate?.toISOString().split('T')[0],
+            time_period: formData.timePeriod || 'FULL_DAY',
+          };
+        }
+      }
+
+      await createDemand(demandData);
+      setIsMakeDemandModalOpen(false);
+
+      // Refresh the demands after creating a new one
+      if (isAdminView) {
+        await fetchAllDemands();
+      } else {
+        await fetchUserDemands();
+      }
+
+      // Reset form and selection
+      setSelectedDemands(new Set());
+      setSelectAll(false);
+      setIsIndeterminate(false);
+    } catch (error) {
+      console.error("Error creating demand:", error);
+      // You might want to show an error toast here
+    }
+  };
+
+  // Helper function to calculate end time based on start time and duration
+  const calculateEndTime = (startTime: string, hours: string): string => {
+    if (!startTime || !hours) return '10:00:00';
+
+    try {
+      const [hoursStr, minutesStr] = startTime.split(':');
+      let hoursNum = parseInt(hoursStr, 10);
+      const minutes = parseInt(minutesStr, 10);
+
+      // Add the duration (assuming hours is a string like '2' for 2 hours)
+      const durationHours = parseInt(hours, 10) || 1;
+      hoursNum += durationHours;
+
+      // Format back to HH:MM:SS
+      return `${hoursNum.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+    } catch (e) {
+      console.error('Error calculating end time:', e);
+      return '10:00:00';
+    }
   };
 
   return (
     <div className="space-y-6">
       {/* Tabs */}
       <div className="flex justify-center">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => {
+            const handleTabChange = (value: string) => {
+              setActiveTab(value);
+              // No need to fetch data here as we already have all the data
+            };
+            handleTabChange(value);
+          }}
+          className="w-full"
+        >
           <TabsList className="grid w-full grid-cols-3 h-16 p-2 bg-white rounded-2xl border border-blue-200">
             <TabsTrigger
               value="all"
@@ -355,13 +510,19 @@ export default function DemandsPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex-1 w-full sm:max-w-md">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <Input
-              placeholder="Quick Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-xl text-lg"
-            />
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Input
+                  placeholder="Search demands..."
+                  className="pl-10 w-full md:w-64"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                  }}
+                />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -417,32 +578,34 @@ export default function DemandsPage() {
                   />
                 </div>
               </TableHead>
-              <TableHead className="text-white font-semibold w-32">
+              <TableHead className="text-white font-semibold">
                 <SortableHeader>Name</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold min-w-[300px]">
+              <TableHead className="text-white font-semibold">
                 <SortableHeader showArrow={false}>Subject</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold w-36">
+              <TableHead className="text-white font-semibold">
                 <SortableHeader>Created at</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold w-24 text-center">
+              <TableHead className="text-white font-semibold text-center">
                 <SortableHeader showArrow={false}>State</SortableHeader>
               </TableHead>
-              <TableHead className="text-white font-semibold w-48 text-center">
+              <TableHead className="text-white font-semibold">
                 Actions
               </TableHead>
+              <TableHead className="w-12" />
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentData.length > 0 ? (
-              currentData.map((demand, index) => (
+            {filteredDemands.length > 0 ? (
+              filteredDemands.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).map((demand, index) => (
                 <TableRow
                   key={demand.id}
                   className={cn(
-                    "border-b border-gray-100",
+                    "border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors",
                     index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]",
                   )}
+                  onClick={() => handleView(demand)}
                 >
                   <TableCell className="text-center">
                     <Checkbox
@@ -454,7 +617,7 @@ export default function DemandsPage() {
                     />
                   </TableCell>
                   <TableCell className="font-semibold text-gray-900">
-                    {demand.name}
+                    {demand.sender?.name || "-"}
                   </TableCell>
                   <TableCell className="text-gray-500">
                     <div
@@ -465,36 +628,45 @@ export default function DemandsPage() {
                     </div>
                   </TableCell>
                   <TableCell className="text-gray-500">
-                    {demand.createdAt}
+                    {demand.created_at ? new Date(demand.created_at).toLocaleString() : "-"}
                   </TableCell>
                   <TableCell className="text-center">
-                    <StateBadge state={demand.state} />
+                    <StateBadge state={demand.state === "PENDING" ? "Pending" : demand.state === "APPROVED" ? "Approved" : demand.state === "REJECTED" ? "Declined" : "Pending"} />
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center justify-center gap-1 flex-wrap">
-                      {/* Reply Button */}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleReply(demand)}
-                        className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
-                      >
-                        <RotateCcw className="h-4 w-4" />
-                        <span className="hidden sm:inline">Reply</span>
-                      </Button>
-
-                      {/* View Reply Button */}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleView(demand)}
-                        className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
-                      >
-                        <Eye className="h-4 w-4" />
-                        <span className="hidden sm:inline">View</span>
-                      </Button>
-
-                      {/* Mail Action Button */}
+                      {/* Show View Reply button if demand has a reply, otherwise show Reply button for admins */}
+                      {demand.response ? (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent row click
+                            handleView(demand, true); // true indicates this is a response view
+                          }}
+                          className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
+                        >
+                          <Eye className="h-4 w-4" />
+                          <span className="hidden sm:inline">View Reply</span>
+                        </Button>
+                      ) : isAdmin ? (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent row click
+                            handleReply(demand);
+                          }}
+                          className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
+                        >
+                          <RotateCcw className="h-4 w-4" />
+                          <span className="hidden sm:inline">Reply</span>
+                        </Button>
+                      ) : null}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center justify-center gap-1 flex-wrap">
                       <Button
                         variant="ghost"
                         size="icon"
@@ -544,7 +716,7 @@ export default function DemandsPage() {
             </Button>
             <div className="flex items-center gap-1">
               {Array.from(
-                { length: Math.min(3, totalPages) },
+                { length: Math.min(3, Math.ceil(filteredDemands.length / rowsPerPage)) },
                 (_, i) => i + 1,
               ).map((page) => (
                 <Button
@@ -567,7 +739,7 @@ export default function DemandsPage() {
               variant="ghost"
               size="icon"
               onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              disabled={currentPage === Math.ceil(filteredDemands.length / rowsPerPage)}
               className="h-8 w-8"
             >
               <ChevronRight className="h-4 w-4" />
@@ -575,15 +747,15 @@ export default function DemandsPage() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setCurrentPage(totalPages)}
-              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(Math.ceil(filteredDemands.length / rowsPerPage))}
+              disabled={currentPage === Math.ceil(filteredDemands.length / rowsPerPage)}
               className="h-8 w-8"
             >
               <ChevronsRight className="h-4 w-4" />
             </Button>
           </div>
           <span className="text-sm text-gray-500">
-            {currentPage} of {totalPages}
+            {currentPage} of {Math.ceil(filteredDemands.length / rowsPerPage)}
           </span>
         </div>
         <div className="flex items-center gap-4 relative order-first lg:order-last">
@@ -636,25 +808,13 @@ export default function DemandsPage() {
           setIsViewModalOpen(false);
           setSelectedDemand(null);
         }}
-        demand={
-          selectedDemand
-            ? {
-                id: selectedDemand.id,
-                name: selectedDemand.name,
-                role: selectedDemand.role,
-                subject: selectedDemand.subject,
-                content: selectedDemand.content || selectedDemand.subject,
-                createdAt: selectedDemand.createdAt,
-                state: selectedDemand.state,
-                attachments: selectedDemand.attachments,
-                userAvatar: selectedDemand.userAvatar,
-              }
-            : undefined
-        }
+        demand={selectedDemand}
         onApprove={handleApproveDemand}
         onDecline={handleDeclineDemand}
         onDownload={handleDownloadAttachment}
-        showActions={selectedDemand?.type === "received"}
+        showActions={isAdmin && selectedDemand && selectedDemand.state === "PENDING"}
+        viewMode={viewMode}
+        responseData={currentResponse}
       />
 
       {/* Make Demand Modal */}

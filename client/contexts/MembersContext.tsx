@@ -281,20 +281,17 @@ export const useMembersStore = create<MembersState>()(
 
         // Add new member
         addMember: async (memberData) => {
-          const token = useAuthStore.getState().user?.token;
-          if (!token) {
-            console.log('[MembersContext] No token available, cannot add member');
-            return null;
-          }
-
           console.log('[MembersContext] Adding new member:', memberData);
           set({ loading: true, error: null });
 
           try {
+            console.log('[MembersContext] Sending request to /members/add_member/');
             const response = await api.post('/members/add_member/', memberData);
+            
             console.log('[MembersContext] Add member response:', {
               status: response.status,
-              data: response.data
+              data: response.data,
+              headers: response.headers
             });
 
             // Refresh the members list
@@ -306,9 +303,11 @@ export const useMembersStore = create<MembersState>()(
             console.error('[MembersContext] Error adding member:', {
               status: error.response?.status,
               data: error.response?.data,
-              message: error.message
+              message: error.message,
+              config: error.config
             });
-            set({ error: extractError(error) });
+            const errorMessage = extractError(error);
+            set({ error: errorMessage });
             return null;
           } finally {
             set({ loading: false });

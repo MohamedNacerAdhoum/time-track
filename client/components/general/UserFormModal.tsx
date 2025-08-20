@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, Calendar, ChevronDown, Eye, EyeOff } from "lucide-react";
+import { X, Calendar, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/useToast";
 import { useMembersStore } from "@/contexts/MembersContext";
 import { MemberData } from "@/contexts/MembersContext";
@@ -18,11 +18,11 @@ interface UserFormData {
   email: string;
   age: string;
   role: string;
+  hours: string;
   location: string;
   experience: string;
   payrate: string;
-  password: string;
-  confirmPassword: string;
+  joined: string;
 }
 
 export function UserFormModal({
@@ -35,21 +35,17 @@ export function UserFormModal({
   const { toast } = useToast();
   const { roles, fetchAllRoles, addMember } = useMembersStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPasswords, setShowPasswords] = useState({
-    password: false,
-    confirmPassword: false,
-  });
 
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
     email: "",
     age: "",
     role: "",
+    hours: "8", // Default to 8 hours
     location: "",
     experience: "",
     payrate: "",
-    password: "",
-    confirmPassword: "",
+    joined: new Date().toISOString().split('T')[0], // Default to today's date
   });
 
   // Load roles when modal opens
@@ -59,37 +55,36 @@ export function UserFormModal({
     }
   }, [isOpen, roles.length, fetchAllRoles]);
 
-  // Populate form data when editing
+  // Initialize form with user data if in edit mode
   useEffect(() => {
-    if (isOpen) {
-      if (mode === "edit" && userData) {
-        setFormData({
-          name: userData.name || "",
-          email: userData.email || "",
-          age: userData.age?.toString() || "",
-          role: userData.role_name || "",
-          location: userData.location || "",
-          experience: userData.experience?.toString() || "",
-          payrate: userData.payrate || "",
-          password: "",
-          confirmPassword: "",
-        });
-      } else if (mode === "add") {
-        // Reset form for add mode
-        setFormData({
-          name: "",
-          email: "",
-          age: "",
-          role: roles.length > 0 ? roles[0].name : "",
-          location: "",
-          experience: "",
-          payrate: "",
-          password: "",
-          confirmPassword: "",
-        });
-      }
+    if (mode === "edit" && userData) {
+      setFormData({
+        name: userData.name || "",
+        email: userData.email || "",
+        age: userData.age?.toString() || "",
+        role: userData.role || "",
+        location: userData.location || "",
+        experience: userData.experience?.toString() || "",
+        payrate: userData.payrate || "",
+        hours: userData.hours?.toString() || "8",
+        joined: userData.joined ? new Date(userData.joined).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      });
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        joined: new Date().toISOString().split('T')[0]
+      }));
     }
   }, [isOpen, mode, userData, roles]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -101,15 +96,11 @@ export function UserFormModal({
     }));
   };
 
-  const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
-    setShowPasswords((prev) => ({
-      ...prev,
-      [field]: !prev[field],
-    }));
-  };
-
   const validateForm = (): boolean => {
-    if (!formData.name.trim()) {
+    const { name, email, role } = formData;
+
+    // Basic validation
+    if (!name.trim()) {
       toast({
         title: "Validation Error",
         description: "Name is required",
@@ -118,7 +109,14 @@ export function UserFormModal({
       return false;
     }
 
-    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
+    if (!email.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Email is required",
+        variant: "destructive",
+      });
+      return false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
       toast({
         title: "Validation Error",
         description: "Please enter a valid email address",
@@ -127,42 +125,13 @@ export function UserFormModal({
       return false;
     }
 
-    if (!formData.role) {
+    if (!role) {
       toast({
         title: "Validation Error",
         description: "Please select a role",
         variant: "destructive",
       });
       return false;
-    }
-
-    if (mode === "add") {
-      if (!formData.password.trim()) {
-        toast({
-          title: "Validation Error",
-          description: "Password is required for new users",
-          variant: "destructive",
-        });
-        return false;
-      }
-
-      if (formData.password.length < 6) {
-        toast({
-          title: "Validation Error",
-          description: "Password must be at least 6 characters long",
-          variant: "destructive",
-        });
-        return false;
-      }
-
-      if (formData.password !== formData.confirmPassword) {
-        toast({
-          title: "Validation Error",
-          description: "Passwords do not match",
-          variant: "destructive",
-        });
-        return false;
-      }
     }
 
     return true;
@@ -177,19 +146,30 @@ export function UserFormModal({
 
     try {
       if (mode === "add") {
-        // Create new user
+        // Find the selected role to get both ID and name
+        const selectedRole = roles.find(role => role.id === formData.role);
+        if (!selectedRole) {
+          throw new Error('Please select a valid role');
+        }
+
+        // Create new user with structure expected by backend
         const memberData = {
-          name: formData.name.trim(),
+          // User data
           email: formData.email.trim(),
-          role: formData.role,
-          age: formData.age ? parseInt(formData.age) : undefined,
-          location: formData.location.trim() || undefined,
-          experience: formData.experience
-            ? parseInt(formData.experience)
-            : undefined,
-          payrate: formData.payrate.trim() || undefined,
-          password: formData.password,
+          name: formData.name.trim(),
+
+          // Employee data
+          role: formData.role, // Role ID
+          role_name: selectedRole.name, // Role name
+          hours: parseInt(formData.hours) || 8,
+          joined: formData.joined,
+          ...(formData.age && { age: parseInt(formData.age) }),
+          ...(formData.location && { location: formData.location.trim() }),
+          ...(formData.experience && { experience: parseInt(formData.experience) }),
+          ...(formData.payrate && { payrate: formData.payrate.trim() }),
         };
+
+        console.log('Sending member data:', memberData);
 
         await addMember(memberData);
 
@@ -301,7 +281,7 @@ export function UserFormModal({
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
                   }}
                 >
-                  Age
+                  Age (Optional)
                 </label>
                 <input
                   type="number"
@@ -338,7 +318,7 @@ export function UserFormModal({
                   >
                     <option value="">Select a role</option>
                     {roles.map((role) => (
-                      <option key={role.id} value={role.name}>
+                      <option key={role.id} value={role.id}>
                         {role.name}
                       </option>
                     ))}
@@ -355,7 +335,7 @@ export function UserFormModal({
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
                   }}
                 >
-                  Location
+                  Location (Optional)
                 </label>
                 <input
                   type="text"
@@ -378,7 +358,7 @@ export function UserFormModal({
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
                   }}
                 >
-                  Experience (years)
+                  Experience (Optional)
                 </label>
                 <input
                   type="number"
@@ -395,7 +375,7 @@ export function UserFormModal({
                 />
               </div>
 
-              <div className="md:col-span-2 space-y-1">
+              <div className="space-y-1">
                 <label
                   className="block text-[14px] font-semibold text-[#0A0A0A]"
                   style={{
@@ -403,14 +383,13 @@ export function UserFormModal({
                       "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
                   }}
                 >
-                  Pay Rate
+                  Balance
                 </label>
                 <input
                   type="text"
                   name="payrate"
                   value={formData.payrate}
                   onChange={handleInputChange}
-                  placeholder="e.g., $25/hour"
                   className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
                   style={{
                     fontFamily:
@@ -419,87 +398,53 @@ export function UserFormModal({
                 />
               </div>
 
-              {mode === "add" && (
-                <>
-                  <div className="space-y-1">
-                    <label
-                      className="block text-[14px] font-semibold text-[#0A0A0A]"
-                      style={{
-                        fontFamily:
-                          "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                      }}
-                    >
-                      Password *
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showPasswords.password ? "text" : "password"}
-                        name="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                        style={{
-                          fontFamily:
-                            "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                        }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => togglePasswordVisibility("password")}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#71839B]"
-                      >
-                        {showPasswords.password ? (
-                          <Eye className="w-4 h-4" />
-                        ) : (
-                          <EyeOff className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
+              <div className="space-y-1">
+                <label
+                  className="block text-[14px] font-semibold text-[#0A0A0A]"
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
+                >
+                  Hours
+                </label>
+                <input
+                  type="number"
+                  name="hours"
+                  value={formData.hours}
+                  onChange={handleInputChange}
+                  min="8"
+                  max="12"
+                  className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
+                />
+              </div>
 
-                  <div className="space-y-1">
-                    <label
-                      className="block text-[14px] font-semibold text-[#0A0A0A]"
-                      style={{
-                        fontFamily:
-                          "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                      }}
-                    >
-                      Confirm Password *
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={
-                          showPasswords.confirmPassword ? "text" : "password"
-                        }
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#5F5F5F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                        style={{
-                          fontFamily:
-                            "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
-                        }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          togglePasswordVisibility("confirmPassword")
-                        }
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#71839B]"
-                      >
-                        {showPasswords.confirmPassword ? (
-                          <Eye className="w-4 h-4" />
-                        ) : (
-                          <EyeOff className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
+              <div className="md:col-span-2 space-y-1">
+                <label
+                  className="block text-[14px] font-semibold text-[#0A0A0A]"
+                  style={{
+                    fontFamily:
+                      "Poppins, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
+                >
+                  Joined At (Optional)
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="joined"
+                    value={formData.joined ? formatDate(formData.joined) : "12/08/2022"}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
+                    style={{ fontFamily: "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif" }}
+                  />
+                  <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB]" />
+                </div>
+              </div>
             </div>
 
             <div className="flex justify-end gap-[8px] pt-4">

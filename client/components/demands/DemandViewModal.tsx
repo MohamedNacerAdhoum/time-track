@@ -1,46 +1,82 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { X, CheckCircle, XCircle, Download, FileText } from "lucide-react";
+import { X, Download, FileText, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/useToast";
-
-interface DemandData {
-  id: string;
-  name: string;
-  role?: string;
-  subject: string;
-  content: string;
-  createdAt: string;
-  state: "Pending" | "Approved" | "Declined";
-  attachments?: Array<{
-    name: string;
-    size: string;
-    url?: string;
-  }>;
-  userAvatar?: string;
-}
+import { DemandData } from "@/contexts/DemandsContext";
 
 interface DemandViewModalProps {
   isOpen: boolean;
   onClose: () => void;
   demand?: DemandData;
+  responseData?: any;
   onApprove?: (demandId: string) => Promise<void> | void;
   onDecline?: (demandId: string) => Promise<void> | void;
   onDownload?: (attachment: { name: string; url?: string }) => void;
   showActions?: boolean;
+  viewMode?: 'demand' | 'response';
 }
 
 export function DemandViewModal({
   isOpen,
   onClose,
   demand,
+  responseData,
   onApprove,
   onDecline,
   onDownload,
   showActions = true,
+  viewMode = 'demand',
 }: DemandViewModalProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
+
+  if (!isOpen || !demand) return null;
+
+  console.log('DemandViewModal rendering with:', {
+    viewMode,
+    demand,
+    responseData,
+    demandResponse: demand?.response,
+    isResponseView: viewMode === 'response'
+  });
+
+  // Determine if we're viewing a response and get the appropriate data
+  const isResponseView = viewMode === 'response';
+  const response = responseData || demand?.response;
+  
+  console.log('DemandViewModal data:', {
+    viewMode,
+    demand,
+    responseData,
+    demandResponse: demand?.response,
+    isResponseView,
+    hasResponse: !!response,
+    responseType: typeof response
+  });
+  
+  // Handle case where response might be just an ID string
+  const displayData = isResponseView ? 
+    (typeof response === 'string' ? null : response) : 
+    demand;
+    
+  // Get sender info based on whether we're viewing a response
+  const sender = isResponseView ? 
+    (typeof response === 'object' ? response?.employee : null) : 
+    demand?.sender;
+  
+  console.log('Display data:', { 
+    displayData, 
+    sender,
+    isResponseView,
+    hasDisplayData: !!displayData,
+    senderType: typeof sender
+  });
+
+  // Format the date for display
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleString();
+  };
 
   const handleApprove = async () => {
     if (!demand || !onApprove) return;
@@ -101,8 +137,6 @@ export function DemandViewModal({
     }
   };
 
-  if (!isOpen || !demand) return null;
-
   const modalContent = (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
@@ -113,7 +147,9 @@ export function DemandViewModal({
         {/* Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-2xl sm:text-3xl font-semibold text-black font-poppins">
-            Demand subject
+            {isResponseView 
+              ? `Response to: ${demand.subject || 'Demand'}` 
+              : demand?.subject || 'Demand Details'}
           </h2>
           <Button
             variant="ghost"
@@ -129,95 +165,68 @@ export function DemandViewModal({
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
           {/* User Avatar */}
           <div className="flex-shrink-0">
-            {demand.userAvatar ? (
-              <img
-                src={demand.userAvatar}
-                alt={demand.name}
-                className="w-15 h-15 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-15 h-15 rounded-full bg-gray-200 flex items-center justify-center text-xl font-medium text-gray-500">
-                {demand.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")
-                  .toUpperCase()}
+            <div className="w-15 h-15 rounded-full p-[2px]">
+              <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
+                {sender?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
               </div>
-            )}
+            </div>
           </div>
 
           {/* User Details */}
           <div className="flex-1 space-y-2">
             <h3 className="text-xl sm:text-2xl font-semibold text-black font-poppins">
-              {demand.name}
+              {sender?.name || 'Unknown User'}
             </h3>
-            {demand.role && (
+            {sender?.role_name && (
               <p className="text-base font-semibold text-[#979797] font-poppins">
-                {demand.role}
+                {sender.role_name}
+              </p>
+            )}
+            {isResponseView && response?.responded_at && (
+              <p className="text-sm text-gray-500">
+                Replied on: {formatDate(response.responded_at)}
               </p>
             )}
           </div>
 
-          {/* Action Buttons */}
-          {showActions && demand.state === "Pending" && (
+          {/* Action Buttons - Only show for demands (not responses) that are pending */}
+          {showActions && !isResponseView && demand.state === "PENDING" && (
             <div className="flex gap-4 sm:gap-9">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleApprove}
                 disabled={isProcessing}
-                className="w-16 h-16 rounded-full bg-[#56C992] hover:bg-[#4AB881] text-white p-0"
+                className="w-14 h-14 rounded-full bg-[#56C992] hover:bg-[#4AB881] text-white p-0 flex items-center justify-center"
               >
-                <CheckCircle className="w-8 h-8" />
+                <Check className="w-10 h-10" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleDecline}
                 disabled={isProcessing}
-                className="w-16 h-16 rounded-full bg-[#FF6262] hover:bg-[#FF5252] text-white p-0"
+                className="w-14 h-14 rounded-full bg-[#FF6262] hover:bg-[#FF5252] text-white p-0 flex items-center justify-center"
               >
-                <XCircle className="w-8 h-8" />
+                <X className="w-10 h-10" />
               </Button>
-            </div>
-          )}
-        </div>
-
-        {/* Demand Content */}
-        <div className="space-y-6">
-          <div className="text-lg sm:text-xl text-[#666] font-poppins leading-relaxed">
-            {demand.content}
-          </div>
-
-          {/* Attachments */}
-          {demand.attachments && demand.attachments.length > 0 && (
-            <div className="space-y-4">
-              {demand.attachments.map((attachment, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-4 border border-[#63CDFA] rounded-xl bg-white gap-4"
-                >
-                  <div className="flex items-center gap-4 flex-1 min-w-0">
-                    <FileText className="w-10 h-10 text-[#63CDFA] flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-lg font-semibold text-[#63CDFA] font-poppins underline truncate">
-                        {attachment.name}
-                      </p>
-                      <p className="text-base font-semibold text-[#979797] font-poppins">
-                        {attachment.size}
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDownload(attachment)}
-                    className="w-10 h-10 text-[#63CDFA] hover:bg-[#F2FBFF] flex-shrink-0"
+              {response?.attachment_url && (
+                <div className="space-y-2">
+                  <div
+                    className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer"
+                    onClick={() => onDownload?.({
+                      name: response.attachment_name || 'Response Attachment',
+                      url: response.attachment_url
+                    })}
                   >
-                    <Download className="w-5 h-5" />
-                  </Button>
+                    <FileText className="h-5 w-5 text-gray-500" />
+                    <span className="text-sm text-gray-700 truncate">
+                      {response.attachment_name || 'Response Attachment'}
+                    </span>
+                    <Download className="h-4 w-4 ml-auto text-gray-400" />
+                  </div>
                 </div>
-              ))}
+              )}
             </div>
           )}
         </div>
