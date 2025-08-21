@@ -119,7 +119,7 @@ export function Sidebar({
       >
         {/* Active indicator background - positioned dynamically based on collapsed state */}
         <div
-          className={`absolute left-0 ${isCollapsed && !isMobile ? "top-[170px]" : "top-[169px]"} w-[73px] h-[50px] transition-all duration-300 ${
+          className={`absolute left-0 ${isCollapsed && !isMobile ? "top-[141px]" : "top-[140px]"} w-[73px] h-[50px] transition-all duration-300 ${
             isMobile ? "hidden" : "block"
           }`}
         >
@@ -140,7 +140,7 @@ export function Sidebar({
           {/* Top section */}
           <div
             className={`${
-              isCollapsed && !isMobile ? "h-[170px]" : "h-[169px]"
+              isCollapsed && !isMobile ? "h-[141px]" : "h-[140px]"
             } bg-[#63CDFA] ${
               isMobile ? "rounded-r-[20px]" : "rounded-r-[40px]"
             } transition-all duration-300 ${isMobile ? "hidden" : "block"}`}
@@ -149,7 +149,7 @@ export function Sidebar({
           {/* Bottom section */}
           <div
             className={`${
-              isCollapsed && !isMobile ? "h-[804px]" : "h-[806px]"
+              isCollapsed && !isMobile ? "h-[833px]" : "h-[835px]"
             } bg-[#63CDFA] ${
               isMobile ? "rounded-r-[20px]" : "rounded-r-[40px]"
             } transition-all duration-300 ${isMobile ? "hidden" : "block"}`}
@@ -158,7 +158,7 @@ export function Sidebar({
           {/* Logo Section */}
           <div
             className={`${isMobile ? "static" : "absolute"} ${
-              isMobile ? "pt-6 pb-4" : "top-[57px] left-0 right-0"
+              isMobile ? "pt-6 pb-4" : "top-[40px] left-0 right-0"
             } ${isCollapsed && !isMobile ? "px-[10px]" : "px-5"} ${
               isMobile ? "h-auto" : "h-[35px]"
             } flex items-center transition-all duration-300`}
@@ -178,8 +178,8 @@ export function Sidebar({
             className={`${isMobile ? "static px-4 pb-4" : "absolute"} ${
               !isMobile
                 ? isCollapsed
-                  ? "top-[169px] left-[23px] w-[47px]"
-                  : "top-[169px] left-[23px] w-[194px]"
+                  ? "top-[140px] left-[23px] w-[47px]"
+                  : "top-[140px] left-[23px] w-[194px]"
                 : ""
             } space-y-6 transition-all duration-300`}
           >
@@ -237,7 +237,7 @@ export function Sidebar({
           {!isMobile && (
             <button
               onClick={onToggleCollapse}
-              className={`absolute top-[59px] ${
+              className={`absolute top-[42px] ${
                 isCollapsed ? "-right-[15px]" : "-right-[15px]"
               } w-[31px] h-[31px] bg-white rounded-full border border-[#71839B] flex items-center justify-center transition-all duration-300 hover:bg-gray-50 hover:border-[#63CDFA] z-10 shadow-sm`}
             >
