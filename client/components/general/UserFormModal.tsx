@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { X, ChevronDown } from "lucide-react";
-import { CalendarField } from "@/components/ui/calendar-field";
+import { useState, useEffect, useRef } from "react";
+import { X, ChevronDown, Calendar as CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/Calendar";
 import { useToast } from "@/hooks/useToast";
 import { useMembersStore } from "@/contexts/MembersContext";
 import { MemberData } from "@/contexts/MembersContext";
@@ -36,6 +36,8 @@ export function UserFormModal({
   const { toast } = useToast();
   const { roles, fetchAllRoles, addMember } = useMembersStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const dateFieldRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
@@ -440,13 +442,27 @@ export function UserFormModal({
                 >
                   Joined At (Optional)
                 </label>
-                <CalendarField
-                  value={formData.joined}
-                  onChange={handleDateChange}
-                  className="w-full"
-                  placeholder="12/08/2022"
-                  variant="profile"
-                />
+                <div className="relative">
+                  <div
+                    ref={dateFieldRef}
+                    onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer"
+                    style={{
+                      fontFamily:
+                        "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+                    }}
+                  >
+                    {formData.joined ? formatDate(formData.joined) : "12/08/2022"}
+                  </div>
+                  <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
+                  <Calendar
+                    value={formData.joined}
+                    onChange={handleDateChange}
+                    isOpen={isDatePickerOpen}
+                    onClose={() => setIsDatePickerOpen(false)}
+                    fieldRef={dateFieldRef}
+                  />
+                </div>
               </div>
             </div>
 
