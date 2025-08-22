@@ -106,16 +106,6 @@ export default function TimesheetsPage() {
   const [lastAction, setLastAction] = useState("last_action");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  // Debug selectedDate changes
-  useEffect(() => {
-    console.log("TimesheetsPage: selectedDate changed to:", selectedDate);
-  }, [selectedDate]);
-
-  // Wrapper function to debug setSelectedDate calls
-  const handleDateChange = (date: Date | null) => {
-    console.log("TimesheetsPage: handleDateChange called with:", date);
-    setSelectedDate(date);
-  };
   const [adminTimeSheets, setAdminTimeSheets] = useState<TimeSheet[]>([]);
 
   const {
@@ -244,19 +234,13 @@ export default function TimesheetsPage() {
             onChange={setLastAction}
             className="min-w-[160px]"
           />
-          <div className="flex flex-col gap-2">
-            <DateFilter
-              value={selectedDate}
-              onChange={handleDateChange}
-              className="min-w-[180px]"
-              placeholder="Select date..."
-              showClearButton={true}
-            />
-            {/* Debug display */}
-            <div className="text-xs text-gray-500 px-2">
-              Debug: {selectedDate ? selectedDate.toLocaleDateString() : "No date selected"}
-            </div>
-          </div>
+          <DateFilter
+            value={selectedDate}
+            onChange={setSelectedDate}
+            className="min-w-[180px]"
+            placeholder="Select date..."
+            showClearButton={true}
+          />
         </div>
       </div>
 
