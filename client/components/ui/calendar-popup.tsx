@@ -227,7 +227,7 @@ export function CalendarPopup({
     <div
       ref={popupRef}
       className={cn(
-        "absolute mt-2 bg-white rounded-3xl z-[60] p-10 w-80 max-h-[400px] overflow-hidden",
+        "absolute mt-2 bg-white rounded-3xl z-[100] p-10 w-80 max-h-[400px] overflow-hidden",
         className
       )}
       style={{
