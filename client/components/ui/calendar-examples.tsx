@@ -10,7 +10,7 @@ export function CalendarExamples() {
   return (
     <div className="space-y-8 p-8">
       <h2 className="text-2xl font-bold">Calendar Field Examples</h2>
-      
+
       {/* Default style (original CalendarWidget style) */}
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">Default Style</h3>
@@ -36,10 +36,7 @@ export function CalendarExamples() {
       {/* Custom field */}
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">Custom Field Style</h3>
-        <CalendarField
-          value={date3}
-          onChange={setDate3}
-        >
+        <CalendarField value={date3} onChange={setDate3}>
           <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
             <Calendar className="w-4 h-4" />
             {date3 ? date3.toLocaleDateString() : "Pick a date"}

@@ -38,9 +38,16 @@ export function CalendarPopup({
   initialMonth,
   fieldRef,
 }: CalendarPopupProps) {
-  const [currentMonth, setCurrentMonth] = useState(initialMonth || value || new Date());
+  const [currentMonth, setCurrentMonth] = useState(
+    initialMonth || value || new Date(),
+  );
   const popupRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ top: '100%', left: 'auto', right: '0', bottom: 'auto' });
+  const [position, setPosition] = useState({
+    top: "100%",
+    left: "auto",
+    right: "0",
+    bottom: "auto",
+  });
 
   const handleDateSelect = (date: Date) => {
     onChange(date);
@@ -165,62 +172,73 @@ export function CalendarPopup({
     const popupHeight = 400; // approximate height
 
     // Find the closest scrollable container or modal
-    let container = fieldRef.current.closest('[role="dialog"]') ||
-                   fieldRef.current.closest('.fixed.inset-0') ||
-                   fieldRef.current.closest('.overflow-auto') ||
-                   fieldRef.current.closest('.overflow-y-auto') ||
-                   fieldRef.current.closest('.overflow-x-auto') ||
-                   document.body;
+    let container =
+      fieldRef.current.closest('[role="dialog"]') ||
+      fieldRef.current.closest(".fixed.inset-0") ||
+      fieldRef.current.closest(".overflow-auto") ||
+      fieldRef.current.closest(".overflow-y-auto") ||
+      fieldRef.current.closest(".overflow-x-auto") ||
+      document.body;
 
     // Get container boundaries
-    const containerRect = container === document.body ?
-      { top: 0, left: 0, right: viewportWidth, bottom: viewportHeight, width: viewportWidth, height: viewportHeight } :
-      container.getBoundingClientRect();
+    const containerRect =
+      container === document.body
+        ? {
+            top: 0,
+            left: 0,
+            right: viewportWidth,
+            bottom: viewportHeight,
+            width: viewportWidth,
+            height: viewportHeight,
+          }
+        : container.getBoundingClientRect();
 
     let newPosition = {
-      top: 'auto' as string,
-      left: 'auto' as string,
-      right: 'auto' as string,
-      bottom: 'auto' as string
+      top: "auto" as string,
+      left: "auto" as string,
+      right: "auto" as string,
+      bottom: "auto" as string,
     };
 
     // Calculate available space in all directions
-    const spaceRight = Math.min(containerRect.right, viewportWidth) - fieldRect.right;
+    const spaceRight =
+      Math.min(containerRect.right, viewportWidth) - fieldRect.right;
     const spaceLeft = fieldRect.left - Math.max(containerRect.left, 0);
-    const spaceBelow = Math.min(containerRect.bottom, viewportHeight) - fieldRect.bottom;
+    const spaceBelow =
+      Math.min(containerRect.bottom, viewportHeight) - fieldRect.bottom;
     const spaceAbove = fieldRect.top - Math.max(containerRect.top, 0);
 
     // Determine horizontal position (prefer right alignment, then left, then best fit)
     if (spaceRight >= popupWidth) {
       // Enough space on the right, align to right edge of field
-      newPosition.right = '0';
+      newPosition.right = "0";
     } else if (spaceLeft >= popupWidth) {
       // Not enough space on right but enough on left, align to left edge of field
-      newPosition.left = '0';
+      newPosition.left = "0";
     } else {
       // Not enough space on either side, position to prevent overflow
       if (spaceRight > spaceLeft) {
         // More space on right, align to right but ensure it fits in viewport
-        newPosition.right = '0';
+        newPosition.right = "0";
       } else {
         // More space on left, align to left but ensure it fits in viewport
-        newPosition.left = '0';
+        newPosition.left = "0";
       }
     }
 
     // Determine vertical position (prefer below, then above)
     if (spaceBelow >= popupHeight) {
       // Enough space below
-      newPosition.top = '100%';
+      newPosition.top = "100%";
     } else if (spaceAbove >= popupHeight) {
       // Not enough space below but enough above
-      newPosition.bottom = '100%';
+      newPosition.bottom = "100%";
     } else {
       // Not enough space above or below, choose the side with more space
       if (spaceBelow >= spaceAbove) {
-        newPosition.top = '100%';
+        newPosition.top = "100%";
       } else {
-        newPosition.bottom = '100%';
+        newPosition.bottom = "100%";
       }
     }
 
@@ -236,7 +254,7 @@ export function CalendarPopup({
         "absolute mt-2 bg-white rounded-3xl z-[100] p-10 w-80 max-h-[400px] overflow-hidden",
         // Ensure calendar never goes outside viewport boundaries
         "max-w-[90vw] max-h-[90vh]",
-        className
+        className,
       )}
       style={{
         boxShadow: "-4px 4px 12px 0 rgba(0, 0, 0, 0.25)",
@@ -245,8 +263,8 @@ export function CalendarPopup({
         right: position.right,
         bottom: position.bottom,
         // Prevent overflow beyond viewport boundaries
-        maxWidth: 'min(320px, 90vw)',
-        maxHeight: 'min(400px, 90vh)'
+        maxWidth: "min(320px, 90vw)",
+        maxHeight: "min(400px, 90vh)",
       }}
     >
       {/* Header */}
@@ -275,13 +293,8 @@ export function CalendarPopup({
         {/* Day Headers */}
         <div className="grid grid-cols-7 gap-3 mb-2">
           {DAYS.map((day) => (
-            <div
-              key={day}
-              className="flex items-center justify-center w-8 h-8"
-            >
-              <span className="text-xs text-gray-400 font-normal">
-                {day}
-              </span>
+            <div key={day} className="flex items-center justify-center w-8 h-8">
+              <span className="text-xs text-gray-400 font-normal">{day}</span>
             </div>
           ))}
         </div>

@@ -76,7 +76,10 @@ export function CalendarField({
             placeholder={placeholder}
             readOnly
             className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer"
-            style={{ fontFamily: "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif" }}
+            style={{
+              fontFamily:
+                "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+            }}
           />
           <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB]" />
         </div>
@@ -101,9 +104,7 @@ export function CalendarField({
 
   return (
     <div ref={fieldRef} className={cn("relative", className)}>
-      <div onClick={handleToggle}>
-        {children || getDefaultField()}
-      </div>
+      <div onClick={handleToggle}>{children || getDefaultField()}</div>
 
       {isOpen && (
         <CalendarPopup
