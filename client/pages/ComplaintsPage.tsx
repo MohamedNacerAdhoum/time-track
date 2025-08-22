@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Search,
   ChevronDown,
   ArrowUpDown,
   ChevronLeft,
@@ -14,7 +13,7 @@ import {
   RotateCcw,
   Mail,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { SearchBar } from "@/components/ui/search-bar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -290,23 +289,13 @@ export default function ComplaintsPage() {
 
       {/* Search + Action Buttons */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex-1 w-full sm:max-w-md">
-          <div className="relative">
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <Input
-                  placeholder={activeTab === "complaints" ? "Search complaints..." : "Search attendance claims..."}
-                  className="pl-10 w-full md:w-64"
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                  }}
-                />
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              </div>
-            </div>
-          </div>
-        </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder={activeTab === "complaints" ? "Search complaints..." : "Search attendance claims..."}
+          className="sm:max-w-md"
+          inputClassName="w-full md:w-64"
+        />
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
           <Button
