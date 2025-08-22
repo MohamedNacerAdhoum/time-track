@@ -234,6 +234,8 @@ export function CalendarPopup({
       ref={popupRef}
       className={cn(
         "absolute mt-2 bg-white rounded-3xl z-[100] p-10 w-80 max-h-[400px] overflow-hidden",
+        // Ensure calendar never goes outside viewport boundaries
+        "max-w-[90vw] max-h-[90vh]",
         className
       )}
       style={{
@@ -241,7 +243,10 @@ export function CalendarPopup({
         top: position.top,
         left: position.left,
         right: position.right,
-        bottom: position.bottom
+        bottom: position.bottom,
+        // Prevent overflow beyond viewport boundaries
+        maxWidth: 'min(320px, 90vw)',
+        maxHeight: 'min(400px, 90vh)'
       }}
     >
       {/* Header */}
