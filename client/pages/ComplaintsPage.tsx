@@ -35,7 +35,7 @@ import { MakeComplaintModal } from "@/components/complaints/MakeComplaintModal";
 import { MakeAttendanceClaimModal } from "@/components/complaints/MakeAttendanceClaimModal";
 import { cn } from "@/lib/utils";
 
-import { useAdminView } from '@/contexts/AdminViewContext';
+import { useAdminView } from "@/contexts/AdminViewContext";
 
 function StateBadge({ state }: { state: "Pending" | "Approved" | "Declined" }) {
   const getBadgeStyle = (state: string) => {
@@ -156,7 +156,8 @@ const sampleComplaints: ComplaintData[] = [
     id: "1",
     name: "John Smith",
     problem: "Workplace harassment",
-    explanation: "Experiencing inappropriate behavior from a colleague during meetings",
+    explanation:
+      "Experiencing inappropriate behavior from a colleague during meetings",
     state: "Pending",
     created_at: new Date().toISOString(),
   },
@@ -198,14 +199,21 @@ export default function ComplaintsPage() {
   const [showRowsDropdown, setShowRowsDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("complaints");
-  const [selectedComplaints, setSelectedComplaints] = useState<Set<string>>(new Set());
+  const [selectedComplaints, setSelectedComplaints] = useState<Set<string>>(
+    new Set(),
+  );
   const [selectAll, setSelectAll] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isMakeComplaintModalOpen, setIsMakeComplaintModalOpen] = useState(false);
-  const [isMakeAttendanceClaimModalOpen, setIsMakeAttendanceClaimModalOpen] = useState(false);
-  const [selectedComplaint, setSelectedComplaint] = useState<ComplaintData | null>(null);
-  const [selectedAttendanceClaims, setSelectedAttendanceClaims] = useState<Set<string>>(new Set());
+  const [isMakeComplaintModalOpen, setIsMakeComplaintModalOpen] =
+    useState(false);
+  const [isMakeAttendanceClaimModalOpen, setIsMakeAttendanceClaimModalOpen] =
+    useState(false);
+  const [selectedComplaint, setSelectedComplaint] =
+    useState<ComplaintData | null>(null);
+  const [selectedAttendanceClaims, setSelectedAttendanceClaims] = useState<
+    Set<string>
+  >(new Set());
   const [lastAction, setLastAction] = useState("last_action");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -229,9 +237,12 @@ export default function ComplaintsPage() {
       // Filter by search query
       if (searchQuery) {
         const searchLower = searchQuery.toLowerCase();
-        const matchesName = complaint.name?.toLowerCase().includes(searchLower) || false;
-        const matchesProblem = complaint.problem?.toLowerCase().includes(searchLower) || false;
-        const matchesExplanation = complaint.explanation?.toLowerCase().includes(searchLower) || false;
+        const matchesName =
+          complaint.name?.toLowerCase().includes(searchLower) || false;
+        const matchesProblem =
+          complaint.problem?.toLowerCase().includes(searchLower) || false;
+        const matchesExplanation =
+          complaint.explanation?.toLowerCase().includes(searchLower) || false;
 
         if (!matchesName && !matchesProblem && !matchesExplanation) {
           return false;
@@ -243,14 +254,17 @@ export default function ComplaintsPage() {
   };
 
   const getFilteredAttendanceClaims = (): AttendanceClaimData[] => {
-    let sourceClaims = activeTab === "attendance-claims" ? sampleAttendanceClaims : [];
+    let sourceClaims =
+      activeTab === "attendance-claims" ? sampleAttendanceClaims : [];
 
     return sourceClaims.filter((claim: AttendanceClaimData) => {
       // Filter by search query
       if (searchQuery) {
         const searchLower = searchQuery.toLowerCase();
-        const matchesName = claim.name?.toLowerCase().includes(searchLower) || false;
-        const matchesNote = claim.note?.toLowerCase().includes(searchLower) || false;
+        const matchesName =
+          claim.name?.toLowerCase().includes(searchLower) || false;
+        const matchesNote =
+          claim.note?.toLowerCase().includes(searchLower) || false;
 
         if (!matchesName && !matchesNote) {
           return false;
@@ -275,11 +289,18 @@ export default function ComplaintsPage() {
   const filteredAttendanceClaims = getFilteredAttendanceClaims();
 
   // Pagination
-  const currentData = activeTab === "complaints" ? filteredComplaints : filteredAttendanceClaims;
+  const currentData =
+    activeTab === "complaints" ? filteredComplaints : filteredAttendanceClaims;
   const totalPages = Math.max(1, Math.ceil(currentData.length / rowsPerPage));
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedComplaints = filteredComplaints.slice(startIndex, startIndex + rowsPerPage);
-  const paginatedAttendanceClaims = filteredAttendanceClaims.slice(startIndex, startIndex + rowsPerPage);
+  const paginatedComplaints = filteredComplaints.slice(
+    startIndex,
+    startIndex + rowsPerPage,
+  );
+  const paginatedAttendanceClaims = filteredAttendanceClaims.slice(
+    startIndex,
+    startIndex + rowsPerPage,
+  );
 
   // Update select all state based on selected items
   useEffect(() => {
@@ -316,7 +337,13 @@ export default function ComplaintsPage() {
         setIsIndeterminate(true);
       }
     }
-  }, [selectedComplaints, selectedAttendanceClaims, currentPage, rowsPerPage, activeTab]);
+  }, [
+    selectedComplaints,
+    selectedAttendanceClaims,
+    currentPage,
+    rowsPerPage,
+    activeTab,
+  ]);
 
   // Handle tab changes
   useEffect(() => {
@@ -328,9 +355,13 @@ export default function ComplaintsPage() {
       const newSelected = new Set(selectedComplaints);
 
       if (checked) {
-        filteredComplaints.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((complaint) => newSelected.add(complaint.id));
+        filteredComplaints
+          .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+          .forEach((complaint) => newSelected.add(complaint.id));
       } else {
-        filteredComplaints.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((complaint) => newSelected.delete(complaint.id));
+        filteredComplaints
+          .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+          .forEach((complaint) => newSelected.delete(complaint.id));
       }
 
       setSelectedComplaints(newSelected);
@@ -338,9 +369,13 @@ export default function ComplaintsPage() {
       const newSelected = new Set(selectedAttendanceClaims);
 
       if (checked) {
-        filteredAttendanceClaims.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((claim) => newSelected.add(claim.id));
+        filteredAttendanceClaims
+          .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+          .forEach((claim) => newSelected.add(claim.id));
       } else {
-        filteredAttendanceClaims.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((claim) => newSelected.delete(claim.id));
+        filteredAttendanceClaims
+          .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+          .forEach((claim) => newSelected.delete(claim.id));
       }
 
       setSelectedAttendanceClaims(newSelected);
@@ -377,7 +412,10 @@ export default function ComplaintsPage() {
         console.log("Deleting complaints:", Array.from(selectedComplaints));
         setSelectedComplaints(new Set());
       } else if (activeTab === "attendance-claims") {
-        console.log("Deleting attendance claims:", Array.from(selectedAttendanceClaims));
+        console.log(
+          "Deleting attendance claims:",
+          Array.from(selectedAttendanceClaims),
+        );
         setSelectedAttendanceClaims(new Set());
       }
     } catch (error) {
@@ -447,7 +485,9 @@ export default function ComplaintsPage() {
 
   // Get current selection count
   const getSelectedCount = () => {
-    return activeTab === "complaints" ? selectedComplaints.size : selectedAttendanceClaims.size;
+    return activeTab === "complaints"
+      ? selectedComplaints.size
+      : selectedAttendanceClaims.size;
   };
 
   return (
@@ -553,7 +593,9 @@ export default function ComplaintsPage() {
                 itemName={
                   getSelectedCount() > 1
                     ? `${getSelectedCount()} ${activeTab === "complaints" ? "complaints" : "attendance claims"}`
-                    : activeTab === "complaints" ? "complaint" : "attendance claim"
+                    : activeTab === "complaints"
+                      ? "complaint"
+                      : "attendance claim"
                 }
               />
             </>
@@ -588,64 +630,74 @@ export default function ComplaintsPage() {
                     <SortableHeader showArrow={false}>Problem</SortableHeader>
                   </TableHead>
                   <TableHead className="text-white font-semibold">
-                    <SortableHeader showArrow={false}>Explanation</SortableHeader>
+                    <SortableHeader showArrow={false}>
+                      Explanation
+                    </SortableHeader>
                   </TableHead>
                   <TableHead className="w-12" />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredComplaints.length > 0 ? (
-                  filteredComplaints.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).map((complaint, index) => (
-                    <TableRow
-                      key={complaint.id}
-                      className={cn(
-                        "border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors",
-                        index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]",
-                      )}
-                    >
-                      <TableCell className="text-center">
-                        <Checkbox
-                          checked={selectedComplaints.has(complaint.id)}
-                          onCheckedChange={(checked) =>
-                            handleSelectComplaint(complaint.id, checked as boolean)
-                          }
-                          className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
-                        />
-                      </TableCell>
-                      <TableCell className="font-semibold text-gray-900">
-                        {complaint.name}
-                      </TableCell>
-                      <TableCell className="text-gray-500">
-                        <div
-                          className="truncate max-w-[300px]"
-                          title={complaint.problem}
-                        >
-                          {complaint.problem}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-gray-500">
-                        <div
-                          className="truncate max-w-[300px]"
-                          title={complaint.explanation}
-                        >
-                          {complaint.explanation}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSeeMore(complaint);
-                          }}
-                          className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
-                        >
-                          See more
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  filteredComplaints
+                    .slice(
+                      (currentPage - 1) * rowsPerPage,
+                      currentPage * rowsPerPage,
+                    )
+                    .map((complaint, index) => (
+                      <TableRow
+                        key={complaint.id}
+                        className={cn(
+                          "border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors",
+                          index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]",
+                        )}
+                      >
+                        <TableCell className="text-center">
+                          <Checkbox
+                            checked={selectedComplaints.has(complaint.id)}
+                            onCheckedChange={(checked) =>
+                              handleSelectComplaint(
+                                complaint.id,
+                                checked as boolean,
+                              )
+                            }
+                            className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
+                          />
+                        </TableCell>
+                        <TableCell className="font-semibold text-gray-900">
+                          {complaint.name}
+                        </TableCell>
+                        <TableCell className="text-gray-500">
+                          <div
+                            className="truncate max-w-[300px]"
+                            title={complaint.problem}
+                          >
+                            {complaint.problem}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-gray-500">
+                          <div
+                            className="truncate max-w-[300px]"
+                            title={complaint.explanation}
+                          >
+                            {complaint.explanation}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSeeMore(complaint);
+                            }}
+                            className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
+                          >
+                            See more
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
                 ) : (
                   <TableRow>
                     <TableCell
@@ -784,7 +836,9 @@ export default function ComplaintsPage() {
                     <SortableHeader>Name</SortableHeader>
                   </TableHead>
                   <TableHead className="text-white font-semibold w-24">
-                    <SortableHeader showArrow={false}>Missing Type</SortableHeader>
+                    <SortableHeader showArrow={false}>
+                      Missing Type
+                    </SortableHeader>
                   </TableHead>
                   <TableHead className="text-white font-semibold w-24">
                     <SortableHeader>Expected Time</SortableHeader>
@@ -814,7 +868,10 @@ export default function ComplaintsPage() {
                         <Checkbox
                           checked={selectedAttendanceClaims.has(claim.id)}
                           onCheckedChange={(checked) =>
-                            handleSelectAttendanceClaim(claim.id, checked as boolean)
+                            handleSelectAttendanceClaim(
+                              claim.id,
+                              checked as boolean,
+                            )
                           }
                           className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
                         />

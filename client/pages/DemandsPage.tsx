@@ -35,10 +35,10 @@ import { cn } from "@/lib/utils";
 import {
   useDemands,
   type DemandData,
-  type EmployeeData
-} from '@/contexts/DemandsContext';
-import { useMembersStore } from '@/contexts/MembersContext';
-import { useAdminView } from '@/contexts/AdminViewContext';
+  type EmployeeData,
+} from "@/contexts/DemandsContext";
+import { useMembersStore } from "@/contexts/MembersContext";
+import { useAdminView } from "@/contexts/AdminViewContext";
 
 function StateBadge({ state }: { state: "Pending" | "Approved" | "Declined" }) {
   const getBadgeStyle = (state: string) => {
@@ -96,7 +96,9 @@ export default function DemandsPage() {
   const [showRowsDropdown, setShowRowsDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
-  const [selectedDemands, setSelectedDemands] = useState<Set<string>>(new Set());
+  const [selectedDemands, setSelectedDemands] = useState<Set<string>>(
+    new Set(),
+  );
   const [selectAll, setSelectAll] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -104,7 +106,7 @@ export default function DemandsPage() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isMakeDemandModalOpen, setIsMakeDemandModalOpen] = useState(false);
   const [selectedDemand, setSelectedDemand] = useState<any | null>(null);
-  const [viewMode, setViewMode] = useState<'demand' | 'response'>('demand');
+  const [viewMode, setViewMode] = useState<"demand" | "response">("demand");
   const [currentResponse, setCurrentResponse] = useState<any>(null);
 
   // Get all necessary data and methods from contexts
@@ -121,7 +123,7 @@ export default function DemandsPage() {
     getDemandResponse,
     deleteDemands,
     approveDemand,
-    rejectDemand
+    rejectDemand,
   } = useDemands();
 
   const { currentUser: memberUser } = useMembersStore();
@@ -143,7 +145,7 @@ export default function DemandsPage() {
           await fetchUserDemands();
         }
       } catch (err) {
-        console.error('Error fetching initial demands:', err);
+        console.error("Error fetching initial demands:", err);
       }
     };
 
@@ -163,21 +165,28 @@ export default function DemandsPage() {
 
     return sourceDemands.filter((demand: DemandData) => {
       // Filter by tab
-      if (activeTab === 'sent') {
+      if (activeTab === "sent") {
         // Check if the current user is the sender
         const senderUserId = demand.sender?.user;
         const isSentByCurrentUser = senderUserId === currentUser?.id;
         if (!isSentByCurrentUser) return false;
-      }
-      else if (activeTab === 'received') {
+      } else if (activeTab === "received") {
         // Check if the current user is in the receivers list
-        const receiverUserIds = demand.receivers?.map((r: EmployeeData) => r.user).filter(Boolean) || [];
-        const isReceivedByCurrentUser = receiverUserIds.includes(currentUser?.id);
+        const receiverUserIds =
+          demand.receivers?.map((r: EmployeeData) => r.user).filter(Boolean) ||
+          [];
+        const isReceivedByCurrentUser = receiverUserIds.includes(
+          currentUser?.id,
+        );
         if (!isReceivedByCurrentUser) return false;
       }
 
       // Filter by state if tab is a state filter
-      if (activeTab !== 'all' && activeTab !== 'sent' && activeTab !== 'received') {
+      if (
+        activeTab !== "all" &&
+        activeTab !== "sent" &&
+        activeTab !== "received"
+      ) {
         if (demand.state !== activeTab.toUpperCase()) {
           return false;
         }
@@ -186,9 +195,14 @@ export default function DemandsPage() {
       // Filter by search query
       if (searchQuery) {
         const searchLower = searchQuery.toLowerCase();
-        const matchesSubject = demand.subject?.toLowerCase().includes(searchLower) || false;
-        const matchesBody = demand.body?.toLowerCase().includes(searchLower) || false;
-        const senderName = typeof demand.sender?.name === 'string' ? demand.sender.name.toLowerCase() : '';
+        const matchesSubject =
+          demand.subject?.toLowerCase().includes(searchLower) || false;
+        const matchesBody =
+          demand.body?.toLowerCase().includes(searchLower) || false;
+        const senderName =
+          typeof demand.sender?.name === "string"
+            ? demand.sender.name.toLowerCase()
+            : "";
         const matchesSender = senderName.includes(searchLower);
 
         if (!matchesSubject && !matchesBody && !matchesSender) {
@@ -203,9 +217,15 @@ export default function DemandsPage() {
   const filteredDemands = getFilteredDemands();
 
   // Pagination
-  const totalPages = Math.max(1, Math.ceil(filteredDemands.length / rowsPerPage));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredDemands.length / rowsPerPage),
+  );
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedDemands = filteredDemands.slice(startIndex, startIndex + rowsPerPage);
+  const paginatedDemands = filteredDemands.slice(
+    startIndex,
+    startIndex + rowsPerPage,
+  );
 
   // Update select all state based on selected demands
   useEffect(() => {
@@ -257,10 +277,14 @@ export default function DemandsPage() {
 
     if (checked) {
       // Add all current page demands to selection
-      filteredDemands.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((demand) => newSelected.add(demand.id));
+      filteredDemands
+        .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+        .forEach((demand) => newSelected.add(demand.id));
     } else {
       // Remove all current page demands from selection
-      filteredDemands.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((demand) => newSelected.delete(demand.id));
+      filteredDemands
+        .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+        .forEach((demand) => newSelected.delete(demand.id));
     }
 
     setSelectedDemands(newSelected);
@@ -306,55 +330,58 @@ export default function DemandsPage() {
   };
 
   const handleView = async (demand: any, isResponse = false) => {
-    console.log('handleView called with:', { demand, isResponse, currentUser });
+    console.log("handleView called with:", { demand, isResponse, currentUser });
     setSelectedDemand(demand);
-    setViewMode(isResponse ? 'response' : 'demand');
-    
+    setViewMode(isResponse ? "response" : "demand");
+
     if (isResponse) {
       // Case 1: response is a full object
-      if (demand.response && typeof demand.response === 'object') {
-        console.log('Using full response object from demand:', demand.response);
+      if (demand.response && typeof demand.response === "object") {
+        console.log("Using full response object from demand:", demand.response);
         setCurrentResponse(demand.response);
-      } 
+      }
       // Case 2: response is just an ID string or we have a response_id
-      else if (typeof demand.response === 'string' || demand.response_id) {
+      else if (typeof demand.response === "string" || demand.response_id) {
         const responseId = demand.response_id || demand.response;
-        console.log('Fetching response data for demand ID:', demand.id);
+        console.log("Fetching response data for demand ID:", demand.id);
         try {
           // Get the full demand with its response without showing loading state
           const fullDemand = await fetchDemandSilently(demand.id);
           if (fullDemand?.response) {
-            console.log('Received response data:', fullDemand.response);
+            console.log("Received response data:", fullDemand.response);
             setCurrentResponse(fullDemand.response);
           } else {
-            console.log('No response found for demand:', demand.id);
+            console.log("No response found for demand:", demand.id);
             setCurrentResponse(null);
           }
         } catch (error) {
-          console.error('Error fetching demand with response:', error);
+          console.error("Error fetching demand with response:", error);
           setCurrentResponse(null);
         }
       } else {
-        console.log('No valid response data found in demand:', demand);
+        console.log("No valid response data found in demand:", demand);
         setCurrentResponse(null);
       }
     } else {
-      console.log('Viewing demand, not response');
+      console.log("Viewing demand, not response");
       setCurrentResponse(null);
     }
-    
-    console.log('Opening view modal with state:', { 
-      demand, 
-      isResponse, 
-      viewMode: isResponse ? 'response' : 'demand',
-      currentResponse: isResponse ? 'fetching...' : null 
+
+    console.log("Opening view modal with state:", {
+      demand,
+      isResponse,
+      viewMode: isResponse ? "response" : "demand",
+      currentResponse: isResponse ? "fetching..." : null,
     });
     setIsViewModalOpen(true);
   };
 
   const handleResponseSubmit = async (data: { body: string; file?: File }) => {
     if (!selectedDemand) return;
-    await createDemandResponse({ demand_id: selectedDemand.id, body: data.body });
+    await createDemandResponse({
+      demand_id: selectedDemand.id,
+      body: data.body,
+    });
     setIsResponseModalOpen(false);
   };
 
@@ -379,15 +406,16 @@ export default function DemandsPage() {
   const handleMakeDemandSubmit = async (formData: any) => {
     try {
       // Set subject based on demand type
-      const subject = formData.type === 'permission'
-        ? 'Permission Demand'
-        : formData.type === 'leave'
-          ? 'Leave Demand'
-          : formData.subject || 'No Subject';
+      const subject =
+        formData.type === "permission"
+          ? "Permission Demand"
+          : formData.type === "leave"
+            ? "Leave Demand"
+            : formData.subject || "No Subject";
 
       let demandData: any = {
         subject,
-        body: formData.body || formData.reason || '',
+        body: formData.body || formData.reason || "",
         demand_type: formData.type.toUpperCase(),
       };
 
@@ -399,29 +427,32 @@ export default function DemandsPage() {
       }
 
       // Handle different demand types
-      if (formData.type === 'permission') {
+      if (formData.type === "permission") {
         // Format permission demand data
         demandData.permission_demand = {
-          date: formData.datePicker?.toISOString().split('T')[0],
-          start_time: formData.from || '09:00:00',
-          end_time: formData.hours ? calculateEndTime(formData.from, formData.hours) : '10:00:00',
-          reason: formData.reason || '',
+          date: formData.datePicker?.toISOString().split("T")[0],
+          start_time: formData.from || "09:00:00",
+          end_time: formData.hours
+            ? calculateEndTime(formData.from, formData.hours)
+            : "10:00:00",
+          reason: formData.reason || "",
         };
-      } else if (formData.type === 'leave') {
+      } else if (formData.type === "leave") {
         // Format leave demand data
         demandData.leave_demand = {
-          leave_type: formData.leaveType === 'multiple' ? 'MULTIDAY' : 'SINGLEDAY',
+          leave_type:
+            formData.leaveType === "multiple" ? "MULTIDAY" : "SINGLEDAY",
         };
 
-        if (formData.leaveType === 'multiple') {
+        if (formData.leaveType === "multiple") {
           demandData.leave_demand.multiday = {
-            start_date: formData.fromDate?.toISOString().split('T')[0],
-            end_date: formData.toDate?.toISOString().split('T')[0],
+            start_date: formData.fromDate?.toISOString().split("T")[0],
+            end_date: formData.toDate?.toISOString().split("T")[0],
           };
         } else {
           demandData.leave_demand.singleday = {
-            date: formData.singleDate?.toISOString().split('T')[0],
-            time_period: formData.timePeriod || 'FULL_DAY',
+            date: formData.singleDate?.toISOString().split("T")[0],
+            time_period: formData.timePeriod || "FULL_DAY",
           };
         }
       }
@@ -448,10 +479,10 @@ export default function DemandsPage() {
 
   // Helper function to calculate end time based on start time and duration
   const calculateEndTime = (startTime: string, hours: string): string => {
-    if (!startTime || !hours) return '10:00:00';
+    if (!startTime || !hours) return "10:00:00";
 
     try {
-      const [hoursStr, minutesStr] = startTime.split(':');
+      const [hoursStr, minutesStr] = startTime.split(":");
       let hoursNum = parseInt(hoursStr, 10);
       const minutes = parseInt(minutesStr, 10);
 
@@ -460,10 +491,10 @@ export default function DemandsPage() {
       hoursNum += durationHours;
 
       // Format back to HH:MM:SS
-      return `${hoursNum.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+      return `${hoursNum.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:00`;
     } catch (e) {
-      console.error('Error calculating end time:', e);
-      return '10:00:00';
+      console.error("Error calculating end time:", e);
+      return "10:00:00";
     }
   };
 
@@ -587,86 +618,103 @@ export default function DemandsPage() {
           </TableHeader>
           <TableBody>
             {filteredDemands.length > 0 ? (
-              filteredDemands.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).map((demand, index) => (
-                <TableRow
-                  key={demand.id}
-                  className={cn(
-                    "border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors",
-                    index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]",
-                  )}
-                  onClick={() => handleView(demand)}
-                >
-                  <TableCell className="text-center">
-                    <Checkbox
-                      checked={selectedDemands.has(demand.id)}
-                      onCheckedChange={(checked) =>
-                        handleSelectDemand(demand.id, checked as boolean)
-                      }
-                      className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
-                    />
-                  </TableCell>
-                  <TableCell className="font-semibold text-gray-900">
-                    {demand.sender?.name || "-"}
-                  </TableCell>
-                  <TableCell className="text-gray-500">
-                    <div
-                      className="truncate max-w-[300px]"
-                      title={demand.subject}
-                    >
-                      {demand.subject}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-gray-500">
-                    {demand.created_at ? new Date(demand.created_at).toLocaleString() : "-"}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <StateBadge state={demand.state === "PENDING" ? "Pending" : demand.state === "APPROVED" ? "Approved" : demand.state === "REJECTED" ? "Declined" : "Pending"} />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center justify-center gap-1 flex-wrap">
-                      {/* Show View Reply button if demand has a reply, otherwise show Reply button for admins */}
-                      {demand.response ? (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation(); // Prevent row click
-                            handleView(demand, true); // true indicates this is a response view
-                          }}
-                          className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
-                        >
-                          <Eye className="h-4 w-4" />
-                          <span className="hidden sm:inline">View Reply</span>
-                        </Button>
-                      ) : isAdmin ? (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation(); // Prevent row click
-                            handleReply(demand);
-                          }}
-                          className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
-                        >
-                          <RotateCcw className="h-4 w-4" />
-                          <span className="hidden sm:inline">Reply</span>
-                        </Button>
-                      ) : null}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center justify-center gap-1 flex-wrap">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="w-8 h-8 rounded-full border border-[#63CDFA] bg-white hover:bg-[#F2FBFF] text-[#63CDFA]"
+              filteredDemands
+                .slice(
+                  (currentPage - 1) * rowsPerPage,
+                  currentPage * rowsPerPage,
+                )
+                .map((demand, index) => (
+                  <TableRow
+                    key={demand.id}
+                    className={cn(
+                      "border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors",
+                      index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]",
+                    )}
+                    onClick={() => handleView(demand)}
+                  >
+                    <TableCell className="text-center">
+                      <Checkbox
+                        checked={selectedDemands.has(demand.id)}
+                        onCheckedChange={(checked) =>
+                          handleSelectDemand(demand.id, checked as boolean)
+                        }
+                        className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
+                      />
+                    </TableCell>
+                    <TableCell className="font-semibold text-gray-900">
+                      {demand.sender?.name || "-"}
+                    </TableCell>
+                    <TableCell className="text-gray-500">
+                      <div
+                        className="truncate max-w-[300px]"
+                        title={demand.subject}
                       >
-                        <Mail className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+                        {demand.subject}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-gray-500">
+                      {demand.created_at
+                        ? new Date(demand.created_at).toLocaleString()
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <StateBadge
+                        state={
+                          demand.state === "PENDING"
+                            ? "Pending"
+                            : demand.state === "APPROVED"
+                              ? "Approved"
+                              : demand.state === "REJECTED"
+                                ? "Declined"
+                                : "Pending"
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-center gap-1 flex-wrap">
+                        {/* Show View Reply button if demand has a reply, otherwise show Reply button for admins */}
+                        {demand.response ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent row click
+                              handleView(demand, true); // true indicates this is a response view
+                            }}
+                            className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
+                          >
+                            <Eye className="h-4 w-4" />
+                            <span className="hidden sm:inline">View Reply</span>
+                          </Button>
+                        ) : isAdmin ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent row click
+                              handleReply(demand);
+                            }}
+                            className="bg-[#F2FBFF] hover:bg-[#E1F3FF] text-[#63CDFA] rounded-lg px-2 py-1 h-auto flex items-center gap-1 text-xs font-semibold"
+                          >
+                            <RotateCcw className="h-4 w-4" />
+                            <span className="hidden sm:inline">Reply</span>
+                          </Button>
+                        ) : null}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-center gap-1 flex-wrap">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="w-8 h-8 rounded-full border border-[#63CDFA] bg-white hover:bg-[#F2FBFF] text-[#63CDFA]"
+                        >
+                          <Mail className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
             ) : (
               <TableRow>
                 <TableCell
@@ -705,7 +753,12 @@ export default function DemandsPage() {
             </Button>
             <div className="flex items-center gap-1">
               {Array.from(
-                { length: Math.min(3, Math.ceil(filteredDemands.length / rowsPerPage)) },
+                {
+                  length: Math.min(
+                    3,
+                    Math.ceil(filteredDemands.length / rowsPerPage),
+                  ),
+                },
                 (_, i) => i + 1,
               ).map((page) => (
                 <Button
@@ -728,7 +781,9 @@ export default function DemandsPage() {
               variant="ghost"
               size="icon"
               onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage === Math.ceil(filteredDemands.length / rowsPerPage)}
+              disabled={
+                currentPage === Math.ceil(filteredDemands.length / rowsPerPage)
+              }
               className="h-8 w-8"
             >
               <ChevronRight className="h-4 w-4" />
@@ -736,8 +791,12 @@ export default function DemandsPage() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setCurrentPage(Math.ceil(filteredDemands.length / rowsPerPage))}
-              disabled={currentPage === Math.ceil(filteredDemands.length / rowsPerPage)}
+              onClick={() =>
+                setCurrentPage(Math.ceil(filteredDemands.length / rowsPerPage))
+              }
+              disabled={
+                currentPage === Math.ceil(filteredDemands.length / rowsPerPage)
+              }
               className="h-8 w-8"
             >
               <ChevronsRight className="h-4 w-4" />
@@ -801,7 +860,9 @@ export default function DemandsPage() {
         onApprove={handleApproveDemand}
         onDecline={handleDeclineDemand}
         onDownload={handleDownloadAttachment}
-        showActions={isAdmin && selectedDemand && selectedDemand.state === "PENDING"}
+        showActions={
+          isAdmin && selectedDemand && selectedDemand.state === "PENDING"
+        }
         viewMode={viewMode}
         responseData={currentResponse}
       />

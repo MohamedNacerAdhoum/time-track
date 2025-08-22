@@ -171,11 +171,11 @@ export function CalendarPopup({
 
     const fieldRect = fieldRef.current.getBoundingClientRect();
     const popupRect = popupRef.current.getBoundingClientRect();
-    
+
     // Get actual popup dimensions instead of estimates
     const popupWidth = popupRect.width || 320; // fallback to estimated width
     const popupHeight = popupRect.height || 400; // fallback to estimated height
-    
+
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const scrollX = window.scrollX;
@@ -230,10 +230,16 @@ export function CalendarPopup({
 
     // Ensure popup doesn't go beyond viewport boundaries
     if (newPosition.left !== undefined) {
-      newPosition.left = Math.max(margin, Math.min(newPosition.left, viewportWidth - popupWidth - margin));
+      newPosition.left = Math.max(
+        margin,
+        Math.min(newPosition.left, viewportWidth - popupWidth - margin),
+      );
     }
     if (newPosition.top !== undefined) {
-      newPosition.top = Math.max(margin, Math.min(newPosition.top, viewportHeight - popupHeight - margin));
+      newPosition.top = Math.max(
+        margin,
+        Math.min(newPosition.top, viewportHeight - popupHeight - margin),
+      );
     }
 
     setPosition(newPosition);
@@ -254,13 +260,13 @@ export function CalendarPopup({
     const handleResize = () => calculatePosition();
     const handleScroll = () => calculatePosition();
 
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll, true);
 
     return () => {
       clearTimeout(timeoutId);
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll, true);
     };
   }, [isOpen]);
 
@@ -287,12 +293,12 @@ export function CalendarPopup({
         boxShadow: "-4px 4px 12px 0 rgba(0, 0, 0, 0.25)",
         ...position,
         // Ensure content is scrollable if height is constrained
-        ...(position.maxHeight && { 
-          overflowY: 'auto',
-          height: `${Math.min(400, position.maxHeight)}px`
+        ...(position.maxHeight && {
+          overflowY: "auto",
+          height: `${Math.min(400, position.maxHeight)}px`,
         }),
-        ...(position.maxWidth && { 
-          width: `${Math.min(320, position.maxWidth)}px`
+        ...(position.maxWidth && {
+          width: `${Math.min(320, position.maxWidth)}px`,
         }),
       }}
     >

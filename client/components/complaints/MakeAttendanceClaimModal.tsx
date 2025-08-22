@@ -23,7 +23,7 @@ interface MakeAttendanceClaimModalProps {
 
 const MISSING_TYPE_OPTIONS = [
   "Clock In",
-  "Clock Out", 
+  "Clock Out",
   "Break Start",
   "Break End",
 ];
@@ -39,7 +39,13 @@ export function MakeAttendanceClaimModal({
   const { toast } = useToast();
 
   const handleSubmit = async () => {
-    const requiredFields = ["datePicker", "from", "hours", "missingType", "notes"];
+    const requiredFields = [
+      "datePicker",
+      "from",
+      "hours",
+      "missingType",
+      "notes",
+    ];
     const missingFields = requiredFields.filter(
       (field) => !formData[field as keyof FormData],
     );
