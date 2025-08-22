@@ -42,7 +42,9 @@ export function DateFilter({
   };
 
   const handleDateChange = (date: Date) => {
+    console.log("DateFilter: Date selected:", date);
     onChange(date);
+    console.log("DateFilter: onChange called with:", date);
     handleClose(); // Close the calendar after selecting a date
   };
 
