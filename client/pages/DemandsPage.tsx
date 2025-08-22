@@ -537,16 +537,14 @@ export default function DemandsPage() {
       </div>
 
       {/* Search + Action Buttons */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <SearchBar
           value={searchQuery}
           onChange={setSearchQuery}
-          placeholder="Search demands..."
-          className="sm:max-w-md"
-          inputClassName="w-full md:w-64"
+          placeholder="Quick Search..."
         />
 
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <div className="flex items-center gap-2 w-full lg:w-auto justify-end">
           <Button
             onClick={handleAddDemand}
             className="bg-[#63CDFA] hover:bg-[#4BA8E8] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
