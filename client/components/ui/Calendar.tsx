@@ -57,7 +57,10 @@ export function Calendar({
   }, [value, isOpen]);
 
   const handleDateSelect = (date: Date) => {
+    console.log("Calendar: Date selected:", date);
+    console.log("Calendar: Current value before change:", value);
     onChange(date);
+    console.log("Calendar: onChange called, closing calendar");
     onClose();
   };
 
