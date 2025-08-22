@@ -27,7 +27,10 @@ import {
 import { CustomDropdown } from "@/components/ui/custom-dropdown";
 import { DateFilter } from "@/components/ui/DateFilter";
 import { BalancesCalendar } from "@/components/dashboard/BalancesCalendar";
-import { DayDetails, type DayDetailsData } from "@/components/dashboard/DayDetails";
+import {
+  DayDetails,
+  type DayDetailsData,
+} from "@/components/dashboard/DayDetails";
 import { cn } from "@/lib/utils";
 
 // Helper function to format currency
@@ -108,31 +111,146 @@ function SortableHeader({
 // Mock work data for different calendar states
 const mockWorkData = {
   // Days with work (green border)
-  '2023-4-3': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-5': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-6': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-7': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-8': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-9': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-10': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-12': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-14': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-15': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-16': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-17': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-18': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-20': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-21': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-23': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-24': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
-  '2023-4-25': { worked: true, status: 'worked' as const, amount: 50, hours: '8h 20mn' },
+  "2023-4-3": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-5": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-6": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-7": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-8": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-9": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-10": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-12": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-14": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-15": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-16": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-17": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-18": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-20": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-21": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-23": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-24": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-25": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
 
   // Days absent (yellow border)
-  '2023-4-4': { worked: false, status: 'absent' as const, amount: 0, hours: '5h 20mn' },
-  '2023-4-11': { worked: false, status: 'absent' as const, amount: 0, hours: '5h 20mn' },
-  '2023-4-13': { worked: false, status: 'absent' as const, amount: 0, hours: '5h 20mn' },
-  '2023-4-19': { worked: false, status: 'absent' as const, amount: 0, hours: '5h 20mn' },
-  '2023-4-22': { worked: false, status: 'absent' as const, amount: 0, hours: '5h 20mn' },
+  "2023-4-4": {
+    worked: false,
+    status: "absent" as const,
+    amount: 0,
+    hours: "5h 20mn",
+  },
+  "2023-4-11": {
+    worked: false,
+    status: "absent" as const,
+    amount: 0,
+    hours: "5h 20mn",
+  },
+  "2023-4-13": {
+    worked: false,
+    status: "absent" as const,
+    amount: 0,
+    hours: "5h 20mn",
+  },
+  "2023-4-19": {
+    worked: false,
+    status: "absent" as const,
+    amount: 0,
+    hours: "5h 20mn",
+  },
+  "2023-4-22": {
+    worked: false,
+    status: "absent" as const,
+    amount: 0,
+    hours: "5h 20mn",
+  },
 };
 
 // Component for user calendar view
@@ -147,32 +265,37 @@ function UserCalendarView() {
     const isFuture = selectedDate > today;
 
     // Determine status and payment type
-    let status: 'worked' | 'absent' | 'future' = 'worked';
-    let paymentType: 'positive' | 'negative' | 'neutral' = 'positive';
+    let status: "worked" | "absent" | "future" = "worked";
+    let paymentType: "positive" | "negative" | "neutral" = "positive";
     let payedAmount: number | string = 50;
 
     if (isFuture) {
-      status = 'future';
-      paymentType = 'neutral';
-      payedAmount = '-';
+      status = "future";
+      paymentType = "neutral";
+      payedAmount = "-";
     } else if (workData) {
       status = workData.status;
-      paymentType = workData.amount > 0 ? 'positive' : workData.amount === 0 ? 'negative' : 'neutral';
+      paymentType =
+        workData.amount > 0
+          ? "positive"
+          : workData.amount === 0
+            ? "negative"
+            : "neutral";
       payedAmount = workData.amount;
     } else {
-      status = 'absent';
-      paymentType = 'negative';
+      status = "absent";
+      paymentType = "negative";
       payedAmount = 0;
     }
 
     return {
-      date: selectedDate.toLocaleDateString('en-GB'), // DD-MM-YYYY format
-      workedTime: workData?.hours || (isFuture ? '5h 30mn' : '5h 20mn'),
+      date: selectedDate.toLocaleDateString("en-GB"), // DD-MM-YYYY format
+      workedTime: workData?.hours || (isFuture ? "5h 30mn" : "5h 20mn"),
       payedAmount,
-      totalPayMonth: '1950 TND',
-      clockIn: 'hh:mm:ss',
-      breakPeriod: 'hh:mm:ss',
-      clockOut: isFuture ? '-' : 'hh:mm:ss',
+      totalPayMonth: "1950 TND",
+      clockIn: "hh:mm:ss",
+      breakPeriod: "hh:mm:ss",
+      clockOut: isFuture ? "-" : "hh:mm:ss",
       status,
       paymentType,
     };
