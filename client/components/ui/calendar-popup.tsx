@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +9,7 @@ interface CalendarPopupProps {
   onClose: () => void;
   className?: string;
   initialMonth?: Date;
+  fieldRef?: React.RefObject<HTMLDivElement>;
 }
 
 const MONTHS = [
@@ -35,8 +36,11 @@ export function CalendarPopup({
   onClose,
   className,
   initialMonth,
+  fieldRef,
 }: CalendarPopupProps) {
   const [currentMonth, setCurrentMonth] = useState(initialMonth || value || new Date());
+  const popupRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ top: '100%', left: 'auto', right: '0', bottom: 'auto' });
 
   const handleDateSelect = (date: Date) => {
     onChange(date);
@@ -148,15 +152,91 @@ export function CalendarPopup({
     return days;
   };
 
+  // Calculate optimal position based on viewport and modal boundaries
+  useEffect(() => {
+    if (!isOpen || !fieldRef?.current || !popupRef.current) return;
+
+    const fieldRect = fieldRef.current.getBoundingClientRect();
+    const popupRect = popupRef.current.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    // Calendar popup dimensions (approximately)
+    const popupWidth = 320; // 80 * 4 (w-80)
+    const popupHeight = 400; // approximate height
+
+    // Find the closest modal container
+    let modalContainer = fieldRef.current.closest('[role="dialog"]') ||
+                        fieldRef.current.closest('.fixed.inset-0') ||
+                        fieldRef.current.closest('.modal') ||
+                        document.body;
+
+    const modalRect = modalContainer === document.body ?
+      { top: 0, left: 0, right: viewportWidth, bottom: viewportHeight, width: viewportWidth, height: viewportHeight } :
+      modalContainer.getBoundingClientRect();
+
+    let newPosition = {
+      top: 'auto' as string,
+      left: 'auto' as string,
+      right: 'auto' as string,
+      bottom: 'auto' as string
+    };
+
+    // Determine horizontal position
+    const spaceOnRight = modalRect.right - fieldRect.right;
+    const spaceOnLeft = fieldRect.left - modalRect.left;
+
+    if (spaceOnRight >= popupWidth) {
+      // Enough space on the right, align to right edge of field
+      newPosition.right = '0';
+    } else if (spaceOnLeft >= popupWidth) {
+      // Not enough space on right, align to left edge of field
+      newPosition.left = '0';
+    } else {
+      // Not enough space on either side, center within available space
+      const availableWidth = modalRect.width;
+      const leftOffset = Math.max(0, (availableWidth - popupWidth) / 2 - (fieldRect.left - modalRect.left));
+      newPosition.left = `${leftOffset}px`;
+    }
+
+    // Determine vertical position
+    const spaceBelow = modalRect.bottom - fieldRect.bottom;
+    const spaceAbove = fieldRect.top - modalRect.top;
+
+    if (spaceBelow >= popupHeight) {
+      // Enough space below
+      newPosition.top = '100%';
+    } else if (spaceAbove >= popupHeight) {
+      // Not enough space below, show above
+      newPosition.bottom = '100%';
+    } else {
+      // Not enough space above or below, position to fit in available space
+      if (spaceBelow > spaceAbove) {
+        newPosition.top = '100%';
+      } else {
+        newPosition.bottom = '100%';
+      }
+    }
+
+    setPosition(newPosition);
+  }, [isOpen, fieldRef]);
+
   if (!isOpen) return null;
 
   return (
     <div
+      ref={popupRef}
       className={cn(
-        "absolute top-full right-0 mt-2 bg-white rounded-3xl z-50 p-10 w-80",
+        "absolute mt-2 bg-white rounded-3xl z-[60] p-10 w-80 max-h-[400px] overflow-hidden",
         className
       )}
-      style={{ boxShadow: "-4px 4px 12px 0 rgba(0, 0, 0, 0.25)" }}
+      style={{
+        boxShadow: "-4px 4px 12px 0 rgba(0, 0, 0, 0.25)",
+        top: position.top,
+        left: position.left,
+        right: position.right,
+        bottom: position.bottom
+      }}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
