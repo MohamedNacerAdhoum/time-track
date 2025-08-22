@@ -110,6 +110,12 @@ export default function TimesheetsPage() {
   useEffect(() => {
     console.log("TimesheetsPage: selectedDate changed to:", selectedDate);
   }, [selectedDate]);
+
+  // Wrapper function to debug setSelectedDate calls
+  const handleDateChange = (date: Date | null) => {
+    console.log("TimesheetsPage: handleDateChange called with:", date);
+    setSelectedDate(date);
+  };
   const [adminTimeSheets, setAdminTimeSheets] = useState<TimeSheet[]>([]);
 
   const {
