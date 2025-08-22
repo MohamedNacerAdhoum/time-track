@@ -4,7 +4,7 @@ import { X, Upload, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { CalendarWidget } from "@/components/ui/calendar-widget";
+import { CalendarField } from "@/components/ui/calendar-field";
 import { useToast } from "@/hooks/useToast";
 
 type DemandType = "standard" | "permission" | "leave";
@@ -301,11 +301,12 @@ export function MakeDemandModal({
                   <label className="block text-base font-semibold text-black font-poppins">
                     Date picker
                   </label>
-                  <CalendarWidget
+                  <CalendarField
                     value={formData.datePicker}
                     onChange={(date) => updateFormData({ datePicker: date })}
                     className="w-full"
                     placeholder="12/08/2022"
+                    variant="default"
                   />
                 </div>
                 <div className="flex-1 space-y-2">
@@ -442,22 +443,24 @@ export function MakeDemandModal({
                     <label className="block text-base font-semibold text-black font-poppins">
                       From
                     </label>
-                    <CalendarWidget
+                    <CalendarField
                       value={formData.fromDate}
                       onChange={(date) => updateFormData({ fromDate: date })}
                       className="w-full"
                       placeholder="12/08/2022"
+                      variant="default"
                     />
                   </div>
                   <div className="flex-1 space-y-2">
                     <label className="block text-base font-semibold text-black font-poppins">
                       To
                     </label>
-                    <CalendarWidget
+                    <CalendarField
                       value={formData.toDate}
                       onChange={(date) => updateFormData({ toDate: date })}
                       className="w-full"
                       placeholder="12/08/2022"
+                      variant="default"
                     />
                   </div>
                 </div>
@@ -467,11 +470,12 @@ export function MakeDemandModal({
                     <label className="block text-base font-semibold text-black font-poppins">
                       Date picker
                     </label>
-                    <CalendarWidget
+                    <CalendarField
                       value={formData.singleDate}
                       onChange={(date) => updateFormData({ singleDate: date })}
                       className="w-full"
                       placeholder="12/08/2022"
+                      variant="default"
                     />
                   </div>
                   <div className="flex-1 space-y-2 relative">
