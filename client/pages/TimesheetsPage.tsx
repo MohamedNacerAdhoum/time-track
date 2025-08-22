@@ -4,7 +4,6 @@ import { useMembersStore } from "@/contexts/MembersContext";
 import { useAdminView } from "@/contexts/AdminViewContext";
 import { TimeSheet } from "@/contexts/TimeSheetsContext";
 import {
-  Search,
   ChevronDown,
   ArrowUpDown,
   ChevronLeft,
@@ -14,7 +13,7 @@ import {
   X,
   NotepadText,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { SearchBar } from "@/components/ui/search-bar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -222,17 +221,11 @@ export default function TimesheetsPage() {
 
       {/* Search + Filters */}
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-        <div className="flex-1 w-full lg:max-w-md">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <Input
-              placeholder="Quick Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-xl text-lg"
-            />
-          </div>
-        </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Quick Search..."
+        />
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
           <CustomDropdown
             value={lastAction}
