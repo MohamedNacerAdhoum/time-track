@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { CalendarPopup } from "./calendar-popup";
 
 interface CalendarFieldProps {
-  value?: Date;
+  value?: Date | null;
   onChange: (date: Date) => void;
   placeholder?: string;
   className?: string;
