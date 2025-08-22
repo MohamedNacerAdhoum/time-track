@@ -12,6 +12,8 @@ import {
   Eye,
   RotateCcw,
   Mail,
+  X,
+  NotepadText,
 } from "lucide-react";
 import { SearchBar } from "@/components/ui/search-bar";
 import { Button } from "@/components/ui/button";
@@ -26,8 +28,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CustomDropdown } from "@/components/ui/custom-dropdown";
+import { CalendarField } from "@/components/ui/calendar-field";
 import { DeleteItemModal } from "@/components/general/DeleteItemModal";
 import { MakeComplaintModal } from "@/components/complaints/MakeComplaintModal";
+import { MakeAttendanceClaimModal } from "@/components/complaints/MakeAttendanceClaimModal";
 import { cn } from "@/lib/utils";
 
 import { useAdminView } from '@/contexts/AdminViewContext';
@@ -81,6 +86,49 @@ function SortableHeader({
   );
 }
 
+// Helper function to format time
+const formatTime = (timeString?: string | null) => {
+  if (!timeString) return "--:--:--";
+  try {
+    const date = new Date(timeString);
+    return date.toLocaleTimeString("en-US", {
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  } catch {
+    return "--:--:--";
+  }
+};
+
+function MissingTypeBadge({ type }: { type: "IN" | "OUT" | "BREAK" }) {
+  const getBadgeStyle = (type: string) => {
+    switch (type) {
+      case "IN":
+        return "bg-green-100 text-green-700 border-green-200";
+      case "OUT":
+        return "bg-red-100 text-red-700 border-red-200";
+      case "BREAK":
+        return "bg-amber-100 text-amber-700 border-amber-200";
+      default:
+        return "bg-gray-100 text-gray-700 border-gray-200";
+    }
+  };
+
+  return (
+    <Badge
+      variant="outline"
+      className={cn(
+        "px-4 py-1 text-sm font-semibold rounded-full border",
+        getBadgeStyle(type),
+      )}
+    >
+      {type}
+    </Badge>
+  );
+}
+
 // Sample complaint data structure
 interface ComplaintData {
   id: string;
@@ -89,6 +137,17 @@ interface ComplaintData {
   explanation: string;
   state: "Pending" | "Approved" | "Declined";
   created_at: string;
+}
+
+// Sample attendance claim data structure
+interface AttendanceClaimData {
+  id: string;
+  name: string;
+  missingType: "IN" | "OUT" | "BREAK";
+  expectedTime: string;
+  recordedTime: string;
+  date: string;
+  note: string;
 }
 
 // Sample data - in real app this would come from an API/context
@@ -102,12 +161,33 @@ const sampleComplaints: ComplaintData[] = [
     created_at: new Date().toISOString(),
   },
   {
-    id: "2", 
+    id: "2",
     name: "Sarah Johnson",
     problem: "Equipment malfunction",
     explanation: "Office computer keeps crashing and affecting productivity",
     state: "Approved",
     created_at: new Date(Date.now() - 86400000).toISOString(),
+  },
+];
+
+const sampleAttendanceClaims: AttendanceClaimData[] = [
+  {
+    id: "1",
+    name: "John Smith",
+    missingType: "IN",
+    expectedTime: "09:00:00",
+    recordedTime: "--:--:--",
+    date: new Date().toISOString(),
+    note: "Forgot to clock in due to urgent meeting",
+  },
+  {
+    id: "2",
+    name: "Sarah Johnson",
+    missingType: "OUT",
+    expectedTime: "17:00:00",
+    recordedTime: "--:--:--",
+    date: new Date(Date.now() - 86400000).toISOString(),
+    note: "System was down when trying to clock out",
   },
 ];
 
@@ -123,7 +203,11 @@ export default function ComplaintsPage() {
   const [isIndeterminate, setIsIndeterminate] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isMakeComplaintModalOpen, setIsMakeComplaintModalOpen] = useState(false);
+  const [isMakeAttendanceClaimModalOpen, setIsMakeAttendanceClaimModalOpen] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState<ComplaintData | null>(null);
+  const [selectedAttendanceClaims, setSelectedAttendanceClaims] = useState<Set<string>>(new Set());
+  const [lastAction, setLastAction] = useState("last_action");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   // Reset to first page when filters change
   useEffect(() => {
@@ -137,7 +221,7 @@ export default function ComplaintsPage() {
     setIsIndeterminate(false);
   }, [activeTab]);
 
-  // Get the appropriate complaints based on view, tab, and search query
+  // Get the appropriate data based on view, tab, and search query
   const getFilteredComplaints = (): ComplaintData[] => {
     let sourceComplaints = activeTab === "complaints" ? sampleComplaints : [];
 
@@ -158,31 +242,81 @@ export default function ComplaintsPage() {
     });
   };
 
+  const getFilteredAttendanceClaims = (): AttendanceClaimData[] => {
+    let sourceClaims = activeTab === "attendance-claims" ? sampleAttendanceClaims : [];
+
+    return sourceClaims.filter((claim: AttendanceClaimData) => {
+      // Filter by search query
+      if (searchQuery) {
+        const searchLower = searchQuery.toLowerCase();
+        const matchesName = claim.name?.toLowerCase().includes(searchLower) || false;
+        const matchesNote = claim.note?.toLowerCase().includes(searchLower) || false;
+
+        if (!matchesName && !matchesNote) {
+          return false;
+        }
+      }
+
+      // Filter by last action
+      const matchesLastAction =
+        lastAction === "last_action" || claim.missingType === lastAction;
+
+      // Filter by date
+      const matchesDate = selectedDate
+        ? new Date(claim.date).toLocaleDateString() ===
+          selectedDate.toLocaleDateString()
+        : true;
+
+      return matchesLastAction && matchesDate;
+    });
+  };
+
   const filteredComplaints = getFilteredComplaints();
+  const filteredAttendanceClaims = getFilteredAttendanceClaims();
 
   // Pagination
-  const totalPages = Math.max(1, Math.ceil(filteredComplaints.length / rowsPerPage));
+  const currentData = activeTab === "complaints" ? filteredComplaints : filteredAttendanceClaims;
+  const totalPages = Math.max(1, Math.ceil(currentData.length / rowsPerPage));
   const startIndex = (currentPage - 1) * rowsPerPage;
   const paginatedComplaints = filteredComplaints.slice(startIndex, startIndex + rowsPerPage);
+  const paginatedAttendanceClaims = filteredAttendanceClaims.slice(startIndex, startIndex + rowsPerPage);
 
-  // Update select all state based on selected complaints
+  // Update select all state based on selected items
   useEffect(() => {
-    const currentPageData = paginatedComplaints;
-    const selectedOnPage = currentPageData.filter((complaint) =>
-      selectedComplaints.has(complaint.id),
-    );
+    if (activeTab === "complaints") {
+      const currentPageData = paginatedComplaints;
+      const selectedOnPage = currentPageData.filter((complaint) =>
+        selectedComplaints.has(complaint.id),
+      );
 
-    if (selectedOnPage.length === 0) {
-      setSelectAll(false);
-      setIsIndeterminate(false);
-    } else if (selectedOnPage.length === currentPageData.length) {
-      setSelectAll(true);
-      setIsIndeterminate(false);
-    } else {
-      setSelectAll(false);
-      setIsIndeterminate(true);
+      if (selectedOnPage.length === 0) {
+        setSelectAll(false);
+        setIsIndeterminate(false);
+      } else if (selectedOnPage.length === currentPageData.length) {
+        setSelectAll(true);
+        setIsIndeterminate(false);
+      } else {
+        setSelectAll(false);
+        setIsIndeterminate(true);
+      }
+    } else if (activeTab === "attendance-claims") {
+      const currentPageData = paginatedAttendanceClaims;
+      const selectedOnPage = currentPageData.filter((claim) =>
+        selectedAttendanceClaims.has(claim.id),
+      );
+
+      if (selectedOnPage.length === 0) {
+        setSelectAll(false);
+        setIsIndeterminate(false);
+      } else if (selectedOnPage.length === currentPageData.length) {
+        setSelectAll(true);
+        setIsIndeterminate(false);
+      } else {
+        setSelectAll(false);
+        setIsIndeterminate(true);
+      }
     }
-  }, [selectedComplaints, currentPage, rowsPerPage]);
+  }, [selectedComplaints, selectedAttendanceClaims, currentPage, rowsPerPage, activeTab]);
 
   // Handle tab changes
   useEffect(() => {
