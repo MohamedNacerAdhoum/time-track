@@ -415,13 +415,18 @@ export default function BalancesPage() {
         </Tabs>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-end gap-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+      {/* Search + Filters */}
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Quick Search..."
+        />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
           <DateFilter
             value={selectedDate}
             onChange={setSelectedDate}
-            className="min-w-[180px]"
+            className="min-w-[180px] h-12"
             placeholder="25/07/2022"
             showClearButton={true}
           />
@@ -429,13 +434,13 @@ export default function BalancesPage() {
             value={selectedUser}
             options={userOptions}
             onChange={setSelectedUser}
-            className="min-w-[160px]"
+            className="min-w-[160px] h-12"
           />
           <CustomDropdown
             value="day"
             options={dayOptions}
             onChange={() => {}}
-            className="min-w-[100px]"
+            className="min-w-[100px] h-12"
           />
         </div>
       </div>
