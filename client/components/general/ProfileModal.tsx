@@ -1,5 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { X, Eye, EyeOff, ChevronDown, Pencil, Calendar as CalendarIcon } from "lucide-react";
+import {
+  X,
+  Eye,
+  EyeOff,
+  ChevronDown,
+  Pencil,
+  Calendar as CalendarIcon,
+} from "lucide-react";
 import { Calendar } from "../ui/Calendar";
 import { useToast } from "@/hooks/useToast";
 import { useAuthStore } from "@/contexts/UserContext";
@@ -29,7 +36,9 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<string>("");
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const [selectedJoinedDate, setSelectedJoinedDate] = useState<Date | null>(null);
+  const [selectedJoinedDate, setSelectedJoinedDate] = useState<Date | null>(
+    null,
+  );
   const dateFieldRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { changePassword } = useAuthStore();
@@ -654,12 +663,15 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                       {selectedJoinedDate
                         ? formatDate(selectedJoinedDate.toISOString())
                         : user?.joined
-                        ? formatDate(user.joined)
-                        : "12/08/2022"}
+                          ? formatDate(user.joined)
+                          : "12/08/2022"}
                     </div>
                     <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
                     <Calendar
-                      value={selectedJoinedDate || (user?.joined ? new Date(user.joined) : undefined)}
+                      value={
+                        selectedJoinedDate ||
+                        (user?.joined ? new Date(user.joined) : undefined)
+                      }
                       onChange={(date) => {
                         setSelectedJoinedDate(date);
                         console.log("Date selected:", date);

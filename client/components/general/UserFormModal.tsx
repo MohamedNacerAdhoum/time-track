@@ -73,18 +73,18 @@ export function UserFormModal({
         joined: userData.joined ? new Date(userData.joined) : new Date(),
       });
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        joined: new Date()
+        joined: new Date(),
       }));
     }
   }, [isOpen, mode, userData, roles]);
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -156,9 +156,9 @@ export function UserFormModal({
     try {
       if (mode === "add") {
         // Find the selected role to get both ID and name
-        const selectedRole = roles.find(role => role.id === formData.role);
+        const selectedRole = roles.find((role) => role.id === formData.role);
         if (!selectedRole) {
-          throw new Error('Please select a valid role');
+          throw new Error("Please select a valid role");
         }
 
         // Create new user with structure expected by backend
@@ -171,14 +171,18 @@ export function UserFormModal({
           role: formData.role, // Role ID
           role_name: selectedRole.name, // Role name
           hours: parseInt(formData.hours) || 8,
-          joined: formData.joined ? formData.joined.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          joined: formData.joined
+            ? formData.joined.toISOString().split("T")[0]
+            : new Date().toISOString().split("T")[0],
           ...(formData.age && { age: parseInt(formData.age) }),
           ...(formData.location && { location: formData.location.trim() }),
-          ...(formData.experience && { experience: parseInt(formData.experience) }),
+          ...(formData.experience && {
+            experience: parseInt(formData.experience),
+          }),
           ...(formData.payrate && { payrate: formData.payrate.trim() }),
         };
 
-        console.log('Sending member data:', memberData);
+        console.log("Sending member data:", memberData);
 
         await addMember(memberData);
 
@@ -452,7 +456,9 @@ export function UserFormModal({
                         "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
                     }}
                   >
-                    {formData.joined ? formatDate(formData.joined) : "12/08/2022"}
+                    {formData.joined
+                      ? formatDate(formData.joined)
+                      : "12/08/2022"}
                   </div>
                   <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
                   <Calendar

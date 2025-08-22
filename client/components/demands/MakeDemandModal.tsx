@@ -480,7 +480,9 @@ export function MakeDemandModal({
                     <div className="relative">
                       <div
                         ref={fromDatePickerRef}
-                        onClick={() => setIsFromDatePickerOpen(!isFromDatePickerOpen)}
+                        onClick={() =>
+                          setIsFromDatePickerOpen(!isFromDatePickerOpen)
+                        }
                         className="h-12 w-full px-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-base text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer flex items-center font-poppins"
                         style={{
                           fontFamily:
@@ -508,7 +510,9 @@ export function MakeDemandModal({
                     <div className="relative">
                       <div
                         ref={toDatePickerRef}
-                        onClick={() => setIsToDatePickerOpen(!isToDatePickerOpen)}
+                        onClick={() =>
+                          setIsToDatePickerOpen(!isToDatePickerOpen)
+                        }
                         className="h-12 w-full px-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-base text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer flex items-center font-poppins"
                         style={{
                           fontFamily:
@@ -539,7 +543,9 @@ export function MakeDemandModal({
                     <div className="relative">
                       <div
                         ref={singleDatePickerRef}
-                        onClick={() => setIsSingleDatePickerOpen(!isSingleDatePickerOpen)}
+                        onClick={() =>
+                          setIsSingleDatePickerOpen(!isSingleDatePickerOpen)
+                        }
                         className="h-12 w-full px-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-base text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer flex items-center font-poppins"
                         style={{
                           fontFamily:
@@ -553,7 +559,9 @@ export function MakeDemandModal({
                       <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
                       <Calendar
                         value={formData.singleDate}
-                        onChange={(date) => updateFormData({ singleDate: date })}
+                        onChange={(date) =>
+                          updateFormData({ singleDate: date })
+                        }
                         isOpen={isSingleDatePickerOpen}
                         onClose={() => setIsSingleDatePickerOpen(false)}
                         fieldRef={singleDatePickerRef}

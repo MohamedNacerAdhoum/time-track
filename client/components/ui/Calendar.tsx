@@ -12,8 +12,18 @@ interface CalendarProps {
 }
 
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
@@ -34,9 +44,7 @@ export function Calendar({
   onClose,
   fieldRef,
 }: CalendarProps) {
-  const [currentMonth, setCurrentMonth] = useState(
-    value || new Date(),
-  );
+  const [currentMonth, setCurrentMonth] = useState(value || new Date());
   const popupRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<Position>({});
   const [isPositioned, setIsPositioned] = useState(false);
