@@ -859,6 +859,104 @@ export default function ComplaintsPage() {
               </TableBody>
             </Table>
           </div>
+
+          {/* Pagination */}
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4 py-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8"
+                >
+                  <ChevronsLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <div className="flex items-center gap-1">
+                  {Array.from(
+                    { length: Math.min(3, totalPages) },
+                    (_, i) => i + 1,
+                  ).map((page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "ghost"}
+                      size="icon"
+                      onClick={() => setCurrentPage(page)}
+                      className={cn(
+                        "h-8 w-8 rounded-full",
+                        currentPage === page
+                          ? "bg-[#63CDFA] text-white hover:bg-[#63CDFA]/90"
+                          : "text-gray-500 hover:bg-gray-100",
+                      )}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8"
+                >
+                  <ChevronsRight className="h-4 w-4" />
+                </Button>
+              </div>
+              <span className="text-sm text-gray-500">
+                {currentPage} of {totalPages}
+              </span>
+            </div>
+            <div className="flex items-center gap-4 relative order-first lg:order-last">
+              <span className="text-sm text-gray-500">Rows per page</span>
+              <div
+                className="flex items-center gap-2 cursor-pointer select-none"
+                onClick={() => setShowRowsDropdown(!showRowsDropdown)}
+              >
+                <span className="text-sm font-semibold text-gray-900">
+                  {rowsPerPage}
+                </span>
+                <ChevronDown
+                  className={`h-3 w-3 text-gray-400 transition-transform ${showRowsDropdown ? "rotate-180" : ""}`}
+                />
+              </div>
+              {showRowsDropdown && (
+                <div className="absolute right-0 bottom-full mb-1 w-20 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                  {[5, 10, 20, 50].map((option) => (
+                    <div
+                      key={option}
+                      className={`px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${rowsPerPage === option ? "bg-blue-50 text-blue-600" : "text-gray-700"}`}
+                      onClick={() => {
+                        setRowsPerPage(option);
+                        setShowRowsDropdown(false);
+                      }}
+                    >
+                      {option}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </>
       )}
 
