@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { X, Calendar, ChevronDown } from "lucide-react";
+import { X, ChevronDown } from "lucide-react";
+import { CalendarField } from "@/components/ui/calendar-field";
 import { useToast } from "@/hooks/useToast";
 import { useMembersStore } from "@/contexts/MembersContext";
 import { MemberData } from "@/contexts/MembersContext";
@@ -22,7 +23,7 @@ interface UserFormData {
   location: string;
   experience: string;
   payrate: string;
-  joined: string;
+  joined: Date | null;
 }
 
 export function UserFormModal({
@@ -45,7 +46,7 @@ export function UserFormModal({
     location: "",
     experience: "",
     payrate: "",
-    joined: new Date().toISOString().split('T')[0], // Default to today's date
+    joined: new Date(), // Default to today's date
   });
 
   // Load roles when modal opens
@@ -67,18 +68,17 @@ export function UserFormModal({
         experience: userData.experience?.toString() || "",
         payrate: userData.payrate || "",
         hours: userData.hours?.toString() || "8",
-        joined: userData.joined ? new Date(userData.joined).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        joined: userData.joined ? new Date(userData.joined) : new Date(),
       });
     } else {
       setFormData(prev => ({
         ...prev,
-        joined: new Date().toISOString().split('T')[0]
+        joined: new Date()
       }));
     }
   }, [isOpen, mode, userData, roles]);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -93,6 +93,13 @@ export function UserFormModal({
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleDateChange = (date: Date) => {
+    setFormData((prev) => ({
+      ...prev,
+      joined: date,
     }));
   };
 
@@ -162,7 +169,7 @@ export function UserFormModal({
           role: formData.role, // Role ID
           role_name: selectedRole.name, // Role name
           hours: parseInt(formData.hours) || 8,
-          joined: formData.joined,
+          joined: formData.joined ? formData.joined.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
           ...(formData.age && { age: parseInt(formData.age) }),
           ...(formData.location && { location: formData.location.trim() }),
           ...(formData.experience && { experience: parseInt(formData.experience) }),
@@ -433,17 +440,13 @@ export function UserFormModal({
                 >
                   Joined At (Optional)
                 </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="joined"
-                    value={formData.joined ? formatDate(formData.joined) : "12/08/2022"}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent"
-                    style={{ fontFamily: "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif" }}
-                  />
-                  <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB]" />
-                </div>
+                <CalendarField
+                  value={formData.joined}
+                  onChange={handleDateChange}
+                  className="w-full"
+                  placeholder="12/08/2022"
+                  variant="profile"
+                />
               </div>
             </div>
 
