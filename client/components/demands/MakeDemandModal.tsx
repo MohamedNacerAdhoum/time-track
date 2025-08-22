@@ -188,7 +188,7 @@ export function MakeDemandModal({
       <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl p-6 sm:p-8 flex flex-col gap-4 sm:gap-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto">
+      <div role="dialog" className="relative bg-white rounded-2xl p-6 sm:p-8 flex flex-col gap-4 sm:gap-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-2xl sm:text-3xl font-semibold text-black font-poppins">
