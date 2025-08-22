@@ -111,6 +111,7 @@ export function CalendarField({
           onChange={onChange}
           isOpen={isOpen}
           onClose={handleClose}
+          fieldRef={fieldRef}
         />
       )}
     </div>
