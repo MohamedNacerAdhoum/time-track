@@ -652,7 +652,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                       }}
                     >
                       {selectedJoinedDate
-                        ? formatDate(selectedJoinedDate)
+                        ? formatDate(selectedJoinedDate.toISOString())
                         : user?.joined
                         ? formatDate(user.joined)
                         : "12/08/2022"}
