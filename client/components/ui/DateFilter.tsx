@@ -13,10 +13,20 @@ interface DateFilterProps {
 }
 
 function formatDate(date: Date): string {
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
+  try {
+    // Ensure we have a valid date
+    if (!date || isNaN(date.getTime())) {
+      return "Invalid Date";
+    }
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return "Invalid Date";
+  }
 }
 
 export function DateFilter({
@@ -42,12 +52,18 @@ export function DateFilter({
   };
 
   const handleDateChange = (date: Date) => {
-    onChange(date);
+    // Ensure we're passing a clean Date object
+    if (date && !isNaN(date.getTime())) {
+      const cleanDate = new Date(date.getTime());
+      onChange(cleanDate);
+    }
+
     handleClose(); // Close the calendar after selecting a date
   };
 
   const handleClear = (event: React.MouseEvent) => {
     event.stopPropagation();
+    event.preventDefault();
     onChange(null);
   };
 
@@ -100,6 +116,7 @@ export function DateFilter({
       )}
 
       <Calendar
+        key={`calendar-${isOpen ? "open" : "closed"}-${value?.getTime() || "null"}`}
         value={value}
         onChange={handleDateChange}
         isOpen={isOpen}

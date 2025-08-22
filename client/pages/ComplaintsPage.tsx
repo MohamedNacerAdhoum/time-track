@@ -220,7 +220,7 @@ export default function ComplaintsPage() {
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeTab, rowsPerPage, isAdminView]);
+  }, [activeTab, rowsPerPage, isAdminView, selectedDate, searchQuery]);
 
   // Reset selected complaints when data changes
   useEffect(() => {
