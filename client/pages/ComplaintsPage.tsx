@@ -324,17 +324,27 @@ export default function ComplaintsPage() {
   }, [activeTab, searchQuery, rowsPerPage]);
 
   const handleSelectAll = (checked: boolean) => {
-    const newSelected = new Set(selectedComplaints);
+    if (activeTab === "complaints") {
+      const newSelected = new Set(selectedComplaints);
 
-    if (checked) {
-      // Add all current page complaints to selection
-      filteredComplaints.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((complaint) => newSelected.add(complaint.id));
-    } else {
-      // Remove all current page complaints from selection
-      filteredComplaints.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((complaint) => newSelected.delete(complaint.id));
+      if (checked) {
+        filteredComplaints.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((complaint) => newSelected.add(complaint.id));
+      } else {
+        filteredComplaints.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((complaint) => newSelected.delete(complaint.id));
+      }
+
+      setSelectedComplaints(newSelected);
+    } else if (activeTab === "attendance-claims") {
+      const newSelected = new Set(selectedAttendanceClaims);
+
+      if (checked) {
+        filteredAttendanceClaims.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((claim) => newSelected.add(claim.id));
+      } else {
+        filteredAttendanceClaims.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).forEach((claim) => newSelected.delete(claim.id));
+      }
+
+      setSelectedAttendanceClaims(newSelected);
     }
-
-    setSelectedComplaints(newSelected);
   };
 
   const handleSelectComplaint = (complaintId: string, checked: boolean) => {
@@ -349,13 +359,29 @@ export default function ComplaintsPage() {
     setSelectedComplaints(newSelected);
   };
 
+  const handleSelectAttendanceClaim = (claimId: string, checked: boolean) => {
+    const newSelected = new Set(selectedAttendanceClaims);
+
+    if (checked) {
+      newSelected.add(claimId);
+    } else {
+      newSelected.delete(claimId);
+    }
+
+    setSelectedAttendanceClaims(newSelected);
+  };
+
   const handleDeleteSelected = async () => {
     try {
-      // In real app, this would call an API to delete complaints
-      console.log("Deleting complaints:", Array.from(selectedComplaints));
-      setSelectedComplaints(new Set());
+      if (activeTab === "complaints") {
+        console.log("Deleting complaints:", Array.from(selectedComplaints));
+        setSelectedComplaints(new Set());
+      } else if (activeTab === "attendance-claims") {
+        console.log("Deleting attendance claims:", Array.from(selectedAttendanceClaims));
+        setSelectedAttendanceClaims(new Set());
+      }
     } catch (error) {
-      console.error("Error deleting complaints:", error);
+      console.error("Error deleting items:", error);
       throw error;
     }
   };
@@ -369,7 +395,11 @@ export default function ComplaintsPage() {
   };
 
   const handleAddComplaint = () => {
-    setIsMakeComplaintModalOpen(true);
+    if (activeTab === "complaints") {
+      setIsMakeComplaintModalOpen(true);
+    } else if (activeTab === "attendance-claims") {
+      setIsMakeAttendanceClaimModalOpen(true);
+    }
   };
 
   const handleSeeMore = (complaint: ComplaintData) => {
@@ -380,17 +410,44 @@ export default function ComplaintsPage() {
 
   const handleMakeComplaintSubmit = async (formData: any) => {
     try {
-      // In real app, this would call an API to create a complaint
       console.log("Creating complaint:", formData);
       setIsMakeComplaintModalOpen(false);
-
-      // Reset form and selection
       setSelectedComplaints(new Set());
       setSelectAll(false);
       setIsIndeterminate(false);
     } catch (error) {
       console.error("Error creating complaint:", error);
     }
+  };
+
+  const handleMakeAttendanceClaimSubmit = async (formData: any) => {
+    try {
+      console.log("Creating attendance claim:", formData);
+      setIsMakeAttendanceClaimModalOpen(false);
+      setSelectedAttendanceClaims(new Set());
+      setSelectAll(false);
+      setIsIndeterminate(false);
+    } catch (error) {
+      console.error("Error creating attendance claim:", error);
+    }
+  };
+
+  const handleNoteClick = (note: string) => {
+    // Handle note viewing for attendance claims
+    console.log("Viewing note:", note);
+  };
+
+  // Action dropdown options
+  const lastActionOptions = [
+    { value: "last_action", label: "All Actions" },
+    { value: "IN", label: "Clock In" },
+    { value: "OUT", label: "Clock Out" },
+    { value: "BREAK", label: "Break" },
+  ];
+
+  // Get current selection count
+  const getSelectedCount = () => {
+    return activeTab === "complaints" ? selectedComplaints.size : selectedAttendanceClaims.size;
   };
 
   return (
@@ -423,13 +480,51 @@ export default function ComplaintsPage() {
 
       {/* Search + Action Buttons */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <SearchBar
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder={activeTab === "complaints" ? "Search complaints..." : "Search attendance claims..."}
-          className="sm:max-w-md"
-          inputClassName="w-full md:w-64"
-        />
+        {activeTab === "complaints" ? (
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search complaints..."
+            className="sm:max-w-md"
+            inputClassName="w-full md:w-64"
+          />
+        ) : (
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 w-full">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search attendance claims..."
+              className="lg:max-w-md"
+            />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
+              <CustomDropdown
+                value={lastAction}
+                options={lastActionOptions}
+                onChange={setLastAction}
+                className="min-w-[160px]"
+              />
+              <div className="relative flex items-center">
+                <CalendarField
+                  value={selectedDate}
+                  onChange={setSelectedDate}
+                  className="min-w-[180px] pr-8"
+                  placeholder="Select date..."
+                  variant="default"
+                />
+                {selectedDate && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedDate(null)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    title="Clear date filter"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
           <Button
@@ -439,7 +534,7 @@ export default function ComplaintsPage() {
             <Plus className="h-6 w-6" />
           </Button>
 
-          {selectedComplaints.size > 0 && (
+          {getSelectedCount() > 0 && (
             <>
               <Button
                 onClick={handleOpenDeleteModal}
@@ -452,13 +547,13 @@ export default function ComplaintsPage() {
                 isOpen={isDeleteModalOpen}
                 onClose={handleCloseDeleteModal}
                 onConfirm={handleDeleteSelected}
-                title={`Delete ${selectedComplaints.size} Complaint${selectedComplaints.size > 1 ? "s" : ""}?`}
-                description={`Are you sure you want to delete the selected ${selectedComplaints.size} complaint${selectedComplaints.size > 1 ? "s" : ""}? This action cannot be undone.`}
-                confirmButtonText={`Delete ${selectedComplaints.size > 0 ? selectedComplaints.size : ""} Complaint${selectedComplaints.size > 1 ? "s" : ""}`}
+                title={`Delete ${getSelectedCount()} ${activeTab === "complaints" ? "Complaint" : "Attendance Claim"}${getSelectedCount() > 1 ? "s" : ""}?`}
+                description={`Are you sure you want to delete the selected ${getSelectedCount()} ${activeTab === "complaints" ? "complaint" : "attendance claim"}${getSelectedCount() > 1 ? "s" : ""}? This action cannot be undone.`}
+                confirmButtonText={`Delete ${getSelectedCount() > 0 ? getSelectedCount() : ""} ${activeTab === "complaints" ? "Complaint" : "Attendance Claim"}${getSelectedCount() > 1 ? "s" : ""}`}
                 itemName={
-                  selectedComplaints.size > 1
-                    ? `${selectedComplaints.size} complaints`
-                    : "complaint"
+                  getSelectedCount() > 1
+                    ? `${getSelectedCount()} ${activeTab === "complaints" ? "complaints" : "attendance claims"}`
+                    : activeTab === "complaints" ? "complaint" : "attendance claim"
                 }
               />
             </>
@@ -589,7 +684,7 @@ export default function ComplaintsPage() {
                 </Button>
                 <div className="flex items-center gap-1">
                   {Array.from(
-                    { length: Math.min(3, Math.ceil(filteredComplaints.length / rowsPerPage)) },
+                    { length: Math.min(3, totalPages) },
                     (_, i) => i + 1,
                   ).map((page) => (
                     <Button
@@ -612,7 +707,7 @@ export default function ComplaintsPage() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setCurrentPage(currentPage + 1)}
-                  disabled={currentPage === Math.ceil(filteredComplaints.length / rowsPerPage)}
+                  disabled={currentPage === totalPages}
                   className="h-8 w-8"
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -620,15 +715,15 @@ export default function ComplaintsPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setCurrentPage(Math.ceil(filteredComplaints.length / rowsPerPage))}
-                  disabled={currentPage === Math.ceil(filteredComplaints.length / rowsPerPage)}
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
                   className="h-8 w-8"
                 >
                   <ChevronsRight className="h-4 w-4" />
                 </Button>
               </div>
               <span className="text-sm text-gray-500">
-                {currentPage} of {Math.ceil(filteredComplaints.length / rowsPerPage)}
+                {currentPage} of {totalPages}
               </span>
             </div>
             <div className="flex items-center gap-4 relative order-first lg:order-last">
@@ -667,14 +762,104 @@ export default function ComplaintsPage() {
 
       {/* Attendance Claims Tab Content */}
       {activeTab === "attendance-claims" && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <div className="text-center py-16">
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">Attendance Claims</h3>
-            <p className="text-gray-500">
-              Attendance claims functionality will be implemented here.
-            </p>
+        <>
+          {/* Table */}
+          <div className="bg-white rounded-xl overflow-hidden overflow-x-auto">
+            <Table className="min-w-full">
+              <TableHeader>
+                <TableRow className="bg-[#63CDFA] hover:bg-[#63CDFA]">
+                  <TableHead className="text-white font-semibold py-4 w-12">
+                    <div className="flex items-center justify-center">
+                      <Checkbox
+                        checked={selectAll}
+                        ref={(el) => {
+                          if (el) (el as any).indeterminate = isIndeterminate;
+                        }}
+                        onCheckedChange={handleSelectAll}
+                        className="w-6 h-6 border-2 border-white data-[state=checked]:bg-white data-[state=checked]:border-white data-[state=checked]:text-[#0061FF]"
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-white font-semibold w-32">
+                    <SortableHeader>Name</SortableHeader>
+                  </TableHead>
+                  <TableHead className="text-white font-semibold w-24">
+                    <SortableHeader showArrow={false}>Missing Type</SortableHeader>
+                  </TableHead>
+                  <TableHead className="text-white font-semibold w-24">
+                    <SortableHeader>Expected Time</SortableHeader>
+                  </TableHead>
+                  <TableHead className="text-white font-semibold w-24">
+                    <SortableHeader>Recorded Time</SortableHeader>
+                  </TableHead>
+                  <TableHead className="text-white font-semibold w-24">
+                    <SortableHeader>Date</SortableHeader>
+                  </TableHead>
+                  <TableHead className="text-white font-semibold text-center w-10">
+                    Note
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedAttendanceClaims.length > 0 ? (
+                  paginatedAttendanceClaims.map((claim, index) => (
+                    <TableRow
+                      key={claim.id}
+                      className={cn(
+                        "border-b border-gray-100",
+                        index % 2 === 0 ? "bg-white" : "bg-[#F2FBFF]",
+                      )}
+                    >
+                      <TableCell className="text-center">
+                        <Checkbox
+                          checked={selectedAttendanceClaims.has(claim.id)}
+                          onCheckedChange={(checked) =>
+                            handleSelectAttendanceClaim(claim.id, checked as boolean)
+                          }
+                          className="w-6 h-6 border-2 border-[#0061FF] data-[state=checked]:bg-[#0061FF] data-[state=checked]:border-[#0061FF]"
+                        />
+                      </TableCell>
+                      <TableCell className="font-semibold text-gray-900">
+                        {claim.name}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <MissingTypeBadge type={claim.missingType} />
+                      </TableCell>
+                      <TableCell className="text-gray-500">
+                        {formatTime(claim.expectedTime)}
+                      </TableCell>
+                      <TableCell className="text-gray-500">
+                        {formatTime(claim.recordedTime)}
+                      </TableCell>
+                      <TableCell className="text-gray-500">
+                        {new Date(claim.date).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleNoteClick(claim.note)}
+                          className="h-8 w-8 text-[#63CDFA] hover:text-[#63CDFA] hover:bg-blue-50"
+                        >
+                          <NotepadText className="h-5 w-5" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={7}
+                      className="text-center py-10 text-gray-500 font-medium"
+                    >
+                      No attendance claims found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
-        </div>
+        </>
       )}
 
       {/* Make Complaint Modal */}
@@ -682,6 +867,13 @@ export default function ComplaintsPage() {
         isOpen={isMakeComplaintModalOpen}
         onClose={() => setIsMakeComplaintModalOpen(false)}
         onSubmit={handleMakeComplaintSubmit}
+      />
+
+      {/* Make Attendance Claim Modal */}
+      <MakeAttendanceClaimModal
+        isOpen={isMakeAttendanceClaimModalOpen}
+        onClose={() => setIsMakeAttendanceClaimModalOpen(false)}
+        onSubmit={handleMakeAttendanceClaimSubmit}
       />
     </div>
   );
