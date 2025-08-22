@@ -6,6 +6,7 @@ import { TimeSheet } from "@/contexts/TimeSheetsContext";
 import {
   ChevronDown,
   ArrowUpDown,
+  X,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
