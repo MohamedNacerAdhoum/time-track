@@ -52,7 +52,9 @@ export function Calendar({
   // Update currentMonth when value changes (to show the correct month when calendar opens)
   useEffect(() => {
     if (value && isOpen) {
-      setCurrentMonth(value);
+      setCurrentMonth(new Date(value.getTime()));
+    } else if (isOpen && !value) {
+      setCurrentMonth(new Date());
     }
   }, [value, isOpen]);
 
