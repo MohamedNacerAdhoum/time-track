@@ -105,6 +105,11 @@ export default function TimesheetsPage() {
   const [selectedNote, setSelectedNote] = useState("");
   const [lastAction, setLastAction] = useState("last_action");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  // Debug selectedDate changes
+  useEffect(() => {
+    console.log("TimesheetsPage: selectedDate changed to:", selectedDate);
+  }, [selectedDate]);
   const [adminTimeSheets, setAdminTimeSheets] = useState<TimeSheet[]>([]);
 
   const {
