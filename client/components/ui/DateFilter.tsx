@@ -43,6 +43,7 @@ export function DateFilter({
 
   const handleDateChange = (date: Date) => {
     onChange(date);
+    handleClose(); // Close the calendar after selecting a date
   };
 
   const handleClear = (event: React.MouseEvent) => {
