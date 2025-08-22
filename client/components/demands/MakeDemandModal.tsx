@@ -4,7 +4,7 @@ import { X, Upload, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { CalendarWidget } from "@/components/ui/calendar-widget";
+import { CalendarField } from "@/components/ui/calendar-field";
 import { useToast } from "@/hooks/useToast";
 
 type DemandType = "standard" | "permission" | "leave";
@@ -188,7 +188,10 @@ export function MakeDemandModal({
       <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl p-6 sm:p-8 flex flex-col gap-4 sm:gap-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto">
+      <div
+        role="dialog"
+        className="relative bg-white rounded-2xl p-6 sm:p-8 flex flex-col gap-4 sm:gap-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto"
+      >
         {/* Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-2xl sm:text-3xl font-semibold text-black font-poppins">
@@ -207,10 +210,11 @@ export function MakeDemandModal({
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as DemandType)}
-                className={`px-5 py-2.5 rounded-xl text-xl font-medium transition-colors ${activeTab === tab.key
-                  ? "bg-[#63CDFA] text-white"
-                  : "bg-[#F2FBFF] text-[#77838F] hover:bg-[#E1F3FF]"
-                  }`}
+                className={`px-5 py-2.5 rounded-xl text-xl font-medium transition-colors ${
+                  activeTab === tab.key
+                    ? "bg-[#63CDFA] text-white"
+                    : "bg-[#F2FBFF] text-[#77838F] hover:bg-[#E1F3FF]"
+                }`}
               >
                 {tab.label}
               </button>
@@ -254,10 +258,11 @@ export function MakeDemandModal({
                     File
                   </label>
                   <div
-                    className={`flex flex-col items-center justify-center gap-4 p-4 h-[220px] border-2 border-dashed rounded-xl transition-colors ${isDragOver
-                      ? "border-[#63CDFA] bg-[#E1F3FF]"
-                      : "border-[#63CDFA] bg-[#F2FBFF]"
-                      }`}
+                    className={`flex flex-col items-center justify-center gap-4 p-4 h-[220px] border-2 border-dashed rounded-xl transition-colors ${
+                      isDragOver
+                        ? "border-[#63CDFA] bg-[#E1F3FF]"
+                        : "border-[#63CDFA] bg-[#F2FBFF]"
+                    }`}
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
@@ -301,11 +306,12 @@ export function MakeDemandModal({
                   <label className="block text-base font-semibold text-black font-poppins">
                     Date picker
                   </label>
-                  <CalendarWidget
+                  <CalendarField
                     value={formData.datePicker}
                     onChange={(date) => updateFormData({ datePicker: date })}
                     className="w-full"
                     placeholder="12/08/2022"
+                    variant="default"
                   />
                 </div>
                 <div className="flex-1 space-y-2">
@@ -351,10 +357,11 @@ export function MakeDemandModal({
                     File
                   </label>
                   <div
-                    className={`flex flex-col items-center justify-center gap-4 p-4 h-[220px] border-2 border-dashed rounded-xl transition-colors ${isDragOver
-                      ? "border-[#63CDFA] bg-[#E1F3FF]"
-                      : "border-[#63CDFA] bg-[#F2FBFF]"
-                      }`}
+                    className={`flex flex-col items-center justify-center gap-4 p-4 h-[220px] border-2 border-dashed rounded-xl transition-colors ${
+                      isDragOver
+                        ? "border-[#63CDFA] bg-[#E1F3FF]"
+                        : "border-[#63CDFA] bg-[#F2FBFF]"
+                    }`}
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
@@ -393,17 +400,19 @@ export function MakeDemandModal({
               {/* Multiple days / Single day radio buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <div
-                  className={`flex items-center gap-4 px-6 py-6 rounded-lg border cursor-pointer transition-colors ${formData.leaveType === "multiple"
-                    ? "border-[#CCDFFF] bg-white"
-                    : "border-[#CCDFFF] bg-white"
-                    }`}
+                  className={`flex items-center gap-4 px-6 py-6 rounded-lg border cursor-pointer transition-colors ${
+                    formData.leaveType === "multiple"
+                      ? "border-[#CCDFFF] bg-white"
+                      : "border-[#CCDFFF] bg-white"
+                  }`}
                   onClick={() => updateFormData({ leaveType: "multiple" })}
                 >
                   <div
-                    className={`w-6 h-6 rounded-full border-2 border-[#CCDFFF] flex items-center justify-center ${formData.leaveType === "multiple"
-                      ? "bg-white"
-                      : "bg-white"
-                      }`}
+                    className={`w-6 h-6 rounded-full border-2 border-[#CCDFFF] flex items-center justify-center ${
+                      formData.leaveType === "multiple"
+                        ? "bg-white"
+                        : "bg-white"
+                    }`}
                   >
                     {formData.leaveType === "multiple" && (
                       <div className="w-3 h-3 rounded-full bg-[#63CDFA]" />
@@ -415,15 +424,17 @@ export function MakeDemandModal({
                 </div>
 
                 <div
-                  className={`flex items-center gap-4 px-6 py-6 rounded-lg border cursor-pointer transition-colors ${formData.leaveType === "single"
-                    ? "border-[#CCDFFF] bg-white"
-                    : "border-[#CCDFFF] bg-white"
-                    }`}
+                  className={`flex items-center gap-4 px-6 py-6 rounded-lg border cursor-pointer transition-colors ${
+                    formData.leaveType === "single"
+                      ? "border-[#CCDFFF] bg-white"
+                      : "border-[#CCDFFF] bg-white"
+                  }`}
                   onClick={() => updateFormData({ leaveType: "single" })}
                 >
                   <div
-                    className={`w-6 h-6 rounded-full border-2 border-[#CCDFFF] flex items-center justify-center ${formData.leaveType === "single" ? "bg-white" : "bg-white"
-                      }`}
+                    className={`w-6 h-6 rounded-full border-2 border-[#CCDFFF] flex items-center justify-center ${
+                      formData.leaveType === "single" ? "bg-white" : "bg-white"
+                    }`}
                   >
                     {formData.leaveType === "single" && (
                       <div className="w-3 h-3 rounded-full bg-[#63CDFA]" />
@@ -442,22 +453,24 @@ export function MakeDemandModal({
                     <label className="block text-base font-semibold text-black font-poppins">
                       From
                     </label>
-                    <CalendarWidget
+                    <CalendarField
                       value={formData.fromDate}
                       onChange={(date) => updateFormData({ fromDate: date })}
                       className="w-full"
                       placeholder="12/08/2022"
+                      variant="default"
                     />
                   </div>
                   <div className="flex-1 space-y-2">
                     <label className="block text-base font-semibold text-black font-poppins">
                       To
                     </label>
-                    <CalendarWidget
+                    <CalendarField
                       value={formData.toDate}
                       onChange={(date) => updateFormData({ toDate: date })}
                       className="w-full"
                       placeholder="12/08/2022"
+                      variant="default"
                     />
                   </div>
                 </div>
@@ -467,11 +480,12 @@ export function MakeDemandModal({
                     <label className="block text-base font-semibold text-black font-poppins">
                       Date picker
                     </label>
-                    <CalendarWidget
+                    <CalendarField
                       value={formData.singleDate}
                       onChange={(date) => updateFormData({ singleDate: date })}
                       className="w-full"
                       placeholder="12/08/2022"
+                      variant="default"
                     />
                   </div>
                   <div className="flex-1 space-y-2 relative">
@@ -528,10 +542,11 @@ export function MakeDemandModal({
                     File
                   </label>
                   <div
-                    className={`flex flex-col items-center justify-center gap-4 p-4 h-[220px] border-2 border-dashed rounded-xl transition-colors ${isDragOver
-                      ? "border-[#63CDFA] bg-[#E1F3FF]"
-                      : "border-[#63CDFA] bg-[#F2FBFF]"
-                      }`}
+                    className={`flex flex-col items-center justify-center gap-4 p-4 h-[220px] border-2 border-dashed rounded-xl transition-colors ${
+                      isDragOver
+                        ? "border-[#63CDFA] bg-[#E1F3FF]"
+                        : "border-[#63CDFA] bg-[#F2FBFF]"
+                    }`}
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}

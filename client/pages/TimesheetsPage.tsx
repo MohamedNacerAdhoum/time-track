@@ -27,7 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CustomDropdown } from "@/components/ui/custom-dropdown";
-import { CalendarWidget } from "@/components/ui/calendar-widget";
+import { CalendarField } from "@/components/ui/calendar-field";
 import { cn } from "@/lib/utils";
 
 // Helper function to format date string to time (HH:MM:SS)
@@ -241,11 +241,12 @@ export default function TimesheetsPage() {
             className="min-w-[160px]"
           />
           <div className="relative flex items-center">
-            <CalendarWidget
-              value={selectedDate || new Date()}
+            <CalendarField
+              value={selectedDate}
               onChange={setSelectedDate}
               className="min-w-[180px] pr-8"
               placeholder="Select date..."
+              variant="default"
             />
             {selectedDate && (
               <button
