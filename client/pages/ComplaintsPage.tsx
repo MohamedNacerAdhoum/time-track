@@ -222,6 +222,12 @@ export default function ComplaintsPage() {
     console.log("ComplaintsPage: selectedDate changed to:", selectedDate);
   }, [selectedDate]);
 
+  // Wrapper function to debug setSelectedDate calls
+  const handleDateChange = (date: Date | null) => {
+    console.log("ComplaintsPage: handleDateChange called with:", date);
+    setSelectedDate(date);
+  };
+
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
