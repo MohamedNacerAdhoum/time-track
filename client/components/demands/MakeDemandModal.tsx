@@ -481,7 +481,7 @@ export function MakeDemandModal({
                       <div
                         ref={fromDatePickerRef}
                         onClick={() => setIsFromDatePickerOpen(!isFromDatePickerOpen)}
-                        className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer"
+                        className="h-12 w-full px-3 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-base text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer flex items-center font-poppins"
                         style={{
                           fontFamily:
                             "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
