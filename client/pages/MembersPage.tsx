@@ -227,28 +227,28 @@ export default function MembersPage() {
   return (
     <div className="space-y-6">
       {/* Search + Action Buttons */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <SearchBar
           value={searchQuery}
           onChange={setSearchQuery}
           placeholder="Quick Search..."
         />
 
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <div className="flex items-center gap-2 w-full lg:w-auto justify-end">
           <Button
             onClick={handleAddMember}
-            className="bg-[#63CDFA] hover:bg-[#4BA8E8] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
+            className="bg-[#63CDFA] hover:bg-[#4BA8E8] text-white px-5 h-12 rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
           >
-            <Plus className="h-6 w-6" />
+            <Plus className="h-5 w-5" />
           </Button>
 
           {selectedMembers.size > 0 && (
             <>
               <Button
                 onClick={handleOpenDeleteModal}
-                className="bg-[#FF6262] hover:bg-[#FF4444] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
+                className="bg-[#FF6262] hover:bg-[#FF4444] text-white px-5 h-12 rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
               >
-                <Trash2 className="h-6 w-6" />
+                <Trash2 className="h-5 w-5" />
               </Button>
 
               <DeleteItemModal

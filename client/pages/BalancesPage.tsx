@@ -26,6 +26,11 @@ import {
 } from "@/components/ui/table";
 import { CustomDropdown } from "@/components/ui/custom-dropdown";
 import { DateFilter } from "@/components/ui/DateFilter";
+import { BalancesCalendar } from "@/components/dashboard/BalancesCalendar";
+import {
+  DayDetails,
+  type DayDetailsData,
+} from "@/components/dashboard/DayDetails";
 import { cn } from "@/lib/utils";
 
 // Helper function to format currency
@@ -103,162 +108,211 @@ function SortableHeader({
   );
 }
 
-// Calendar widget for user view
-function CalendarWidget() {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
+// Mock work data for different calendar states
+const mockWorkData = {
+  // Days with work (green border)
+  "2023-4-3": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-5": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-6": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-7": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-8": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-9": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-10": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-12": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-14": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-15": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-16": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-17": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-18": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-20": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-21": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-23": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-24": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
+  "2023-4-25": {
+    worked: true,
+    status: "worked" as const,
+    amount: 50,
+    hours: "8h 20mn",
+  },
 
-  // Mock calendar data - April 2023
-  const generateCalendarData = () => {
-    const year = 2023;
-    const month = 3; // April (0-indexed)
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDay = new Date(year, month, 1).getDay();
-    const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1; // Adjust for Monday start
+  // Days absent (yellow border)
+  "2023-4-4": {
+    worked: false,
+    status: "absent" as const,
+    amount: 0,
+    hours: "5h 20mn",
+  },
+  "2023-4-11": {
+    worked: false,
+    status: "absent" as const,
+    amount: 0,
+    hours: "5h 20mn",
+  },
+  "2023-4-13": {
+    worked: false,
+    status: "absent" as const,
+    amount: 0,
+    hours: "5h 20mn",
+  },
+  "2023-4-19": {
+    worked: false,
+    status: "absent" as const,
+    amount: 0,
+    hours: "5h 20mn",
+  },
+  "2023-4-22": {
+    worked: false,
+    status: "absent" as const,
+    amount: 0,
+    hours: "5h 20mn",
+  },
+};
 
-    const days = [];
+// Component for user calendar view
+function UserCalendarView() {
+  const [selectedDate, setSelectedDate] = useState(new Date(2023, 3, 25)); // April 25, 2023
 
-    // Previous month trailing days
-    const prevMonth = new Date(year, month, 0);
-    const daysInPrevMonth = prevMonth.getDate();
-    for (let i = adjustedFirstDay - 1; i >= 0; i--) {
-      days.push({
-        date: daysInPrevMonth - i,
-        isCurrentMonth: false,
-        hasEvent: false,
-      });
+  // Get data for selected date
+  const getSelectedDateData = (): DayDetailsData => {
+    const dateKey = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`;
+    const workData = mockWorkData[dateKey as keyof typeof mockWorkData];
+    const today = new Date();
+    const isFuture = selectedDate > today;
+
+    // Determine status and payment type
+    let status: "worked" | "absent" | "future" = "worked";
+    let paymentType: "positive" | "negative" | "neutral" = "positive";
+    let payedAmount: number | string = 50;
+
+    if (isFuture) {
+      status = "future";
+      paymentType = "neutral";
+      payedAmount = "-";
+    } else if (workData) {
+      status = workData.status;
+      paymentType =
+        workData.amount > 0
+          ? "positive"
+          : workData.amount === 0
+            ? "negative"
+            : "neutral";
+      payedAmount = workData.amount;
+    } else {
+      status = "absent";
+      paymentType = "negative";
+      payedAmount = 0;
     }
 
-    // Current month days
-    for (let day = 1; day <= daysInMonth; day++) {
-      const hasEvent = [
-        1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-        22, 23, 24, 25,
-      ].includes(day);
-      const isSelected = day === 26; // April 26th is selected
-
-      days.push({
-        date: day,
-        isCurrentMonth: true,
-        hasEvent,
-        isSelected,
-        eventType: day === 1 ? "primary" : "work",
-      });
-    }
-
-    // Next month leading days
-    const totalCells = 42; // 6 weeks
-    const remainingCells = totalCells - days.length;
-    for (let day = 1; day <= remainingCells; day++) {
-      days.push({
-        date: day,
-        isCurrentMonth: false,
-        hasEvent: false,
-      });
-    }
-
-    return days;
+    return {
+      date: selectedDate.toLocaleDateString("en-GB"), // DD-MM-YYYY format
+      workedTime: workData?.hours || (isFuture ? "5h 30mn" : "5h 20mn"),
+      payedAmount,
+      totalPayMonth: "1950 TND",
+      clockIn: "hh:mm:ss",
+      breakPeriod: "hh:mm:ss",
+      clockOut: isFuture ? "-" : "hh:mm:ss",
+      status,
+      paymentType,
+    };
   };
 
-  const calendarData = generateCalendarData();
-  const weekDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-
   return (
-    <div className="flex gap-20 p-8 bg-[#EEFAFF] rounded-xl">
-      {/* Calendar */}
-      <div className="bg-white rounded-xl p-10 w-[500px]">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <Button variant="ghost" size="icon" className="w-7 h-7">
-            <ChevronLeft className="w-5 h-5 text-black" />
-          </Button>
-          <h3 className="text-xl font-semibold text-black">April 2023</h3>
-          <Button variant="ghost" size="icon" className="w-7 h-7">
-            <ChevronRight className="w-5 h-5 text-black" />
-          </Button>
+    <div className="w-full">
+      <div className="flex flex-col xl:flex-row gap-6 lg:gap-8 xl:gap-12 2xl:gap-20 p-4 sm:p-6 lg:p-8 bg-[#EEFAFF] rounded-2xl min-h-[600px] lg:min-h-[700px]">
+        <div className="flex-1 flex justify-center">
+          <BalancesCalendar
+            selectedDate={selectedDate}
+            onDateSelect={setSelectedDate}
+            workData={mockWorkData}
+          />
         </div>
-
-        {/* Week days */}
-        <div className="grid grid-cols-7 gap-4 mb-4">
-          {weekDays.map((day) => (
-            <div key={day} className="text-center py-2">
-              <span className="text-sm font-normal text-[#BDBDBD]">{day}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Calendar grid */}
-        <div className="grid grid-cols-7 gap-4">
-          {calendarData.map((item, index) => (
-            <div key={index} className="flex flex-col items-center gap-1">
-              <button
-                className={cn(
-                  "w-10 h-10 flex items-center justify-center text-sm font-normal rounded-full transition-colors",
-                  item.isSelected
-                    ? "bg-[#63CDFA] text-white"
-                    : item.isCurrentMonth
-                      ? "text-[#333] hover:bg-gray-100"
-                      : "text-[#BDBDBD]",
-                  item.hasEvent && item.isCurrentMonth && !item.isSelected
-                    ? "border-2 border-green-400"
-                    : "",
-                )}
-              >
-                {item.date}
-              </button>
-              {item.hasEvent && item.isCurrentMonth && item.date === 1 && (
-                <div className="w-1 h-1 rounded-full bg-[#016EED]" />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Date Details */}
-      <div className="bg-white rounded-xl p-15 w-[450px] flex flex-col gap-10">
-        <h2 className="text-2xl font-semibold text-center text-black">
-          25-04-2023
-        </h2>
-
-        <div className="flex justify-between items-end">
-          <span className="text-base font-medium text-black">Worked time</span>
-          <span className="text-base text-gray-500">5h 30mn</span>
-        </div>
-
-        <div className="flex justify-between items-start">
-          <span className="text-base font-medium text-black">Payed amount</span>
-          <span className="text-base font-medium text-black">
-            Total pay / month
-          </span>
-        </div>
-
-        <div className="flex justify-between items-start">
-          <div className="flex flex-col items-center">
-            <div className="bg-[#63CDFA] bg-opacity-20 px-5 py-1 rounded-xl">
-              <span className="text-[#63CDFA] font-semibold text-base">-</span>
-            </div>
-          </div>
-          <span className="text-base text-gray-500">1950 TND</span>
-        </div>
-
-        <div className="w-full h-px bg-[#71839B]"></div>
-
-        <div className="flex justify-between items-start">
-          <span className="text-base font-medium text-black">Clock in</span>
-          <span className="text-base font-medium text-black">Break period</span>
-          <span className="text-base font-medium text-black">Clock out</span>
-        </div>
-
-        <div className="flex justify-between items-start">
-          <span className="text-base text-gray-500">hh:mm:ss</span>
-          <span className="text-base text-gray-500">hh:mm:ss</span>
-          <span className="text-base text-gray-500">-</span>
-        </div>
-
-        <div className="flex justify-center items-center gap-28">
-          <Notebook className="w-8 h-8 text-[#63CDFA]" />
-          <Notebook className="w-8 h-8 text-[#63CDFA]" />
-          <Notebook className="w-8 h-8 text-[#D7D7D7]" />
+        <div className="flex-1 flex justify-center">
+          <DayDetails data={getSelectedDateData()} />
         </div>
       </div>
     </div>
@@ -443,7 +497,7 @@ export default function BalancesPage() {
         </div>
 
         {/* Calendar Widget */}
-        <CalendarWidget />
+        <UserCalendarView />
       </div>
     );
   }
@@ -484,13 +538,18 @@ export default function BalancesPage() {
         </Tabs>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-end gap-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+      {/* Search + Filters */}
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Quick Search..."
+        />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
           <DateFilter
             value={selectedDate}
             onChange={setSelectedDate}
-            className="min-w-[180px]"
+            className="min-w-[180px] h-12"
             placeholder="25/07/2022"
             showClearButton={true}
           />
@@ -498,13 +557,13 @@ export default function BalancesPage() {
             value={selectedUser}
             options={userOptions}
             onChange={setSelectedUser}
-            className="min-w-[160px]"
+            className="min-w-[160px] h-12"
           />
           <CustomDropdown
             value="day"
             options={dayOptions}
             onChange={() => {}}
-            className="min-w-[100px]"
+            className="min-w-[100px] h-12"
           />
         </div>
       </div>
