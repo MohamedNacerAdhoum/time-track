@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -37,29 +37,6 @@ export function CalendarPopup({
   initialMonth,
 }: CalendarPopupProps) {
   const [currentMonth, setCurrentMonth] = useState(initialMonth || value || new Date());
-  const calendarRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        calendarRef.current &&
-        !calendarRef.current.contains(event.target as Node)
-      ) {
-        // Add a small delay to prevent interference with field click
-        setTimeout(() => {
-          onClose();
-        }, 0);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen, onClose]);
 
   const handleDateSelect = (date: Date) => {
     onChange(date);
@@ -175,7 +152,6 @@ export function CalendarPopup({
 
   return (
     <div
-      ref={calendarRef}
       className={cn(
         "absolute top-full right-0 mt-2 bg-white rounded-3xl z-50 p-10 w-80",
         className
