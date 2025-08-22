@@ -152,12 +152,11 @@ export function CalendarPopup({
     return days;
   };
 
-  // Calculate optimal position based on viewport and modal boundaries
+  // Calculate optimal position based on viewport and container boundaries
   useEffect(() => {
-    if (!isOpen || !fieldRef?.current || !popupRef.current) return;
+    if (!isOpen || !fieldRef?.current) return;
 
     const fieldRect = fieldRef.current.getBoundingClientRect();
-    const popupRect = popupRef.current.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
@@ -165,15 +164,18 @@ export function CalendarPopup({
     const popupWidth = 320; // 80 * 4 (w-80)
     const popupHeight = 400; // approximate height
 
-    // Find the closest modal container
-    let modalContainer = fieldRef.current.closest('[role="dialog"]') ||
-                        fieldRef.current.closest('.fixed.inset-0') ||
-                        fieldRef.current.closest('.modal') ||
-                        document.body;
+    // Find the closest scrollable container or modal
+    let container = fieldRef.current.closest('[role="dialog"]') ||
+                   fieldRef.current.closest('.fixed.inset-0') ||
+                   fieldRef.current.closest('.overflow-auto') ||
+                   fieldRef.current.closest('.overflow-y-auto') ||
+                   fieldRef.current.closest('.overflow-x-auto') ||
+                   document.body;
 
-    const modalRect = modalContainer === document.body ?
+    // Get container boundaries
+    const containerRect = container === document.body ?
       { top: 0, left: 0, right: viewportWidth, bottom: viewportHeight, width: viewportWidth, height: viewportHeight } :
-      modalContainer.getBoundingClientRect();
+      container.getBoundingClientRect();
 
     let newPosition = {
       top: 'auto' as string,
@@ -182,36 +184,40 @@ export function CalendarPopup({
       bottom: 'auto' as string
     };
 
-    // Determine horizontal position
-    const spaceOnRight = modalRect.right - fieldRect.right;
-    const spaceOnLeft = fieldRect.left - modalRect.left;
+    // Calculate available space in all directions
+    const spaceRight = Math.min(containerRect.right, viewportWidth) - fieldRect.right;
+    const spaceLeft = fieldRect.left - Math.max(containerRect.left, 0);
+    const spaceBelow = Math.min(containerRect.bottom, viewportHeight) - fieldRect.bottom;
+    const spaceAbove = fieldRect.top - Math.max(containerRect.top, 0);
 
-    if (spaceOnRight >= popupWidth) {
+    // Determine horizontal position (prefer right alignment, then left, then best fit)
+    if (spaceRight >= popupWidth) {
       // Enough space on the right, align to right edge of field
       newPosition.right = '0';
-    } else if (spaceOnLeft >= popupWidth) {
-      // Not enough space on right, align to left edge of field
+    } else if (spaceLeft >= popupWidth) {
+      // Not enough space on right but enough on left, align to left edge of field
       newPosition.left = '0';
     } else {
-      // Not enough space on either side, center within available space
-      const availableWidth = modalRect.width;
-      const leftOffset = Math.max(0, (availableWidth - popupWidth) / 2 - (fieldRect.left - modalRect.left));
-      newPosition.left = `${leftOffset}px`;
+      // Not enough space on either side, position to prevent overflow
+      if (spaceRight > spaceLeft) {
+        // More space on right, align to right but ensure it fits in viewport
+        newPosition.right = '0';
+      } else {
+        // More space on left, align to left but ensure it fits in viewport
+        newPosition.left = '0';
+      }
     }
 
-    // Determine vertical position
-    const spaceBelow = modalRect.bottom - fieldRect.bottom;
-    const spaceAbove = fieldRect.top - modalRect.top;
-
+    // Determine vertical position (prefer below, then above)
     if (spaceBelow >= popupHeight) {
       // Enough space below
       newPosition.top = '100%';
     } else if (spaceAbove >= popupHeight) {
-      // Not enough space below, show above
+      // Not enough space below but enough above
       newPosition.bottom = '100%';
     } else {
-      // Not enough space above or below, position to fit in available space
-      if (spaceBelow > spaceAbove) {
+      // Not enough space above or below, choose the side with more space
+      if (spaceBelow >= spaceAbove) {
         newPosition.top = '100%';
       } else {
         newPosition.bottom = '100%';
