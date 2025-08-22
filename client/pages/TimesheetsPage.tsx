@@ -233,25 +233,13 @@ export default function TimesheetsPage() {
             onChange={setLastAction}
             className="min-w-[160px]"
           />
-          <div className="relative flex items-center">
-            <CalendarField
-              value={selectedDate}
-              onChange={setSelectedDate}
-              className="min-w-[180px] pr-8"
-              placeholder="Select date..."
-              variant="default"
-            />
-            {selectedDate && (
-              <button
-                type="button"
-                onClick={() => setSelectedDate(null)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                title="Clear date filter"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
+          <DateFilter
+            value={selectedDate}
+            onChange={setSelectedDate}
+            className="min-w-[180px]"
+            placeholder="Select date..."
+            showClearButton={true}
+          />
         </div>
       </div>
 
