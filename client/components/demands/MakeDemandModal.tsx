@@ -311,7 +311,7 @@ export function MakeDemandModal({
                     onChange={(date) => updateFormData({ datePicker: date })}
                     className="w-full"
                     placeholder="12/08/2022"
-                    variant="default"
+                    variant="profile"
                   />
                 </div>
                 <div className="flex-1 space-y-2">
@@ -458,7 +458,7 @@ export function MakeDemandModal({
                       onChange={(date) => updateFormData({ fromDate: date })}
                       className="w-full"
                       placeholder="12/08/2022"
-                      variant="default"
+                      variant="profile"
                     />
                   </div>
                   <div className="flex-1 space-y-2">
@@ -470,7 +470,7 @@ export function MakeDemandModal({
                       onChange={(date) => updateFormData({ toDate: date })}
                       className="w-full"
                       placeholder="12/08/2022"
-                      variant="default"
+                      variant="profile"
                     />
                   </div>
                 </div>
@@ -485,7 +485,7 @@ export function MakeDemandModal({
                       onChange={(date) => updateFormData({ singleDate: date })}
                       className="w-full"
                       placeholder="12/08/2022"
-                      variant="default"
+                      variant="profile"
                     />
                   </div>
                   <div className="flex-1 space-y-2 relative">
