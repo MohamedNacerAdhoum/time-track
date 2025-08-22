@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { CalendarField } from "@/components/ui/calendar-field";
+import { Calendar } from "@/components/ui/Calendar";
 import { useToast } from "@/hooks/useToast";
 
 interface FormData {
@@ -36,6 +36,8 @@ export function MakeAttendanceClaimModal({
   const [formData, setFormData] = useState<FormData>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showMissingTypeDropdown, setShowMissingTypeDropdown] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const datePickerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   const handleSubmit = async () => {
@@ -125,13 +127,29 @@ export function MakeAttendanceClaimModal({
               <label className="block text-base font-semibold text-black font-poppins">
                 Date picker
               </label>
-              <CalendarField
-                value={formData.datePicker}
-                onChange={(date) => updateFormData({ datePicker: date })}
-                className="h-12 bg-[#F2FBFF] border-[#CCDFFF] border rounded-lg text-base font-poppins focus:border-[#63CDFA] focus:ring-[#63CDFA]"
-                placeholder="12/08/2022"
-                variant="profile"
-              />
+              <div className="relative">
+                <div
+                  ref={datePickerRef}
+                  onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+                  className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer"
+                  style={{
+                    fontFamily:
+                      "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+                  }}
+                >
+                  {formData.datePicker
+                    ? formData.datePicker.toLocaleDateString()
+                    : "12/08/2022"}
+                </div>
+                <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
+                <Calendar
+                  value={formData.datePicker}
+                  onChange={(date) => updateFormData({ datePicker: date })}
+                  isOpen={isDatePickerOpen}
+                  onClose={() => setIsDatePickerOpen(false)}
+                  fieldRef={datePickerRef}
+                />
+              </div>
             </div>
             <div className="flex-1 space-y-2">
               <label className="block text-base font-semibold text-black font-poppins">
