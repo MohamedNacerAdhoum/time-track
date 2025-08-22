@@ -128,7 +128,7 @@ export function MakeAttendanceClaimModal({
               <CalendarField
                 value={formData.datePicker}
                 onChange={(date) => updateFormData({ datePicker: date })}
-                className="w-full"
+                className="h-12 bg-[#F2FBFF] border-[#CCDFFF] border rounded-lg text-base font-poppins focus:border-[#63CDFA] focus:ring-[#63CDFA]"
                 placeholder="12/08/2022"
                 variant="profile"
               />
