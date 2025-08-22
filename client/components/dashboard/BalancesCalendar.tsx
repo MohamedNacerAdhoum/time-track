@@ -21,7 +21,7 @@ const weekDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 export function BalancesCalendar({
   selectedDate = new Date(),
   onDateSelect,
-  className
+  className,
 }: BalancesCalendarProps) {
   const [currentDate, setCurrentDate] = useState(selectedDate);
 
@@ -33,7 +33,7 @@ export function BalancesCalendar({
     const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1; // Adjust for Monday start
 
     const days: CalendarDay[] = [];
-    
+
     // Previous month trailing days
     const prevMonth = new Date(year, month, 0);
     const daysInPrevMonth = prevMonth.getDate();
@@ -48,20 +48,26 @@ export function BalancesCalendar({
     // Current month days with mock data patterns
     for (let day = 1; day <= daysInMonth; day++) {
       const today = new Date();
-      const isToday = day === today.getDate() && 
-                     month === today.getMonth() && 
-                     year === today.getFullYear();
-      const isSelected = day === selectedDate.getDate() && 
-                        month === selectedDate.getMonth() && 
-                        year === selectedDate.getFullYear();
-      
+      const isToday =
+        day === today.getDate() &&
+        month === today.getMonth() &&
+        year === today.getFullYear();
+      const isSelected =
+        day === selectedDate.getDate() &&
+        month === selectedDate.getMonth() &&
+        year === selectedDate.getFullYear();
+
       // Mock work patterns - some days worked, some didn't, future dates
       let eventType: "worked" | "not-worked" | "future" | "today" = "worked";
       let hasEvent = true;
-      
+
       if (isToday) {
         eventType = "today";
-      } else if (day > today.getDate() && month >= today.getMonth() && year >= today.getFullYear()) {
+      } else if (
+        day > today.getDate() &&
+        month >= today.getMonth() &&
+        year >= today.getFullYear()
+      ) {
         eventType = "future";
         hasEvent = false;
       } else if ([4, 11, 13, 19, 22].includes(day)) {
@@ -72,7 +78,7 @@ export function BalancesCalendar({
         eventType = "future";
         hasEvent = false;
       }
-      
+
       days.push({
         date: day,
         isCurrentMonth: true,
@@ -99,19 +105,31 @@ export function BalancesCalendar({
   const calendarData = generateCalendarData(currentDate);
 
   const goToPrevMonth = () => {
-    const prev = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    const prev = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() - 1,
+      1,
+    );
     setCurrentDate(prev);
   };
 
   const goToNextMonth = () => {
-    const next = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    const next = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      1,
+    );
     setCurrentDate(next);
   };
 
   const handleDateClick = (day: CalendarDay) => {
     if (!day.isCurrentMonth) return;
-    
-    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day.date);
+
+    const newDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      day.date,
+    );
     if (onDateSelect) {
       onDateSelect(newDate);
     }
@@ -122,41 +140,61 @@ export function BalancesCalendar({
       return "text-[#BDBDBD] cursor-default";
     }
 
-    let baseStyle = "w-10 h-10 flex items-center justify-center text-sm font-normal rounded-full transition-colors cursor-pointer ";
-    
+    let baseStyle =
+      "w-10 h-10 flex items-center justify-center text-sm font-normal rounded-full transition-colors cursor-pointer ";
+
     if (day.isSelected) {
       return baseStyle + "bg-[#63CDFA] text-white";
     }
-    
+
     if (day.eventType === "today") {
       return baseStyle + "bg-[#63CDFA] text-white";
     }
-    
+
     if (day.hasEvent) {
       switch (day.eventType) {
         case "worked":
-          return baseStyle + "border-2 border-green-400 text-[#333] hover:bg-green-50";
+          return (
+            baseStyle +
+            "border-2 border-green-400 text-[#333] hover:bg-green-50"
+          );
         case "not-worked":
-          return baseStyle + "border-2 border-yellow-400 text-[#333] hover:bg-yellow-50";
+          return (
+            baseStyle +
+            "border-2 border-yellow-400 text-[#333] hover:bg-yellow-50"
+          );
         default:
           return baseStyle + "text-[#333] hover:bg-gray-100";
       }
     }
-    
+
     return baseStyle + "text-[#333] hover:bg-gray-100";
   };
 
   return (
-    <div className={`bg-white rounded-xl p-6 lg:p-10 w-full max-w-[500px] ${className || ""}`}>
+    <div
+      className={`bg-white rounded-xl p-6 lg:p-10 w-full max-w-[500px] ${className || ""}`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <Button variant="ghost" size="icon" className="w-7 h-7" onClick={goToPrevMonth}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="w-7 h-7"
+          onClick={goToPrevMonth}
+        >
           <ChevronLeft className="w-5 h-5 text-black" />
         </Button>
         <h3 className="text-lg lg:text-xl font-semibold text-black">
-          {currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}
+          {currentDate.toLocaleString("default", { month: "long" })}{" "}
+          {currentDate.getFullYear()}
         </h3>
-        <Button variant="ghost" size="icon" className="w-7 h-7" onClick={goToNextMonth}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="w-7 h-7"
+          onClick={goToNextMonth}
+        >
           <ChevronRight className="w-5 h-5 text-black" />
         </Button>
       </div>

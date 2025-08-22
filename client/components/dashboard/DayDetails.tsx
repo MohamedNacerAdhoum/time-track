@@ -20,7 +20,7 @@ export function DayDetails({
   clockIn = "hh:mm:ss",
   breakPeriod = "hh:mm:ss",
   clockOut = "hh:mm:ss",
-  status = "worked"
+  status = "worked",
 }: DayDetailsProps) {
   const getPaymentBadgeStyle = () => {
     switch (status) {
@@ -68,22 +68,30 @@ export function DayDetails({
       <h2 className="text-xl lg:text-2xl font-semibold text-center text-black">
         {date}
       </h2>
-      
+
       <div className="flex justify-between items-end gap-2">
-        <span className="text-sm lg:text-base font-medium text-black">Worked time</span>
+        <span className="text-sm lg:text-base font-medium text-black">
+          Worked time
+        </span>
         <span className="text-sm lg:text-base text-gray-500">
           {status === "future" ? "-" : workTime || "0h 0mn"}
         </span>
       </div>
-      
+
       <div className="flex justify-between items-start gap-4">
-        <span className="text-sm lg:text-base font-medium text-black">Payed amount</span>
-        <span className="text-sm lg:text-base font-medium text-black">Total pay / month</span>
+        <span className="text-sm lg:text-base font-medium text-black">
+          Payed amount
+        </span>
+        <span className="text-sm lg:text-base font-medium text-black">
+          Total pay / month
+        </span>
       </div>
-      
+
       <div className="flex justify-between items-center gap-4">
         <div className="flex flex-col items-center flex-shrink-0">
-          <div className={`px-4 lg:px-5 py-1 rounded-xl ${getPaymentBadgeStyle()}`}>
+          <div
+            className={`px-4 lg:px-5 py-1 rounded-xl ${getPaymentBadgeStyle()}`}
+          >
             <span className="font-semibold text-sm lg:text-base">
               {getPaymentText()}
             </span>
@@ -97,11 +105,17 @@ export function DayDetails({
       <div className="w-full h-px bg-[#71839B]"></div>
 
       <div className="flex justify-between items-start gap-2">
-        <span className="text-sm lg:text-base font-medium text-black text-center flex-1">Clock in</span>
-        <span className="text-sm lg:text-base font-medium text-black text-center flex-1">Break period</span>
-        <span className="text-sm lg:text-base font-medium text-black text-center flex-1">Clock out</span>
+        <span className="text-sm lg:text-base font-medium text-black text-center flex-1">
+          Clock in
+        </span>
+        <span className="text-sm lg:text-base font-medium text-black text-center flex-1">
+          Break period
+        </span>
+        <span className="text-sm lg:text-base font-medium text-black text-center flex-1">
+          Clock out
+        </span>
       </div>
-      
+
       <div className="flex justify-between items-start gap-2">
         <span className="text-sm lg:text-base text-gray-500 text-center flex-1">
           {status === "future" ? "-" : clockIn}

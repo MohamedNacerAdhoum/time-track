@@ -116,7 +116,7 @@ export function DateFilter({
       )}
 
       <Calendar
-        key={`calendar-${isOpen ? 'open' : 'closed'}-${value?.getTime() || 'null'}`}
+        key={`calendar-${isOpen ? "open" : "closed"}-${value?.getTime() || "null"}`}
         value={value}
         onChange={handleDateChange}
         isOpen={isOpen}

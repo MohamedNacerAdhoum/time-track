@@ -217,7 +217,6 @@ export default function ComplaintsPage() {
   const [lastAction, setLastAction] = useState("last_action");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
