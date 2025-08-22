@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import { X, Upload, ChevronDown } from "lucide-react";
+import { X, Upload, ChevronDown, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { CalendarField } from "@/components/ui/calendar-field";
+import { Calendar } from "@/components/ui/Calendar";
 import { useToast } from "@/hooks/useToast";
 
 type DemandType = "standard" | "permission" | "leave";
@@ -60,6 +60,14 @@ export function MakeDemandModal({
   const [isDragOver, setIsDragOver] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showTimePeriodDropdown, setShowTimePeriodDropdown] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [isFromDatePickerOpen, setIsFromDatePickerOpen] = useState(false);
+  const [isToDatePickerOpen, setIsToDatePickerOpen] = useState(false);
+  const [isSingleDatePickerOpen, setIsSingleDatePickerOpen] = useState(false);
+  const datePickerRef = useRef<HTMLDivElement>(null);
+  const fromDatePickerRef = useRef<HTMLDivElement>(null);
+  const toDatePickerRef = useRef<HTMLDivElement>(null);
+  const singleDatePickerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -306,13 +314,29 @@ export function MakeDemandModal({
                   <label className="block text-base font-semibold text-black font-poppins">
                     Date picker
                   </label>
-                  <CalendarField
-                    value={formData.datePicker}
-                    onChange={(date) => updateFormData({ datePicker: date })}
-                    className="w-full"
-                    placeholder="12/08/2022"
-                    variant="profile"
-                  />
+                  <div className="relative">
+                    <div
+                      ref={datePickerRef}
+                      onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+                      className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer"
+                      style={{
+                        fontFamily:
+                          "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+                      }}
+                    >
+                      {formData.datePicker
+                        ? formData.datePicker.toLocaleDateString()
+                        : "12/08/2022"}
+                    </div>
+                    <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
+                    <Calendar
+                      value={formData.datePicker}
+                      onChange={(date) => updateFormData({ datePicker: date })}
+                      isOpen={isDatePickerOpen}
+                      onClose={() => setIsDatePickerOpen(false)}
+                      fieldRef={datePickerRef}
+                    />
+                  </div>
                 </div>
                 <div className="flex-1 space-y-2">
                   <label className="block text-base font-semibold text-black font-poppins">
@@ -453,25 +477,57 @@ export function MakeDemandModal({
                     <label className="block text-base font-semibold text-black font-poppins">
                       From
                     </label>
-                    <CalendarField
-                      value={formData.fromDate}
-                      onChange={(date) => updateFormData({ fromDate: date })}
-                      className="w-full"
-                      placeholder="12/08/2022"
-                      variant="profile"
-                    />
+                    <div className="relative">
+                      <div
+                        ref={fromDatePickerRef}
+                        onClick={() => setIsFromDatePickerOpen(!isFromDatePickerOpen)}
+                        className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer"
+                        style={{
+                          fontFamily:
+                            "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
+                      >
+                        {formData.fromDate
+                          ? formData.fromDate.toLocaleDateString()
+                          : "12/08/2022"}
+                      </div>
+                      <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
+                      <Calendar
+                        value={formData.fromDate}
+                        onChange={(date) => updateFormData({ fromDate: date })}
+                        isOpen={isFromDatePickerOpen}
+                        onClose={() => setIsFromDatePickerOpen(false)}
+                        fieldRef={fromDatePickerRef}
+                      />
+                    </div>
                   </div>
                   <div className="flex-1 space-y-2">
                     <label className="block text-base font-semibold text-black font-poppins">
                       To
                     </label>
-                    <CalendarField
-                      value={formData.toDate}
-                      onChange={(date) => updateFormData({ toDate: date })}
-                      className="w-full"
-                      placeholder="12/08/2022"
-                      variant="profile"
-                    />
+                    <div className="relative">
+                      <div
+                        ref={toDatePickerRef}
+                        onClick={() => setIsToDatePickerOpen(!isToDatePickerOpen)}
+                        className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer"
+                        style={{
+                          fontFamily:
+                            "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
+                      >
+                        {formData.toDate
+                          ? formData.toDate.toLocaleDateString()
+                          : "12/08/2022"}
+                      </div>
+                      <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
+                      <Calendar
+                        value={formData.toDate}
+                        onChange={(date) => updateFormData({ toDate: date })}
+                        isOpen={isToDatePickerOpen}
+                        onClose={() => setIsToDatePickerOpen(false)}
+                        fieldRef={toDatePickerRef}
+                      />
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -480,13 +536,29 @@ export function MakeDemandModal({
                     <label className="block text-base font-semibold text-black font-poppins">
                       Date picker
                     </label>
-                    <CalendarField
-                      value={formData.singleDate}
-                      onChange={(date) => updateFormData({ singleDate: date })}
-                      className="w-full"
-                      placeholder="12/08/2022"
-                      variant="profile"
-                    />
+                    <div className="relative">
+                      <div
+                        ref={singleDatePickerRef}
+                        onClick={() => setIsSingleDatePickerOpen(!isSingleDatePickerOpen)}
+                        className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer"
+                        style={{
+                          fontFamily:
+                            "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+                        }}
+                      >
+                        {formData.singleDate
+                          ? formData.singleDate.toLocaleDateString()
+                          : "12/08/2022"}
+                      </div>
+                      <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
+                      <Calendar
+                        value={formData.singleDate}
+                        onChange={(date) => updateFormData({ singleDate: date })}
+                        isOpen={isSingleDatePickerOpen}
+                        onClose={() => setIsSingleDatePickerOpen(false)}
+                        fieldRef={singleDatePickerRef}
+                      />
+                    </div>
                   </div>
                   <div className="flex-1 space-y-2 relative">
                     <label className="block text-base font-semibold text-black font-poppins">
