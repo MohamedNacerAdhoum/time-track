@@ -59,13 +59,9 @@ export function Calendar({
   }, [value, isOpen]);
 
   const handleDateSelect = (date: Date) => {
-    console.log("Calendar: Date selected:", date);
-    console.log("Calendar: Current value before change:", value);
-
     // Create a new Date object to avoid mutation issues
     const newDate = new Date(date.getTime());
     onChange(newDate);
-    console.log("Calendar: onChange called with new date:", newDate);
     onClose();
   };
 
