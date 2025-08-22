@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CalendarPopup } from "./calendar-popup";
@@ -32,8 +32,10 @@ export function CalendarField({
   variant = "default",
 }: CalendarFieldProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const fieldRef = useRef<HTMLDivElement>(null);
 
-  const handleToggle = () => {
+  const handleToggle = (event: React.MouseEvent) => {
+    event.stopPropagation();
     if (!disabled) {
       setIsOpen(!isOpen);
     }
@@ -42,6 +44,26 @@ export function CalendarField({
   const handleClose = () => {
     setIsOpen(false);
   };
+
+  // Close calendar when clicking outside the entire component
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        fieldRef.current &&
+        !fieldRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   // Default field styles based on variant
   const getDefaultField = () => {
@@ -78,17 +100,19 @@ export function CalendarField({
   };
 
   return (
-    <div className={cn("relative", className)}>
+    <div ref={fieldRef} className={cn("relative", className)}>
       <div onClick={handleToggle}>
         {children || getDefaultField()}
       </div>
 
-      <CalendarPopup
-        value={value}
-        onChange={onChange}
-        isOpen={isOpen}
-        onClose={handleClose}
-      />
+      {isOpen && (
+        <CalendarPopup
+          value={value}
+          onChange={onChange}
+          isOpen={isOpen}
+          onClose={handleClose}
+        />
+      )}
     </div>
   );
 }
