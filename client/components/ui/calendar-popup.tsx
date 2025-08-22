@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
 interface CalendarPopupProps {
@@ -29,6 +30,15 @@ const MONTHS = [
 
 const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
+interface Position {
+  top?: number;
+  left?: number;
+  right?: number;
+  bottom?: number;
+  maxWidth?: number;
+  maxHeight?: number;
+}
+
 export function CalendarPopup({
   value,
   onChange,
@@ -42,12 +52,8 @@ export function CalendarPopup({
     initialMonth || value || new Date(),
   );
   const popupRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({
-    top: "100%",
-    left: "auto",
-    right: "0",
-    bottom: "auto",
-  });
+  const [position, setPosition] = useState<Position>({});
+  const [isPositioned, setIsPositioned] = useState(false);
 
   const handleDateSelect = (date: Date) => {
     onChange(date);
@@ -159,112 +165,141 @@ export function CalendarPopup({
     return days;
   };
 
-  // Calculate optimal position based on viewport and container boundaries
-  useEffect(() => {
-    if (!isOpen || !fieldRef?.current) return;
+  // Calculate optimal position with smart viewport-aware positioning
+  const calculatePosition = () => {
+    if (!fieldRef?.current || !popupRef.current) return;
 
     const fieldRect = fieldRef.current.getBoundingClientRect();
+    const popupRect = popupRef.current.getBoundingClientRect();
+
+    // Get actual popup dimensions instead of estimates
+    const popupWidth = popupRect.width || 320; // fallback to estimated width
+    const popupHeight = popupRect.height || 400; // fallback to estimated height
+
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
 
-    // Calendar popup dimensions (approximately)
-    const popupWidth = 320; // 80 * 4 (w-80)
-    const popupHeight = 400; // approximate height
+    // Calculate available space in all directions relative to viewport
+    const spaceBelow = viewportHeight - fieldRect.bottom;
+    const spaceAbove = fieldRect.top;
+    const spaceRight = viewportWidth - fieldRect.left;
+    const spaceLeft = fieldRect.right;
 
-    // Find the closest scrollable container or modal
-    let container =
-      fieldRef.current.closest('[role="dialog"]') ||
-      fieldRef.current.closest(".fixed.inset-0") ||
-      fieldRef.current.closest(".overflow-auto") ||
-      fieldRef.current.closest(".overflow-y-auto") ||
-      fieldRef.current.closest(".overflow-x-auto") ||
-      document.body;
+    const margin = 8; // 8px margin from viewport edges
+    let newPosition: Position = {};
 
-    // Get container boundaries
-    const containerRect =
-      container === document.body
-        ? {
-            top: 0,
-            left: 0,
-            right: viewportWidth,
-            bottom: viewportHeight,
-            width: viewportWidth,
-            height: viewportHeight,
-          }
-        : container.getBoundingClientRect();
-
-    let newPosition = {
-      top: "auto" as string,
-      left: "auto" as string,
-      right: "auto" as string,
-      bottom: "auto" as string,
-    };
-
-    // Calculate available space in all directions
-    const spaceRight =
-      Math.min(containerRect.right, viewportWidth) - fieldRect.right;
-    const spaceLeft = fieldRect.left - Math.max(containerRect.left, 0);
-    const spaceBelow =
-      Math.min(containerRect.bottom, viewportHeight) - fieldRect.bottom;
-    const spaceAbove = fieldRect.top - Math.max(containerRect.top, 0);
-
-    // Determine horizontal position (prefer right alignment, then left, then best fit)
-    if (spaceRight >= popupWidth) {
-      // Enough space on the right, align to right edge of field
-      newPosition.right = "0";
-    } else if (spaceLeft >= popupWidth) {
-      // Not enough space on right but enough on left, align to left edge of field
-      newPosition.left = "0";
+    // Determine vertical position
+    if (spaceBelow >= popupHeight + margin) {
+      // Enough space below - position below the field
+      newPosition.top = fieldRect.bottom + scrollY + 8;
+    } else if (spaceAbove >= popupHeight + margin) {
+      // Not enough space below but enough above - position above the field
+      newPosition.bottom = viewportHeight - fieldRect.top - scrollY + 8;
     } else {
-      // Not enough space on either side, position to prevent overflow
-      if (spaceRight > spaceLeft) {
-        // More space on right, align to right but ensure it fits in viewport
-        newPosition.right = "0";
+      // Not enough space in either direction - choose the side with more space
+      if (spaceBelow >= spaceAbove) {
+        newPosition.top = fieldRect.bottom + scrollY + 8;
+        newPosition.maxHeight = spaceBelow - margin;
       } else {
-        // More space on left, align to left but ensure it fits in viewport
-        newPosition.left = "0";
+        newPosition.bottom = viewportHeight - fieldRect.top - scrollY + 8;
+        newPosition.maxHeight = spaceAbove - margin;
       }
     }
 
-    // Determine vertical position (prefer below, then above)
-    if (spaceBelow >= popupHeight) {
-      // Enough space below
-      newPosition.top = "100%";
-    } else if (spaceAbove >= popupHeight) {
-      // Not enough space below but enough above
-      newPosition.bottom = "100%";
+    // Determine horizontal position
+    if (spaceRight >= popupWidth + margin) {
+      // Enough space on the right - align to left edge of field
+      newPosition.left = fieldRect.left + scrollX;
+    } else if (spaceLeft >= popupWidth + margin) {
+      // Not enough space on right but enough on left - align to right edge of field
+      newPosition.right = viewportWidth - fieldRect.right - scrollX;
     } else {
-      // Not enough space above or below, choose the side with more space
-      if (spaceBelow >= spaceAbove) {
-        newPosition.top = "100%";
+      // Not enough space on either side - position to fit in viewport
+      if (spaceRight >= spaceLeft) {
+        // More space on right
+        newPosition.left = fieldRect.left + scrollX;
+        newPosition.maxWidth = spaceRight - margin;
       } else {
-        newPosition.bottom = "100%";
+        // More space on left
+        newPosition.right = viewportWidth - fieldRect.right - scrollX;
+        newPosition.maxWidth = spaceLeft - margin;
       }
+    }
+
+    // Ensure popup doesn't go beyond viewport boundaries
+    if (newPosition.left !== undefined) {
+      newPosition.left = Math.max(
+        margin,
+        Math.min(newPosition.left, viewportWidth - popupWidth - margin),
+      );
+    }
+    if (newPosition.top !== undefined) {
+      newPosition.top = Math.max(
+        margin,
+        Math.min(newPosition.top, viewportHeight - popupHeight - margin),
+      );
     }
 
     setPosition(newPosition);
-  }, [isOpen, fieldRef]);
+    setIsPositioned(true);
+  };
+
+  // Calculate position when popup opens or on resize/scroll
+  useEffect(() => {
+    if (!isOpen) {
+      setIsPositioned(false);
+      return;
+    }
+
+    // Initial calculation after popup is rendered
+    const timeoutId = setTimeout(calculatePosition, 0);
+
+    // Recalculate on window resize or scroll
+    const handleResize = () => calculatePosition();
+    const handleScroll = () => calculatePosition();
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [isOpen]);
+
+  // Re-calculate position when popup content changes (month navigation)
+  useEffect(() => {
+    if (isOpen && isPositioned) {
+      const timeoutId = setTimeout(calculatePosition, 0);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [currentMonth, isOpen, isPositioned]);
 
   if (!isOpen) return null;
 
-  return (
+  const popupElement = (
     <div
       ref={popupRef}
       className={cn(
-        "absolute mt-2 bg-white rounded-3xl z-[100] p-10 w-80 max-h-[400px] overflow-hidden",
-        // Ensure calendar never goes outside viewport boundaries
-        "max-w-[90vw] max-h-[90vh]",
+        "fixed bg-white rounded-3xl z-[100] p-10 w-80",
+        // Hide initially until positioned to prevent flash
+        isPositioned ? "opacity-100" : "opacity-0",
         className,
       )}
       style={{
         boxShadow: "-4px 4px 12px 0 rgba(0, 0, 0, 0.25)",
-        top: position.top,
-        left: position.left,
-        right: position.right,
-        bottom: position.bottom,
-        // Prevent overflow beyond viewport boundaries
-        maxWidth: "min(320px, 90vw)",
-        maxHeight: "min(400px, 90vh)",
+        ...position,
+        // Ensure content is scrollable if height is constrained
+        ...(position.maxHeight && {
+          overflowY: "auto",
+          height: `${Math.min(400, position.maxHeight)}px`,
+        }),
+        ...(position.maxWidth && {
+          width: `${Math.min(320, position.maxWidth)}px`,
+        }),
       }}
     >
       {/* Header */}
@@ -304,4 +339,7 @@ export function CalendarPopup({
       </div>
     </div>
   );
+
+  // Render popup in a portal to avoid container clipping
+  return createPortal(popupElement, document.body);
 }

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useMembersStore } from "@/contexts/MembersContext";
 import { MemberData } from "@/contexts/MembersContext";
 import {
-  Search,
   ChevronDown,
   ArrowUpDown,
   ChevronLeft,
@@ -13,7 +12,7 @@ import {
   Trash2,
   Edit,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { SearchBar } from "@/components/ui/search-bar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -229,17 +228,11 @@ export default function MembersPage() {
     <div className="space-y-6">
       {/* Search + Action Buttons */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex-1 w-full sm:max-w-md">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <Input
-              placeholder="Quick Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 bg-gray-50 border-gray-200 rounded-xl text-lg"
-            />
-          </div>
-        </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Quick Search..."
+        />
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
           <Button
