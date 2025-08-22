@@ -551,16 +551,16 @@ export default function DemandsPage() {
             onClick={handleAddDemand}
             className="bg-[#63CDFA] hover:bg-[#4BA8E8] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
           >
-            <Plus className="h-6 w-6" />
+            <Plus className="h-5 w-5" />
           </Button>
 
           {selectedDemands.size > 0 && (
             <>
               <Button
                 onClick={handleOpenDeleteModal}
-                className="bg-[#FF6262] hover:bg-[#FF4444] text-white px-5 py-[18px] rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
+                className="bg-[#FF6262] hover:bg-[#FF4444] text-white px-5 h-12 rounded-xl shadow-[-4px_4px_12px_0_rgba(0,0,0,0.25)] flex items-center gap-3"
               >
-                <Trash2 className="h-6 w-6" />
+                <Trash2 className="h-5 w-5" />
               </Button>
 
               <DeleteItemModal
