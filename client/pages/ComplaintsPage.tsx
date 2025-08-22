@@ -556,7 +556,7 @@ export default function ComplaintsPage() {
               />
               <DateFilter
                 value={selectedDate}
-                onChange={setSelectedDate}
+                onChange={handleDateChange}
                 className="min-w-[180px]"
                 placeholder="Select date..."
                 showClearButton={true}
