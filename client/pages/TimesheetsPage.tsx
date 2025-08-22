@@ -10,7 +10,6 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  X,
   NotepadText,
 } from "lucide-react";
 import { SearchBar } from "@/components/ui/search-bar";
