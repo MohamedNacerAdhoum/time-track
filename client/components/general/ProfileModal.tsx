@@ -28,6 +28,9 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<string>("");
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [selectedJoinedDate, setSelectedJoinedDate] = useState<Date | null>(null);
+  const dateFieldRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { changePassword } = useAuthStore();
   const hasFetched = useRef(false);
