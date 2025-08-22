@@ -1,225 +1,195 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-interface CalendarDay {
+export interface CalendarDay {
   date: number;
   isCurrentMonth: boolean;
-  hasEvent: boolean;
-  eventType?: "worked" | "not-worked" | "future" | "today";
+  hasWorked?: boolean;
+  workStatus?: 'worked' | 'absent' | 'future';
+  paymentAmount?: number;
+  workedHours?: string;
+  isFilled?: boolean;
   isSelected?: boolean;
 }
 
 interface BalancesCalendarProps {
   selectedDate?: Date;
   onDateSelect?: (date: Date) => void;
-  className?: string;
+  workData?: Record<string, {
+    worked: boolean;
+    status: 'worked' | 'absent' | 'future';
+    amount: number;
+    hours: string;
+  }>;
 }
 
 const weekDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
-export function BalancesCalendar({
-  selectedDate = new Date(),
-  onDateSelect,
-  className,
-}: BalancesCalendarProps) {
-  const [currentDate, setCurrentDate] = useState(selectedDate);
+const generateCalendarData = (date: Date, workData?: any): CalendarDay[] => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startDay = (firstDay.getDay() + 6) % 7; // Adjust for Monday start
+  
+  const calendar: CalendarDay[] = [];
+  
+  // Previous month days
+  const prevMonth = new Date(year, month, 0);
+  const daysInPrevMonth = prevMonth.getDate();
+  for (let i = startDay - 1; i >= 0; i--) {
+    calendar.push({
+      date: daysInPrevMonth - i,
+      isCurrentMonth: false,
+    });
+  }
+  
+  // Current month days
+  const today = new Date();
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dayKey = `${year}-${month + 1}-${day}`;
+    const dayData = workData?.[dayKey];
+    const currentDate = new Date(year, month, day);
+    const isToday = currentDate.toDateString() === today.toDateString();
+    const isFuture = currentDate > today;
+    
+    calendar.push({
+      date: day,
+      isCurrentMonth: true,
+      hasWorked: dayData?.worked || false,
+      workStatus: isFuture ? 'future' : (dayData?.status || 'absent'),
+      paymentAmount: dayData?.amount || 0,
+      workedHours: dayData?.hours || '',
+      isFilled: day === 25, // Example: day 25 is filled/completed
+      isSelected: isToday,
+    });
+  }
+  
+  // Next month days
+  const totalCells = 42; // 6 weeks
+  const remainingCells = totalCells - calendar.length;
+  for (let day = 1; day <= remainingCells; day++) {
+    calendar.push({
+      date: day,
+      isCurrentMonth: false,
+    });
+  }
+  
+  return calendar;
+};
 
-  const generateCalendarData = (date: Date): CalendarDay[] => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDay = new Date(year, month, 1).getDay();
-    const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1; // Adjust for Monday start
-
-    const days: CalendarDay[] = [];
-
-    // Previous month trailing days
-    const prevMonth = new Date(year, month, 0);
-    const daysInPrevMonth = prevMonth.getDate();
-    for (let i = adjustedFirstDay - 1; i >= 0; i--) {
-      days.push({
-        date: daysInPrevMonth - i,
-        isCurrentMonth: false,
-        hasEvent: false,
-      });
-    }
-
-    // Current month days with mock data patterns
-    for (let day = 1; day <= daysInMonth; day++) {
-      const today = new Date();
-      const isToday =
-        day === today.getDate() &&
-        month === today.getMonth() &&
-        year === today.getFullYear();
-      const isSelected =
-        day === selectedDate.getDate() &&
-        month === selectedDate.getMonth() &&
-        year === selectedDate.getFullYear();
-
-      // Mock work patterns - some days worked, some didn't, future dates
-      let eventType: "worked" | "not-worked" | "future" | "today" = "worked";
-      let hasEvent = true;
-
-      if (isToday) {
-        eventType = "today";
-      } else if (
-        day > today.getDate() &&
-        month >= today.getMonth() &&
-        year >= today.getFullYear()
-      ) {
-        eventType = "future";
-        hasEvent = false;
-      } else if ([4, 11, 13, 19, 22].includes(day)) {
-        eventType = "not-worked";
-      } else if (day <= today.getDate()) {
-        eventType = "worked";
-      } else {
-        eventType = "future";
-        hasEvent = false;
-      }
-
-      days.push({
-        date: day,
-        isCurrentMonth: true,
-        hasEvent,
-        eventType,
-        isSelected,
-      });
-    }
-
-    // Next month leading days
-    const totalCells = 42; // 6 weeks
-    const remainingCells = totalCells - days.length;
-    for (let day = 1; day <= remainingCells; day++) {
-      days.push({
-        date: day,
-        isCurrentMonth: false,
-        hasEvent: false,
-      });
-    }
-
-    return days;
-  };
-
-  const calendarData = generateCalendarData(currentDate);
-
+export function BalancesCalendar({ selectedDate, onDateSelect, workData }: BalancesCalendarProps) {
+  const [currentDate, setCurrentDate] = useState(selectedDate || new Date(2023, 3, 1)); // April 2023
+  
+  const calendarData = generateCalendarData(currentDate, workData);
+  
   const goToPrevMonth = () => {
-    const prev = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() - 1,
-      1,
-    );
+    const prev = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
     setCurrentDate(prev);
   };
-
+  
   const goToNextMonth = () => {
-    const next = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      1,
-    );
+    const next = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     setCurrentDate(next);
   };
-
+  
   const handleDateClick = (day: CalendarDay) => {
-    if (!day.isCurrentMonth) return;
-
-    const newDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      day.date,
-    );
-    if (onDateSelect) {
+    if (day.isCurrentMonth && onDateSelect) {
+      const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day.date);
       onDateSelect(newDate);
     }
   };
-
-  const getDayButtonStyle = (day: CalendarDay) => {
+  
+  const getDayStyles = (day: CalendarDay) => {
     if (!day.isCurrentMonth) {
-      return "text-[#BDBDBD] cursor-default";
+      return "text-[#BDBDBD]";
     }
-
-    let baseStyle =
-      "w-10 h-10 flex items-center justify-center text-sm font-normal rounded-full transition-colors cursor-pointer ";
-
+    
+    const baseStyles = "w-11 h-11 flex items-center justify-center text-[17px] font-normal rounded-full transition-colors cursor-pointer";
+    
+    // Future dates with blue background
+    if (day.workStatus === 'future' && day.date === 26) {
+      return cn(baseStyles, "bg-[#63CDFA] text-white");
+    }
+    
+    // Filled/completed work day (green background)
+    if (day.isFilled) {
+      return cn(baseStyles, "bg-[#56C992] text-white");
+    }
+    
+    // Days with work status borders
+    if (day.workStatus === 'worked') {
+      return cn(baseStyles, "border-2 border-[#56C992] text-black bg-white hover:bg-gray-50");
+    }
+    
+    if (day.workStatus === 'absent') {
+      return cn(baseStyles, "border-2 border-[#FFA501] text-black bg-white hover:bg-gray-50");
+    }
+    
+    // Selected date border
     if (day.isSelected) {
-      return baseStyle + "bg-[#63CDFA] text-white";
+      return cn(baseStyles, "border-[2.7px] border-[#63CDFA] text-[#333] bg-white");
     }
-
-    if (day.eventType === "today") {
-      return baseStyle + "bg-[#63CDFA] text-white";
-    }
-
-    if (day.hasEvent) {
-      switch (day.eventType) {
-        case "worked":
-          return (
-            baseStyle +
-            "border-2 border-green-400 text-[#333] hover:bg-green-50"
-          );
-        case "not-worked":
-          return (
-            baseStyle +
-            "border-2 border-yellow-400 text-[#333] hover:bg-yellow-50"
-          );
-        default:
-          return baseStyle + "text-[#333] hover:bg-gray-100";
-      }
-    }
-
-    return baseStyle + "text-[#333] hover:bg-gray-100";
+    
+    // Regular current month days
+    return cn(baseStyles, "text-[#333] hover:bg-gray-100");
   };
-
+  
   return (
-    <div
-      className={`bg-white rounded-xl p-6 lg:p-10 w-full max-w-[500px] ${className || ""}`}
-    >
+    <div className="bg-white rounded-2xl p-6 sm:p-8 lg:p-10 w-full max-w-[500px]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="w-7 h-7"
+      <div className="flex items-center justify-between mb-8">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="w-7 h-7 hover:bg-gray-100"
           onClick={goToPrevMonth}
         >
           <ChevronLeft className="w-5 h-5 text-black" />
         </Button>
-        <h3 className="text-lg lg:text-xl font-semibold text-black">
-          {currentDate.toLocaleString("default", { month: "long" })}{" "}
-          {currentDate.getFullYear()}
+        
+        <h3 className="text-xl font-semibold text-black font-roboto">
+          {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
         </h3>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="w-7 h-7"
+        
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="w-7 h-7 hover:bg-gray-100"
           onClick={goToNextMonth}
         >
           <ChevronRight className="w-5 h-5 text-black" />
         </Button>
       </div>
-
+      
       {/* Week days */}
-      <div className="grid grid-cols-7 gap-2 lg:gap-4 mb-4">
+      <div className="grid grid-cols-7 gap-2 sm:gap-4 mb-4">
         {weekDays.map((day) => (
           <div key={day} className="text-center py-2">
-            <span className="text-sm font-normal text-[#BDBDBD]">{day}</span>
+            <span className="text-[15px] font-normal text-[#BDBDBD] font-roboto">
+              {day}
+            </span>
           </div>
         ))}
       </div>
-
+      
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-2 lg:gap-4">
+      <div className="grid grid-cols-7 gap-2 sm:gap-4">
         {calendarData.map((day, index) => (
           <div key={index} className="flex flex-col items-center gap-1">
             <button
-              className={getDayButtonStyle(day)}
+              className={getDayStyles(day)}
               onClick={() => handleDateClick(day)}
               disabled={!day.isCurrentMonth}
             >
-              {day.date}
+              <span className="font-roboto">{day.date}</span>
             </button>
-            {day.hasEvent && day.isCurrentMonth && day.date === 1 && (
+            
+            {/* Event indicator for day 1 */}
+            {day.date === 1 && day.isCurrentMonth && (
               <div className="w-1 h-1 rounded-full bg-[#016EED]" />
             )}
           </div>
