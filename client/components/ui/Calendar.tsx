@@ -49,6 +49,13 @@ export function Calendar({
   const [position, setPosition] = useState<Position>({});
   const [isPositioned, setIsPositioned] = useState(false);
 
+  // Update currentMonth when value changes (to show the correct month when calendar opens)
+  useEffect(() => {
+    if (value && isOpen) {
+      setCurrentMonth(value);
+    }
+  }, [value, isOpen]);
+
   const handleDateSelect = (date: Date) => {
     onChange(date);
     onClose();
