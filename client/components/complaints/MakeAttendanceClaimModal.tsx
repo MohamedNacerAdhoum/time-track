@@ -130,7 +130,7 @@ export function MakeAttendanceClaimModal({
                 onChange={(date) => updateFormData({ datePicker: date })}
                 className="w-full"
                 placeholder="12/08/2022"
-                variant="default"
+                variant="profile"
               />
             </div>
             <div className="flex-1 space-y-2">
