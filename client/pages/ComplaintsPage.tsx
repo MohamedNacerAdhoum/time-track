@@ -519,14 +519,12 @@ export default function ComplaintsPage() {
       </div>
 
       {/* Search + Action Buttons */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         {activeTab === "complaints" ? (
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
-            placeholder="Search complaints..."
-            className="sm:max-w-md"
-            inputClassName="w-full md:w-64"
+            placeholder="Quick Search..."
           />
         ) : (
           <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 w-full">
