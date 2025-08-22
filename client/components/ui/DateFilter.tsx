@@ -52,15 +52,10 @@ export function DateFilter({
   };
 
   const handleDateChange = (date: Date) => {
-    console.log("DateFilter: Date selected:", date);
-
     // Ensure we're passing a clean Date object
     if (date && !isNaN(date.getTime())) {
       const cleanDate = new Date(date.getTime());
       onChange(cleanDate);
-      console.log("DateFilter: onChange called with clean date:", cleanDate);
-    } else {
-      console.error("DateFilter: Invalid date received:", date);
     }
 
     handleClose(); // Close the calendar after selecting a date
@@ -69,7 +64,6 @@ export function DateFilter({
   const handleClear = (event: React.MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
-    console.log("DateFilter: Clearing date");
     onChange(null);
   };
 
