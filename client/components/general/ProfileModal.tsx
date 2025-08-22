@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { X, Eye, EyeOff, ChevronDown, Pencil } from "lucide-react";
-import { CalendarField } from "../ui/calendar-field";
+import {
+  X,
+  Eye,
+  EyeOff,
+  ChevronDown,
+  Pencil,
+  Calendar as CalendarIcon,
+} from "lucide-react";
+import { Calendar } from "../ui/Calendar";
 import { useToast } from "@/hooks/useToast";
 import { useAuthStore } from "@/contexts/UserContext";
 import { useMembersStore } from "@/contexts/MembersContext";
@@ -28,6 +35,11 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<string>("");
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [selectedJoinedDate, setSelectedJoinedDate] = useState<Date | null>(
+    null,
+  );
+  const dateFieldRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { changePassword } = useAuthStore();
   const hasFetched = useRef(false);
@@ -638,17 +650,37 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   >
                     Date picker
                   </label>
-                  <CalendarField
-                    value={user?.joined ? new Date(user.joined) : undefined}
-                    onChange={(date) => {
-                      // Handle date change - you can add your update logic here
-                      console.log("Date selected:", date);
-                    }}
-                    placeholder={
-                      user?.joined ? formatDate(user.joined) : "12/08/2022"
-                    }
-                    variant="profile"
-                  />
+                  <div className="relative">
+                    <div
+                      ref={dateFieldRef}
+                      onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+                      className="w-full px-3 py-2 rounded-lg border border-[#CCDFFF] bg-[#F2FBFF] text-[14px] text-[#7F7F7F] pr-10 focus:outline-none focus:ring-2 focus:ring-[#63CDFA] focus:border-transparent cursor-pointer"
+                      style={{
+                        fontFamily:
+                          "IBM Plex Sans, -apple-system, Roboto, Helvetica, sans-serif",
+                      }}
+                    >
+                      {selectedJoinedDate
+                        ? formatDate(selectedJoinedDate.toISOString())
+                        : user?.joined
+                          ? formatDate(user.joined)
+                          : "12/08/2022"}
+                    </div>
+                    <CalendarIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#06B2FB] pointer-events-none" />
+                    <Calendar
+                      value={
+                        selectedJoinedDate ||
+                        (user?.joined ? new Date(user.joined) : undefined)
+                      }
+                      onChange={(date) => {
+                        setSelectedJoinedDate(date);
+                        console.log("Date selected:", date);
+                      }}
+                      isOpen={isDatePickerOpen}
+                      onClose={() => setIsDatePickerOpen(false)}
+                      fieldRef={dateFieldRef}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="flex justify-end gap-[8px]">

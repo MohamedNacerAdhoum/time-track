@@ -3,13 +3,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
-interface CalendarPopupProps {
-  value?: Date;
+interface CalendarProps {
+  value?: Date | null;
   onChange: (date: Date) => void;
   isOpen: boolean;
   onClose: () => void;
-  className?: string;
-  initialMonth?: Date;
   fieldRef?: React.RefObject<HTMLDivElement>;
 }
 
@@ -39,18 +37,14 @@ interface Position {
   maxHeight?: number;
 }
 
-export function CalendarPopup({
+export function Calendar({
   value,
   onChange,
   isOpen,
   onClose,
-  className,
-  initialMonth,
   fieldRef,
-}: CalendarPopupProps) {
-  const [currentMonth, setCurrentMonth] = useState(
-    initialMonth || value || new Date(),
-  );
+}: CalendarProps) {
+  const [currentMonth, setCurrentMonth] = useState(value || new Date());
   const popupRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<Position>({});
   const [isPositioned, setIsPositioned] = useState(false);
@@ -119,9 +113,6 @@ export function CalendarPopup({
         value.getMonth() === currentMonth.getMonth() &&
         value.getFullYear() === currentMonth.getFullYear();
 
-      // Sample highlight days (you can customize this logic)
-      const hasEvent = day === 1 || day === 12;
-
       days.push(
         <div key={day} className="flex flex-col items-center gap-0.5">
           <button
@@ -135,14 +126,6 @@ export function CalendarPopup({
           >
             {day}
           </button>
-          {hasEvent && !isSelected && (
-            <div
-              className={cn(
-                "w-0.5 h-0.5 rounded-full",
-                day === 1 ? "bg-blue-600" : "bg-[#63CDFA]",
-              )}
-            />
-          )}
         </div>,
       );
     }
@@ -165,40 +148,35 @@ export function CalendarPopup({
     return days;
   };
 
-  // Calculate optimal position with smart viewport-aware positioning
+  // Calculate optimal position
   const calculatePosition = () => {
     if (!fieldRef?.current || !popupRef.current) return;
 
     const fieldRect = fieldRef.current.getBoundingClientRect();
     const popupRect = popupRef.current.getBoundingClientRect();
 
-    // Get actual popup dimensions instead of estimates
-    const popupWidth = popupRect.width || 320; // fallback to estimated width
-    const popupHeight = popupRect.height || 400; // fallback to estimated height
+    const popupWidth = popupRect.width || 320;
+    const popupHeight = popupRect.height || 400;
 
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
 
-    // Calculate available space in all directions relative to viewport
     const spaceBelow = viewportHeight - fieldRect.bottom;
     const spaceAbove = fieldRect.top;
     const spaceRight = viewportWidth - fieldRect.left;
     const spaceLeft = fieldRect.right;
 
-    const margin = 8; // 8px margin from viewport edges
+    const margin = 8;
     let newPosition: Position = {};
 
     // Determine vertical position
     if (spaceBelow >= popupHeight + margin) {
-      // Enough space below - position below the field
       newPosition.top = fieldRect.bottom + scrollY + 8;
     } else if (spaceAbove >= popupHeight + margin) {
-      // Not enough space below but enough above - position above the field
       newPosition.bottom = viewportHeight - fieldRect.top - scrollY + 8;
     } else {
-      // Not enough space in either direction - choose the side with more space
       if (spaceBelow >= spaceAbove) {
         newPosition.top = fieldRect.bottom + scrollY + 8;
         newPosition.maxHeight = spaceBelow - margin;
@@ -210,19 +188,14 @@ export function CalendarPopup({
 
     // Determine horizontal position
     if (spaceRight >= popupWidth + margin) {
-      // Enough space on the right - align to left edge of field
       newPosition.left = fieldRect.left + scrollX;
     } else if (spaceLeft >= popupWidth + margin) {
-      // Not enough space on right but enough on left - align to right edge of field
       newPosition.right = viewportWidth - fieldRect.right - scrollX;
     } else {
-      // Not enough space on either side - position to fit in viewport
       if (spaceRight >= spaceLeft) {
-        // More space on right
         newPosition.left = fieldRect.left + scrollX;
         newPosition.maxWidth = spaceRight - margin;
       } else {
-        // More space on left
         newPosition.right = viewportWidth - fieldRect.right - scrollX;
         newPosition.maxWidth = spaceLeft - margin;
       }
@@ -246,17 +219,15 @@ export function CalendarPopup({
     setIsPositioned(true);
   };
 
-  // Calculate position when popup opens or on resize/scroll
+  // Calculate position when popup opens
   useEffect(() => {
     if (!isOpen) {
       setIsPositioned(false);
       return;
     }
 
-    // Initial calculation after popup is rendered
     const timeoutId = setTimeout(calculatePosition, 0);
 
-    // Recalculate on window resize or scroll
     const handleResize = () => calculatePosition();
     const handleScroll = () => calculatePosition();
 
@@ -270,7 +241,7 @@ export function CalendarPopup({
     };
   }, [isOpen]);
 
-  // Re-calculate position when popup content changes (month navigation)
+  // Re-calculate position when month changes
   useEffect(() => {
     if (isOpen && isPositioned) {
       const timeoutId = setTimeout(calculatePosition, 0);
@@ -285,14 +256,11 @@ export function CalendarPopup({
       ref={popupRef}
       className={cn(
         "fixed bg-white rounded-3xl z-[100] p-10 w-80",
-        // Hide initially until positioned to prevent flash
         isPositioned ? "opacity-100" : "opacity-0",
-        className,
       )}
       style={{
         boxShadow: "-4px 4px 12px 0 rgba(0, 0, 0, 0.25)",
         ...position,
-        // Ensure content is scrollable if height is constrained
         ...(position.maxHeight && {
           overflowY: "auto",
           height: `${Math.min(400, position.maxHeight)}px`,
@@ -340,6 +308,5 @@ export function CalendarPopup({
     </div>
   );
 
-  // Render popup in a portal to avoid container clipping
   return createPortal(popupElement, document.body);
 }
