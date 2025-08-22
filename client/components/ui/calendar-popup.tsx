@@ -45,7 +45,10 @@ export function CalendarPopup({
         calendarRef.current &&
         !calendarRef.current.contains(event.target as Node)
       ) {
-        onClose();
+        // Add a small delay to prevent interference with field click
+        setTimeout(() => {
+          onClose();
+        }, 0);
       }
     };
 
